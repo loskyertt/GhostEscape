@@ -5,7 +5,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # 在这里添加动态库，库名称：gamedll
 add_library(gamedll SHARED
-  Game.cpp
+  core/Game.cpp
+  SceneMain.cpp
 )
 
 target_include_directories(gamedll PUBLIC ${PROJECT_SOURCE_DIR}/include)

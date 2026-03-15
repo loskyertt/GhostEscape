@@ -9,7 +9,7 @@ add_executable(${TARGET}
 )
 
 target_link_libraries(${TARGET}
-  PUBLIC
+  PRIVATE
     gamedll
 )
 

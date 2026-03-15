@@ -1,10 +1,10 @@
 /*
-@File    :   example\example04.cpp
-@Time    :   2026/03/15 15:37:14
-@Author  :   loskyertt
-@Github  :   https://github.com/loskyertt
-@Desc    :   glm 使用示例
-*/
+ * @File    :   example\example04.cpp
+ * @Time    :   2026/03/15 15:37:14
+ * @Author  :   loskyertt
+ * @Github  :   https://github.com/loskyertt
+ * @Desc    :   glm 使用示例
+ */
 
 #include <SDL3/SDL_log.h>
 

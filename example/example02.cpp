@@ -1,10 +1,10 @@
 /*
-@File    :   example\example02.cpp
-@Time    :   2026/03/15 15:35:42
-@Author  :   loskyertt
-@Github  :   https://github.com/loskyertt
-@Desc    :   SDL3_mixer 使用示例
-*/
+ * @File    :   example\example02.cpp
+ * @Time    :   2026/03/15 15:35:42
+ * @Author  :   loskyertt
+ * @Github  :   https://github.com/loskyertt
+ * @Desc    :   SDL3_mixer 使用示例
+ */
 
 #include <SDL3/SDL.h>
 #include <SDL3_mixer/SDL_mixer.h>

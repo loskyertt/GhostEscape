@@ -1,10 +1,10 @@
 /*
-@File    :   example\example01.cpp
-@Time    :   2026/03/15 14:08:22
-@Author  :   loskyertt
-@Github  :   https://github.com/loskyertt
-@Desc    :   SDL3 使用示例
-*/
+ * @File    :   example\example01.cpp
+ * @Time    :   2026/03/15 14:08:22
+ * @Author  :   loskyertt
+ * @Github  :   https://github.com/loskyertt
+ * @Desc    :   SDL3 使用示例
+ */
 
 #include <glm/glm.hpp>
 #include <glm/fwd.hpp>
@@ -54,29 +54,45 @@ int main(int argc, char *argv[]) {
 
   // 渲染循环
   bool is_running = true;
+  Uint64 frame_delay = 1000000000 / 60;
+  float delta_time = 1.0f / 60.0f;
+
   while (is_running) {
+    auto start = SDL_GetTicksNS();
+
     // 声明一个事件容器，SDL 会把事件信息填进这个结构体
     SDL_Event event;
-    // ✅ while：每帧清空整个事件队列（推荐）
-    // ⚠️ if：每帧只处理一个事件
+    /*
+     * ✅ while：每帧清空整个事件队列（推荐）
+     * ⚠️ if：每帧只处理一个事件
+    */
     while (SDL_PollEvent(&event)) {
-      // SDL_PollEvent 从事件队列里取出一个事件放入 event
-      // 如果队列里还有事件就返回 true，队列空了就返回 false
-      // 所以这个 while 会一次性处理掉本帧所有积压的事件
+      /*
+       * SDL_PollEvent 从事件队列里取出一个事件放入 event
+       * 如果队列里还有事件就返回 true，队列空了就返回 false
+       * 所以这个 while 会一次性处理掉本帧所有积压的事件
+      */
       if (event.type == SDL_EVENT_QUIT) {
         is_running = false;
-        break;
       }
     }
 
+    // 事件处理完后立即检查，跳过本帧剩余的渲染
+    if (!is_running) {
+      break;
+    }
+
+    // 鼠标状态
     auto state = SDL_GetMouseState(&mousePos.x, &mousePos.y);
     // SDL_Log("Mouse Pos: (%f, %f)", mousePos.x, mousePos.y);
     if (state & SDL_BUTTON_LMASK) {
       SDL_Log("Left Button Down");
     }
 
-    // 清屏
-    SDL_RenderClear(renderer);
+    // 渲染
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // 先设清屏色
+    SDL_RenderClear(renderer);                       // 再清屏
+
     // 画一个长方形
     SDL_FRect rect = {100, 100, 200, 200};
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
@@ -90,10 +106,17 @@ int main(int argc, char *argv[]) {
     SDL_FRect textRect = {300, 300, static_cast<float>(surface->w), static_cast<float>(surface->h)};
     SDL_RenderTexture(renderer, textTexture, NULL, &textRect);
 
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-
     // 更新屏幕
     SDL_RenderPresent(renderer);
+
+    // 帧率控制
+    auto elapsed = SDL_GetTicksNS() - start;
+    if (elapsed < frame_delay) {
+      SDL_DelayNS(frame_delay - elapsed);
+      delta_time = (float)(frame_delay / 1.0e9);
+    } else {
+      delta_time = (float)(elapsed / 1.0e9);
+    }
   }
 
   // 清理图片资源

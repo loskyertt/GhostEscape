@@ -1,10 +1,10 @@
 /*
-@File    :   example\example03.cpp
-@Time    :   2026/03/15 14:08:22
-@Author  :   loskyertt
-@Github  :   https://github.com/loskyertt
-@Desc    :   SDL3_ttf 使用示例
-*/
+ * @File    :   example\example03.cpp
+ * @Time    :   2026/03/15 14:08:22
+ * @Author  :   loskyertt
+ * @Github  :   https://github.com/loskyertt
+ * @Desc    :   SDL3_ttf 使用示例
+ */
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
