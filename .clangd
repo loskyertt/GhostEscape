@@ -3,7 +3,18 @@
 # ─── 编译参数 ────────────────────────────────────────────────
 # 这些参数会叠加到 compile_commands.json 之上，或在没有它时作为默认参数
 CompileFlags:
+  # 指定 compile_commands.json 的位置（如果不在根目录）
+  CompilationDatabase: build/
+
   Add:
+    # 包含路径（-I）示例，按需修改为实际路径（建议用绝对路径）
+    - "-IC:/Users/sky/Desktop/Repositories/Games/GhostEscape/3rdparty/glm-1.0.3"
+    - "-IC:/Users/sky/Desktop/Repositories/Games/GhostEscape/3rdparty/SDL3-3.4.2/include"
+    - "-IC:/Users/sky/Desktop/Repositories/Games/GhostEscape/3rdparty/SDL3_image-3.4.0/include"
+    - "-IC:/Users/sky/Desktop/Repositories/Games/GhostEscape/3rdparty/SDL3_mixer-3.2.0/include"
+    - "-IC:/Users/sky/Desktop/Repositories/Games/GhostEscape/3rdparty/SDL3_ttf-3.2.2/include"
+    - "-IC:/Users/sky/Desktop/Repositories/Games/GhostEscape/include"
+
     - -std=c++20                  # 使用 C++20 标准解析代码
     - -Wall                       # 开启基础警告集合
     - -Wextra                     # 开启额外警告（补充 -Wall 未覆盖的部分）

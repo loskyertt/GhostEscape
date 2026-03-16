@@ -13,4 +13,8 @@ target_link_libraries(${TARGET}
     gamedll
 )
 
+if(MSVC)
+  target_compile_options(${TARGET} PRIVATE /utf-8)  # UTF-8 支持
+endif()
+
 message(STATUS "--------------------------------------------\n")

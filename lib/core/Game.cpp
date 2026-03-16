@@ -7,6 +7,7 @@
  */
 
 #include "core/Game.h"
+#include "core/AssetStore.h"
 #include "SceneMain.h"
 
 #include <glm/fwd.hpp>
@@ -30,6 +31,10 @@ Game &Game::getInstance() {
   return instance;
 }
 
+Game::~Game() {
+  clean();
+}
+
 /* 初始化游戏 */
 void Game::init(const std::string &title, int width, int height) {
   m_screen_size = glm::vec2(width, height);
@@ -46,8 +51,8 @@ void Game::init(const std::string &title, int width, int height) {
     return;
   }
   // 创建 Mixer，绑定到默认音频输出设备
-  MIX_Mixer *mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
-  if (!mixer) {
+  m_mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
+  if (!m_mixer) {
     SDL_Log("MIX_CreateMixerDevice Error: %s", SDL_GetError());
     MIX_Quit();
     return;
@@ -68,6 +73,9 @@ void Game::init(const std::string &title, int width, int height) {
 
   // === 计算帧延迟 ===
   m_frame_delay = 1000000000 / m_FPS;
+
+  // === 创建资源管理器 ===
+  m_asset_store = new AssetStore(m_renderer, m_mixer);
 
   // === 创建场景 ===
   m_current_scene = new SceneMain();
@@ -127,17 +135,23 @@ void Game::render() {
 
 /* 清理游戏资源 */
 void Game::clean() {
-  // 清理游戏场景
-  if (!m_current_scene) {
+  // 清理场景
+  if (m_current_scene) {
     m_current_scene->clean();
     delete m_current_scene;
   }
 
+  // 清理资源
+  if (m_asset_store) {
+    m_asset_store->clean();
+    delete m_asset_store;
+  }
+
   // 释放渲染器和窗口
-  if (!m_renderer) {
+  if (m_renderer) {
     SDL_DestroyRenderer(m_renderer);
   }
-  if (!m_window) {
+  if (m_window) {
     SDL_DestroyWindow(m_window);
   }
 
@@ -153,7 +167,10 @@ void Game::clean() {
 
 /* 绘制网格 */
 void Game::drawGrid(
-    const glm::vec2 &top_left, const glm::vec2 &bottom_right, float grid_width, const SDL_FColor &color) {
+    const glm::vec2 &top_left,
+    const glm::vec2 &bottom_right,
+    float grid_width,
+    const SDL_FColor &color) {
   SDL_SetRenderDrawColorFloat(m_renderer, color.r, color.g, color.b, color.a);
 
   for (float x = top_left.x; x <= bottom_right.x; x += grid_width) {
@@ -173,7 +190,10 @@ void Game::drawGrid(
 
 /* 绘制边框 */
 void Game::drawBoundary(
-    const glm::vec2 &top_left, const glm::vec2 &bottom_right, float boundary_width, const SDL_FColor &color) {
+    const glm::vec2 &top_left,
+    const glm::vec2 &bottom_right,
+    float boundary_width,
+    const SDL_FColor &color) {
   SDL_SetRenderDrawColorFloat(m_renderer, color.r, color.g, color.b, color.a);
 
   for (float i = 0; i < boundary_width; i++) {

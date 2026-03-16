@@ -8,8 +8,8 @@ AccessModifierOffset: -1
 AlignAfterOpenBracket: AlwaysBreak  # default: Align
 AlignConsecutiveAssignments: None
 AlignOperands: DontAlign  # default: Align
-AllowAllArgumentsOnNextLine: true
-AllowAllConstructorInitializersOnNextLine: true
+AllowAllArgumentsOnNextLine: false # default: true
+AllowAllConstructorInitializersOnNextLine: false # default: true
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortBlocksOnASingleLine: Empty
 AllowShortCaseLabelsOnASingleLine: false
@@ -20,6 +20,7 @@ AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterReturnType: None
 AlwaysBreakTemplateDeclarations: Yes
 BinPackArguments: false    # default: true
+BinPackParameters: false    # 函数定义的参数列表同样处理
 BreakBeforeBraces: Custom
 BraceWrapping:
   AfterCaseLabel: false
@@ -42,9 +43,9 @@ BreakBeforeBinaryOperators: None
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeColon
 BreakInheritanceList: BeforeColon
-ColumnLimit: 120  # default: 80
+ColumnLimit: 120  # 超过此宽度才触发换行
 CompactNamespaces: false
-ContinuationIndentWidth: 4
+ContinuationIndentWidth: 4  # 续行缩进宽度（控制参数缩进量）
 Cpp11BracedListStyle: true
 DerivePointerAlignment: false  # Make sure the * or & align on the left
 EmptyLineBeforeAccessModifier: LogicalBlock

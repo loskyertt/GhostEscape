@@ -7,33 +7,48 @@
  */
 
 #include "SceneMain.h"
-#include "glm/fwd.hpp"
+#include "Player.h"
 
-SceneMain::~SceneMain() {}
+#include <glm/fwd.hpp>
+
+SceneMain::SceneMain() = default;
+SceneMain::~SceneMain() = default;
 
 /* 初始化 */
 void SceneMain::init() {
   m_world_size = m_game.getScreenSize() * 3.0f;
-  // m_camera_position = glm::vec2(-100.0f);
+  m_camera_position = m_world_size / 2.0f - m_game.getScreenSize() / 2.0f;
+
+  // 玩家初始化
+  m_player = new Player();
+  m_player->init();
+  m_player->setPosition(m_world_size / 2.0f);
+  addChild(m_player); // Player -> Actor -> ObjectWorld
 }
 
 /* 事件处理 */
-void SceneMain::handleEvents(SDL_Event &event) {}
+void SceneMain::handleEvents(SDL_Event &event) {
+  Scene::handleEvents(event);
+}
 
 /* 更新 */
 void SceneMain::update(const float &deltaTime) {
+  Scene::update(deltaTime);
   // m_camera_position += glm::vec2(20.0f, 20.0f) * deltaTime;
 }
 
 /* 渲染 */
 void SceneMain::render() {
+  Scene::render();
   renderBackground();
 }
 
 /* 清理 */
-void SceneMain::clean() {}
+void SceneMain::clean() {
+  Scene::clean();
+}
 
-/* 绘制背景图片 */
+/* 绘制背景 */
 void SceneMain::renderBackground() {
   auto start = -m_camera_position;
   auto end = m_world_size - m_camera_position;

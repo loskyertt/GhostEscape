@@ -3,10 +3,15 @@ message("CMakeLists.txt for lib directory")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# 在这里添加动态库，库名称：gamedll
+# 动态库：gamedll
 add_library(gamedll SHARED
+  core/AssetStore.cpp
   core/Game.cpp
+  core/Object.cpp
+  core/ObjectWorld.cpp
+  core/Scene.cpp
   SceneMain.cpp
+  Player.cpp
 )
 
 target_include_directories(gamedll PUBLIC ${PROJECT_SOURCE_DIR}/include)

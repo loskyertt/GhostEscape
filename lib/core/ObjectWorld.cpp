@@ -1,0 +1,29 @@
+/*
+ * @File    :   lib\core\ObjectWorld.cpp
+ * @Time    :   2026/03/15 22:41:58
+ * @Author  :   loskyertt
+ * @Github  :   https://github.com/loskyertt
+ * @Desc    :   .....
+ */
+
+#include "core/ObjectWorld.h"
+#include "SceneMain.h"
+
+/* 同步更新物体的坐标 */
+void ObjectWorld::update(const float &deltaTime) {
+  ObjectScreen::update(deltaTime);
+  // 根据当前的世界坐标同步更新渲染坐标
+  m_render_postion = m_game.getCurrentScene()->worldToScreen(m_position);
+}
+
+/* 设置物体的世界坐标（同时更新物体的屏幕坐标） */
+void ObjectWorld::setPosition(const glm::vec2 &position) {
+  m_position = position;
+  m_render_postion = m_game.getCurrentScene()->worldToScreen(position);
+}
+
+/* 设置物体的屏幕（渲染）位置（同时更新物体的世界坐标） */
+void ObjectWorld::setRenderPosition(const glm::vec2 &render_position) {
+  m_render_postion = render_position;
+  m_position = m_game.getCurrentScene()->screenToWorld(render_position);
+}

@@ -81,7 +81,6 @@ find_package(SDL3_mixer REQUIRED)
 find_package(SDL3_ttf REQUIRED)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/3rdparty/glm-1.0.3)
-# find_package(glm REQUIRED)
 
 message(STATUS "--------------------------------------------\n")
 
@@ -91,4 +90,4 @@ add_subdirectory(./src)
 
 # add_subdirectory(./test)
 
-# add_subdirectory(./example)
+add_subdirectory(./example)

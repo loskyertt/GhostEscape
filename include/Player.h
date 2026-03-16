@@ -1,6 +1,6 @@
 /*
- * @File    :   include\SceneMain.cpp
- * @Time    :   2026/03/15 19:17:35
+ * @File    :   include\Player.h
+ * @Time    :   2026/03/15 23:44:48
  * @Author  :   loskyertt
  * @Github  :   https://github.com/loskyertt
  * @Desc    :   .....
@@ -8,17 +8,12 @@
 
 #pragma once
 
-#include "core/Scene.h"
+#include "core/Actor.h"
 
-class Player;
-
-class SceneMain : public Scene {
- private:
-  Player* m_player;  // 玩家实例
-
+class Player : public Actor {
  public:
-  SceneMain();
-  ~SceneMain() override;
+  Player();
+  ~Player() override;
 
   /* 初始化 */
   void init() override;
@@ -35,7 +30,13 @@ class SceneMain : public Scene {
   /* 清理 */
   void clean() override;
 
- private:
-  /* 绘制背景 */
-  void renderBackground();
+ public:
+  /* 键盘控制逻辑 */
+  void keyboardControl();
+
+  /* 玩家位置移动 */
+  void move(const float &deltaTime);
+
+  /* 相机跟随玩家 */
+  void syncCamera();
 };
