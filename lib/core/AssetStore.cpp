@@ -46,8 +46,14 @@ void AssetStore::loadImage(const std::string &file_path) {
 }
 
 /* 载入声音 */
-void AssetStore::loadSound(const std::string &file_path, bool isSound) {
-  MIX_Audio *sound = MIX_LoadAudio(m_mixer, file_path.c_str(), isSound);
+void AssetStore::loadSound(const std::string &file_path, bool predecode) {
+  // 已经加载过了，直接跳过，避免重复加载浪费内存
+  if (m_sounds.count(file_path)) {
+    SDL_Log("Sound '%s' already loaded, skipping.", file_path.c_str());
+    return;
+  }
+
+  MIX_Audio *sound = MIX_LoadAudio(m_mixer, file_path.c_str(), predecode);
   if (!sound) {
     SDL_Log("Failed to load sound: %s", SDL_GetError());
     return;
@@ -87,18 +93,12 @@ SDL_Texture *AssetStore::getImage(const std::string &file_path) {
 }
 
 /* 获取声音资源 */
-MIX_Audio *AssetStore::getSound(const std::string &file_path, bool isSound) {
+MIX_Audio *AssetStore::getSound(const std::string &file_path) {
   auto iter = m_sounds.find(file_path);
-
-  // 第一次找：如果没找到，就载入容器
   if (iter == m_sounds.end()) {
-    loadSound(file_path, isSound);
-    iter = m_sounds.find(file_path);
-  }
-
-  // 第二次找：如果载入容器后也没找到，表明确实没有该资源
-  if (iter == m_sounds.end()) {
-    SDL_Log("Failed to get sound: %s", SDL_GetError());
+    // 没找到就是真的没有，不尝试自动加载
+    // 因为 getSound 不知道文件路径和 predecode 参数
+    SDL_Log("Sound '%s' not found. Did you forget to call loadSound?", file_path.c_str());
     return nullptr;
   }
 

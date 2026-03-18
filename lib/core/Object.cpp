@@ -18,21 +18,27 @@ void Object::init() {}
 /* 事件处理 */
 void Object::handleEvents(SDL_Event &event) {
   for (auto &child : m_children) {
-    child->handleEvents(event);
+    if (child->getActiveState()) {
+      child->handleEvents(event);
+    }
   }
 }
 
 /* 更新 */
-void Object::update(const float &deltaTime) {
+void Object::update(const float &delta_time) {
   for (auto &child : m_children) {
-    child->update(deltaTime);
+    if (child->getActiveState()) {
+      child->update(delta_time);
+    }
   }
 }
 
 /* 渲染 */
 void Object::render() {
   for (auto &child : m_children) {
-    child->render();
+    if (child->getActiveState()) {
+      child->render();
+    }
   }
 }
 
@@ -42,5 +48,23 @@ void Object::clean() {
     child->clean();
   }
 
-  m_children.clear();
+  m_children.clear();  //触发所有子对象的析构
+}
+
+/* 添加 Object */
+void Object::addObject(std::unique_ptr<Object> child) {
+  m_children.push_back(std::move(child));
+}
+
+/* 移除 Object */
+void Object::removeObject(Object *child) {
+  m_children.erase(
+      std::remove_if(
+          m_children.begin(),
+          m_children.end(),
+          [child](const std::unique_ptr<Object> &p) {
+            return p.get() == child;  // 比较原始指针地址
+          }),
+      m_children.end());
+  // erase 时 unique_ptr 析构 → 自动 delete
 }

@@ -10,8 +10,8 @@
 #include "SceneMain.h"
 
 /* 同步更新物体的坐标 */
-void ObjectWorld::update(const float &deltaTime) {
-  ObjectScreen::update(deltaTime);
+void ObjectWorld::update(const float &delta_time) {
+  ObjectScreen::update(delta_time);
   // 根据当前的世界坐标同步更新渲染坐标
   m_render_postion = m_game.getCurrentScene()->worldToScreen(m_position);
 }

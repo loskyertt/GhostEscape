@@ -1,5 +1,5 @@
 /*
- * @File    :   include\SceneMain.cpp
+ * @File    :   include\SceneMain.h
  * @Time    :   2026/03/15 19:17:35
  * @Author  :   loskyertt
  * @Github  :   https://github.com/loskyertt
@@ -14,7 +14,11 @@ class Player;
 
 class SceneMain : public Scene {
  private:
-  Player* m_player;  // 玩家实例
+  /*
+   * 玩家实例：
+   * 只是观察者，不拥有所有权，所有权在 Scene::m_children_world 里
+   */
+  Player *m_player;
 
  public:
   SceneMain();
@@ -27,7 +31,7 @@ class SceneMain : public Scene {
   void handleEvents(SDL_Event &event) override;
 
   /* 更新 */
-  void update(const float &deltaTime) override;
+  void update(const float &delta_time) override;
 
   /* 渲染 */
   void render() override;

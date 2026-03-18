@@ -40,11 +40,11 @@ class AssetStore {
   void loadImage(const std::string &file_path);
 
   /*
-   * 载入声音：
-   * - 音效（短音频）：isSound=true，提前解压到内存，播放时无延迟
-   * - 背景音乐（长音频）：isSound=false，流式解码，节省内存
+   * 载入声音资源
+   * @param file_path 文件路径，资源的唯一标识，后续用这个 key 来获取
+   * @param predecode true=预解码（音效），false=流式（背景音乐）
    */
-  void loadSound(const std::string &file_path, bool isSound);
+  void loadSound(const std::string &file_path, bool predecode);
 
   /* 载入字体 */
   void loadFont(const std::string &file_path, const float &font_size);
@@ -54,8 +54,11 @@ class AssetStore {
   /* 获取图片资源 */
   SDL_Texture *getImage(const std::string &file_path);
 
-  /* 获取声音资源 */
-  MIX_Audio *getSound(const std::string &file_path, bool isSound);
+  /*
+   * 获取声音资源（必须先 loadSound，否则返回 nullptr）
+   * @param file_path 与 loadSound 时传入的 file_path 一致
+   */
+  MIX_Audio *getSound(const std::string &file_path);
 
   /* 获取字体资源 */
   TTF_Font *getFont(const std::string &file_path, const float &font_size);

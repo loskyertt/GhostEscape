@@ -18,7 +18,7 @@ class ObjectWorld : public ObjectScreen {
 
  public:
   /* 同步更新物体的坐标 */
-  void update(const float &deltaTime) override;
+  void update(const float &delta_time) override;
 
   // getters
  public:

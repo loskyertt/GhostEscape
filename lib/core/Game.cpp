@@ -9,7 +9,9 @@
 #include "core/Game.h"
 #include "core/AssetStore.h"
 #include "SceneMain.h"
+#include "affiliate/Sprite.h"
 
+#include <cstddef>
 #include <glm/fwd.hpp>
 
 #include <SDL3/SDL.h>
@@ -20,6 +22,7 @@
 #include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_stdinc.h>
+#include <SDL3/SDL_surface.h>
 #include <SDL3/SDL_timer.h>
 #include <SDL3/SDL_video.h>
 #include <SDL3_mixer/SDL_mixer.h>
@@ -120,9 +123,9 @@ void Game::handleEvents() {
   }
 }
 
-/* 逻辑更新 */
-void Game::update(const float &deltaTime) {
-  m_current_scene->update(deltaTime);
+/* 更新游戏场景 */
+void Game::update(const float &delta_time) {
+  m_current_scene->update(delta_time);
 }
 
 /* 渲染游戏 */
@@ -153,6 +156,11 @@ void Game::clean() {
   }
   if (m_window) {
     SDL_DestroyWindow(m_window);
+  }
+
+  // 关闭设备（销毁 Mixer）
+  if (m_mixer) {
+    MIX_DestroyMixer(m_mixer);
   }
 
   // 退出 MIX
@@ -208,4 +216,23 @@ void Game::drawBoundary(
 
   // 还原颜色
   SDL_SetRenderDrawColorFloat(m_renderer, 0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+/* 渲染材质 */
+void Game::renderTexture(const Texture &texture, const glm::vec2 &position, const glm::vec2 &size) {
+  SDL_FRect dst_rect = {
+      position.x,
+      position.y,
+      size.x,
+      size.y,
+  };
+
+  SDL_RenderTextureRotated(
+      m_renderer,
+      texture.texture,
+      &texture.src_rect,
+      &dst_rect,
+      static_cast<double>(texture.angle),
+      NULL,
+      texture.is_flip ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }

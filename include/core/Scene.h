@@ -12,6 +12,7 @@
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 
+#include <memory>
 #include <vector>
 
 class Scene : public Object {
@@ -19,8 +20,8 @@ class Scene : public Object {
   glm::vec2 m_world_size = glm::vec2(0);       // 世界大小
   glm::vec2 m_camera_position = glm::vec2(0);  // 相机位置
 
-  std::vector<ObjectWorld *> m_children_world;    // 地图上的元素、角色
-  std::vector<ObjectScreen *> m_children_screen;  // 固定在屏幕上的元素
+  std::vector<std::unique_ptr<ObjectWorld>> m_children_world;    // 地图上的元素、角色
+  std::vector<std::unique_ptr<ObjectScreen>> m_children_screen;  // 固定在屏幕上的元素
 
  public:
   Scene();
@@ -34,7 +35,7 @@ class Scene : public Object {
   void handleEvents(SDL_Event &event) override;
 
   /* 更新 */
-  void update(const float &deltaTime) override;
+  void update(const float &delta_time) override;
 
   /* 渲染 */
   void render() override;
@@ -55,24 +56,16 @@ class Scene : public Object {
   // using Object::addChild;
 
   /* 添加 ObjectScreen */
-  void addChild(ObjectScreen *child) { m_children_screen.push_back(child); }
+  void addObjectScreen(std::unique_ptr<ObjectScreen> child);
 
   /* 添加 ObjectWorld */
-  void addChild(ObjectWorld *child) { m_children_world.push_back(child); }
+  void addObjectWorld(std::unique_ptr<ObjectWorld> child);
 
   /* 移除 ObjectScreen */
-  void removeObject(ObjectScreen *child) {
-    m_children_screen.erase(
-        std::remove(m_children_screen.begin(), m_children_screen.end(), child),
-        m_children_screen.end());
-  }
+  void removeObjectScreen(ObjectScreen *child);
 
   /* 移除 ObjectWorld */
-  void removeObject(ObjectWorld *child) {
-    m_children_world.erase(
-        std::remove(m_children_world.begin(), m_children_world.end(), child),
-        m_children_world.end());
-  }
+  void removeObjectWorld(ObjectWorld *child);
 
   // getters
  public:

@@ -7,11 +7,13 @@
  */
 
 #include "Player.h"
+#include "affiliate/SpriteAnim.h"
 #include "core/Actor.h"
 #include "core/Scene.h"
 
-#include "glm/common.hpp"
-#include "glm/fwd.hpp"
+#include <glm/geometric.hpp>
+#include <glm/common.hpp>
+#include <glm/fwd.hpp>
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_keyboard.h>
@@ -24,6 +26,11 @@ Player::~Player() = default;
 void Player::init() {
   Actor::init();
   m_max_speed = 1000.0f;  // 设置玩家速度
+
+  // === 测试 ===
+  sprite_idle = SpriteAnim::addSpriteAnimToObjects(this, "assets/sprite/ghost-idle.png", 2.0f);
+  sprite_move = SpriteAnim::addSpriteAnimToObjects(this, "assets/sprite/ghost-move.png", 2.0f);
+  sprite_move->setActive(false);
 }
 
 /* 事件处理 */
@@ -32,12 +39,13 @@ void Player::handleEvents(SDL_Event &event) {
 }
 
 /* 更新 */
-void Player::update(const float &deltaTime) {
-  Actor::update(deltaTime);
+void Player::update(const float &delta_time) {
+  Actor::update(delta_time);
 
   m_velocity *= 0.9f;  // 先衰减当前速度
   keyboardControl();   // 然后根据按键设置速度
-  move(deltaTime);     // 最后应用速度移动
+  checkState();
+  move(delta_time);  // 最后应用速度移动
   syncCamera();
 }
 
@@ -45,7 +53,7 @@ void Player::update(const float &deltaTime) {
 void Player::render() {
   Actor::render();
 
-  m_game.drawBoundary(m_render_postion, m_render_postion + glm::vec2(20.0f), 5.0f, {1.0f, 0.0, 0.0, 1.0f});
+  // m_game.drawBoundary(m_render_postion, m_render_postion + glm::vec2(20.0f), 5.0f, {1.0f, 0.0, 0.0, 1.0f});
 }
 
 /* 清理 */
@@ -73,11 +81,11 @@ void Player::keyboardControl() {
 }
 
 /* 玩家位置移动 */
-void Player::move(const float &deltaTime) {
-  setPosition(m_position += m_velocity * deltaTime);
+void Player::move(const float &delta_time) {
+  setPosition(m_position += m_velocity * delta_time);
   // SDL_Log(
-  //     "deltaTime: %f, position: (%f, %f), velocity: (%f, %f)",
-  //     deltaTime,
+  //     "delta_time: %f, position: (%f, %f), velocity: (%f, %f)",
+  //     delta_time,
   //     m_position.x,
   //     m_position.y,
   //     m_velocity.x,
@@ -96,4 +104,36 @@ void Player::move(const float &deltaTime) {
 /* 相机跟随玩家 */
 void Player::syncCamera() {
   m_game.getCurrentScene()->setCameraPosition(m_position - m_game.getScreenSize() / 2.0f);
+}
+
+/* 判断当前物体状态 */
+void Player::checkState() {
+  if (m_velocity.x < 0) {
+    sprite_move->setFlip(true);
+    sprite_idle->setFlip(true);
+  } else {
+    sprite_move->setFlip(false);
+    sprite_idle->setFlip(false);
+  }
+
+  bool is_moving_again = glm::length(m_velocity) > 0.1f;
+  if (is_moving_again != m_is_moving) {
+    m_is_moving = is_moving_again;
+    copyState(m_is_moving);
+  }
+}
+
+/* 拷贝物体运动状态，让运动状态切换更丝滑 */
+void Player::copyState(bool is_moving) {
+  if (is_moving) {
+    sprite_idle->setActive(false);
+    sprite_move->setActive(true);
+    sprite_move->setCurrentFrame(sprite_idle->getCurrentFrame());
+    sprite_move->setFrameTimer(sprite_idle->getFrameTimer());
+  } else {
+    sprite_idle->setActive(true);
+    sprite_move->setActive(false);
+    sprite_idle->setCurrentFrame(sprite_move->getCurrentFrame());
+    sprite_idle->setFrameTimer(sprite_move->getFrameTimer());
+  }
 }

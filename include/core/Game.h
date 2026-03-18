@@ -11,6 +11,7 @@
 #include <glm/glm.hpp>
 #include <glm/fwd.hpp>
 
+#include <SDL3/SDL_events.h>
 #include <SDL3/SDL_pixels.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_stdinc.h>
@@ -22,6 +23,8 @@
 class Scene;
 
 class AssetStore;
+
+struct Texture;
 
 class Game {
  private:
@@ -44,8 +47,8 @@ class Game {
   SDL_Renderer *m_renderer = nullptr;  // 渲染器
   MIX_Mixer *m_mixer = nullptr;        // 混音器
 
-  Scene *m_current_scene;     // 资源库
-  AssetStore *m_asset_store;  // 当前场景
+  Scene *m_current_scene;     // 当前场景
+  AssetStore *m_asset_store;  // 资源库
 
  private:
   const Uint64 m_FPS = 60;    // 游戏帧率
@@ -63,8 +66,8 @@ class Game {
   /* 事件处理 */
   void handleEvents();
 
-  /* 逻辑更新 */
-  void update(const float &deltaTime);
+  /* 更新游戏场景 */
+  void update(const float &delta_time);
 
   /* 渲染游戏 */
   void render();
@@ -80,6 +83,9 @@ class Game {
   /* 绘制边框 */
   void
   drawBoundary(const glm::vec2 &top_left, const glm::vec2 &bottom_right, float boundary_width, const SDL_FColor &color);
+
+  /* 渲染材质 */
+  void renderTexture(const Texture &texture, const glm::vec2 &position, const glm::vec2 &size);
 
   // gettters
  public:

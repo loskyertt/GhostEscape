@@ -11,6 +11,9 @@
 
 #include <glm/fwd.hpp>
 
+#include <memory>
+#include <utility>
+
 SceneMain::SceneMain() = default;
 SceneMain::~SceneMain() = default;
 
@@ -20,10 +23,11 @@ void SceneMain::init() {
   m_camera_position = m_world_size / 2.0f - m_game.getScreenSize() / 2.0f;
 
   // 玩家初始化
-  m_player = new Player();
-  m_player->init();
-  m_player->setPosition(m_world_size / 2.0f);
-  addChild(m_player); // Player -> Actor -> ObjectWorld
+  auto player = std::make_unique<Player>();
+  player->init();
+  player->setPosition(m_world_size / 2.0f);
+  m_player = player.get();            // 先保存原始指针负责日常访问，Scene 存 unique_ptr 负责生命周期
+  addObjectWorld(std::move(player));  // Player -> Actor -> ObjectWorld
 }
 
 /* 事件处理 */
@@ -32,15 +36,15 @@ void SceneMain::handleEvents(SDL_Event &event) {
 }
 
 /* 更新 */
-void SceneMain::update(const float &deltaTime) {
-  Scene::update(deltaTime);
-  // m_camera_position += glm::vec2(20.0f, 20.0f) * deltaTime;
+void SceneMain::update(const float &delta_time) {
+  Scene::update(delta_time);
+  // m_camera_position += glm::vec2(20.0f, 20.0f) * delta_time;
 }
 
 /* 渲染 */
 void SceneMain::render() {
-  Scene::render();
   renderBackground();
+  Scene::render();
 }
 
 /* 清理 */

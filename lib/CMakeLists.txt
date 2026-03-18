@@ -9,9 +9,13 @@ add_library(gamedll SHARED
   core/Game.cpp
   core/Object.cpp
   core/ObjectWorld.cpp
+  core/ObjectAffiliate.cpp
   core/Scene.cpp
+  affiliate/Sprite.cpp
+  affiliate/SpriteAnim.cpp
   SceneMain.cpp
   Player.cpp
+  Enemy.cpp
 )
 
 target_include_directories(gamedll PUBLIC ${PROJECT_SOURCE_DIR}/include)

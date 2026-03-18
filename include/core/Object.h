@@ -10,7 +10,7 @@
 
 #include "Game.h"
 
-#include <algorithm>
+#include <memory>
 #include <vector>
 
 /*
@@ -22,10 +22,13 @@
 class Object {
  protected:
   Game &m_game = Game::getInstance();
-  std::vector<Object *> m_children;  // 无实体，纯功能
+  std::vector<std::unique_ptr<Object>> m_children;  // 无实体，纯功能
+
+  bool m_is_activive = true;
 
  public:
   Object();
+
   virtual ~Object();
 
   /* 初始化 */
@@ -35,7 +38,7 @@ class Object {
   virtual void handleEvents(SDL_Event &event);
 
   /* 更新 */
-  virtual void update(const float &deltaTime);
+  virtual void update(const float &delta_time);
 
   /* 渲染 */
   virtual void render();
@@ -45,10 +48,16 @@ class Object {
 
  public:
   /* 添加 Object */
-  void addChild(Object *child) { m_children.push_back(child); }
+  void addObject(std::unique_ptr<Object> child);
 
   /* 移除 Object */
-  void removeObject(Object *child) {
-    m_children.erase(std::remove(m_children.begin(), m_children.end(), child), m_children.end());
-  }
+  void removeObject(Object *child);
+
+  // getters
+ public:
+  bool getActiveState() { return m_is_activive; }
+
+  // setters
+ public:
+  void setActive(bool is_active) { m_is_activive = is_active; }
 };
