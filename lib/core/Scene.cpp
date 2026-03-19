@@ -7,6 +7,7 @@
  */
 
 #include "core/Scene.h"
+#include <SDL3/SDL_log.h>
 
 #include <glm/fwd.hpp>
 
@@ -35,14 +36,31 @@ void Scene::handleEvents(SDL_Event &event) {
 /* 更新 */
 void Scene::update(const float &delta_time) {
   Object::update(delta_time);
-  for (auto &iter : m_children_world) {
-    if (m_is_activive) {
-      iter->update(delta_time);
+
+  for (auto it = m_children_world.begin(); it != m_children_world.end();) {
+    auto &child = *it;  // 使用引用来避免复制 unique_ptr
+    if (child->getNeedRmove()) {
+      child->clean();  // 一定要在 erase 之前调用 clean()，
+      it = m_children_world.erase(it);
+      SDL_Log("world child removed");
+    } else {
+      if (child->getActiveState()) {
+        child->update(delta_time);
+      }
+      ++it;
     }
   }
-  for (auto &iter : m_children_screen) {
-    if (m_is_activive) {
-      iter->update(delta_time);
+
+  for (auto it = m_children_screen.begin(); it != m_children_screen.end();) {
+    auto &child = *it;  // 使用引用来避免复制 unique_ptr
+    if (child->getNeedRmove()) {
+      child->clean();  // 一定要在 erase 之前调用 clean()，
+      it = m_children_screen.erase(it);
+    } else {
+      if (child->getActiveState()) {
+        child->update(delta_time);
+      }
+      ++it;
     }
   }
 }

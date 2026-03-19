@@ -7,12 +7,96 @@
  */
 
 #include "Enemy.h"
+#include "affiliate/SpriteAnim.h"
+#include "core/Actor.h"
+#include "SceneMain.h"
 
-#include "glm/geometric.hpp"
+#include <glm/geometric.hpp>
+
+#include <SDL3/SDL_log.h>
+
+void Enemy::update(const float &delta_time) {
+  Actor::update(delta_time);
+
+  aimTargetPlayer(m_target_player);
+  move(delta_time);
+
+  timer += delta_time;
+  if (timer > 2.0f && timer < 4.0f) {
+    // SDL_Log("状态改变为 HURT");
+    changeState(State::HURT);
+  } else if (timer > 4.0f) {
+    changeState(State::DEAD);
+    // SDL_Log("状态改变为 DEAD");
+  }
+
+  remove();
+
+  m_target_player->getPosition(); // 测试
+}
+
+void Enemy::init() {
+  m_anim_normal = SpriteAnim::addSpriteAnimToObjects(this, "assets/sprite/ghost-Sheet.png", 2.0f);
+  m_anim_hurt = SpriteAnim::addSpriteAnimToObjects(this, "assets/sprite/ghostHurt-Sheet.png", 2.0f);
+  m_anim_die = SpriteAnim::addSpriteAnimToObjects(this, "assets/sprite/ghostDead-Sheet.png", 2.0f);
+  m_anim_hurt->setActive(false);
+  m_anim_die->setActive(false);
+  m_anim_die->setIsLoop(false);
+
+  m_current_anim = m_anim_normal;
+}
 
 /* 向玩家移动 */
 void Enemy::aimTargetPlayer(Player *target_player) {
+  if (!target_player) {
+    return;
+  }
+
   auto direction = target_player->getPosition() - this->getPosition();
   direction = glm::normalize(direction);
   m_velocity = direction * m_max_speed;
+}
+
+/* 检查当前状态 */
+void Enemy::checkState() {}
+
+/* 切换当前状态 */
+void Enemy::changeState(State new_state) {
+  // SDL_Log(
+  //     "changeState 被调用: new_state=%d, m_current_state=%d",
+  //     static_cast<int>(new_state),
+  //     static_cast<int>(m_current_state));
+
+  if (new_state == m_current_state) {
+    return;
+  }
+
+  m_current_anim->setActive(false);
+
+  switch (new_state) {
+    case State::NORMAL:
+      m_current_anim = m_anim_normal;
+      m_current_anim->setActive(true);
+      break;
+    case State::HURT:
+      m_current_anim = m_anim_hurt;
+      m_current_anim->setActive(true);
+      break;
+    case State::DEAD:
+      m_current_anim = m_anim_die;
+      m_current_anim->setActive(true);
+      break;
+  }
+  m_current_state = new_state;
+}
+
+/* 删除死亡的 Enemy */
+void Enemy::remove() {
+  SDL_Log("调用 Enemy::remove()");
+
+  if (m_anim_die->getIsFinished()) {
+    m_need_remove = true;
+    // m_game.getCurrentScene()->removeObjectWorld(this);
+    // SDL_Log("Enemy removed");
+  }
 }

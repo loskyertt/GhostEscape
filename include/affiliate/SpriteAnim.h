@@ -20,6 +20,9 @@ class SpriteAnim : public Sprite {
   float m_frame_interval = 0.1f;  // 一帧占的时间，即 1s/10帧=0.1s/帧
   float m_frame_timer = 0.0f;     // 累计计时器：记录"距离上一次切换帧，已经过去了多少时间"
 
+ private:
+  bool m_is_loop = true;  // 是否循环播放
+
  public:
   SpriteAnim();
 
@@ -46,6 +49,8 @@ class SpriteAnim : public Sprite {
 
   float getFrameTimer() { return m_frame_timer; }
 
+  bool getIsLoop() { return m_is_loop; }
+
   // setters
  public:
   void setCurrentFrame(int current_frame) { m_current_frame = current_frame; }
@@ -55,4 +60,6 @@ class SpriteAnim : public Sprite {
   void setFPS(int fps) { m_fps = fps; }
 
   void setFrameTimer(float frame_timer) { m_frame_timer = frame_timer; }
+
+  void setIsLoop(bool is_loop) { m_is_loop = is_loop; }
 };

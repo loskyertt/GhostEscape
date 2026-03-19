@@ -30,16 +30,12 @@ Sprite::~Sprite() = default;
 
 /* 渲染 */
 void Sprite::render() {
-  if (!m_texture.texture) {
-    return;
-  }
-
-  if (!m_parent) {
+  if (!m_texture.texture || !m_parent || m_is_finished) {
     return;
   }
 
   auto pos = m_parent->getRenderPosition() + m_offset;
-  m_game.getInstance().renderTexture(m_texture, pos, m_size);
+  m_game.renderTexture(m_texture, pos, m_size);
 }
 
 /* 创建静态精灵 */

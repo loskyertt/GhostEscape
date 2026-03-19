@@ -25,7 +25,7 @@ Player::~Player() = default;
 /* 初始化 */
 void Player::init() {
   Actor::init();
-  m_max_speed = 1000.0f;  // 设置玩家速度
+  m_max_speed = 500.0f;  // 设置玩家速度
 
   // === 测试 ===
   sprite_idle = SpriteAnim::addSpriteAnimToObjects(this, "assets/sprite/ghost-idle.png", 2.0f);
@@ -80,27 +80,6 @@ void Player::keyboardControl() {
   }
 }
 
-/* 玩家位置移动 */
-void Player::move(const float &delta_time) {
-  setPosition(m_position += m_velocity * delta_time);
-  // SDL_Log(
-  //     "delta_time: %f, position: (%f, %f), velocity: (%f, %f)",
-  //     delta_time,
-  //     m_position.x,
-  //     m_position.y,
-  //     m_velocity.x,
-  //     m_velocity.y);
-
-  /*
-   * 返回值：value < min -> 返回 min；value > max -> 返回 max；min ≤ value ≤ max -> 返回 value 本身
-   * - m_position.x = clamp(m_position.x, 0, worldSize.x);
-   * - m_position.y = clamp(m_position.y, 0, worldSize.y);
-   * - => 物体的在世界中的坐标范围：x ∈ [0, worldSize.x],  y ∈ [0, worldSize.y]
-   */
-  // 玩家位置限制
-  m_position = glm::clamp(m_position, glm::vec2(0), m_game.getCurrentScene()->getWorldSize());
-}
-
 /* 相机跟随玩家 */
 void Player::syncCamera() {
   m_game.getCurrentScene()->setCameraPosition(m_position - m_game.getScreenSize() / 2.0f);
@@ -119,12 +98,12 @@ void Player::checkState() {
   bool is_moving_again = glm::length(m_velocity) > 0.1f;
   if (is_moving_again != m_is_moving) {
     m_is_moving = is_moving_again;
-    copyState(m_is_moving);
+    changeState(m_is_moving);
   }
 }
 
-/* 拷贝物体运动状态，让运动状态切换更丝滑 */
-void Player::copyState(bool is_moving) {
+/* 改变物体运动状态，让运动状态切换更丝滑 */
+void Player::changeState(bool is_moving) {
   if (is_moving) {
     sprite_idle->setActive(false);
     sprite_move->setActive(true);

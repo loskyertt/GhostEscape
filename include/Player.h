@@ -40,15 +40,12 @@ class Player : public Actor {
   /* 键盘控制逻辑 */
   void keyboardControl();
 
-  /* 玩家位置移动 */
-  void move(const float &delta_time);
-
   /* 相机跟随玩家 */
   void syncCamera();
 
   /* 判断当前物体状态 */
   void checkState();
 
-  /* 拷贝物体运动状态，让运动状态切换更丝滑 */
-  void copyState(bool is_moving);
+  /* 改变物体运动状态，让运动状态切换更丝滑 */
+  void changeState(bool is_moving);
 };

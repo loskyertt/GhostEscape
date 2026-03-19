@@ -28,6 +28,7 @@ struct Texture {
 class Sprite : public ObjectAffiliate {
  protected:
   Texture m_texture;
+  bool m_is_finished = false;  // 是否播放完毕
 
  public:
   Sprite();
@@ -49,6 +50,8 @@ class Sprite : public ObjectAffiliate {
 
   float getAngle() { return m_texture.angle; }
 
+  bool getIsFinished() { return m_is_finished; }
+
   // setters
  public:
   // 设置图片的大小
@@ -59,4 +62,6 @@ class Sprite : public ObjectAffiliate {
   void setFlip(bool is_flip) { m_texture.is_flip = is_flip; }
 
   void setAngle(float angle) { m_texture.angle = angle; }
+
+  void setIsFinished(bool is_finished) { m_is_finished = is_finished; }
 };

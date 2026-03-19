@@ -17,9 +17,15 @@ SpriteAnim::~SpriteAnim() = default;
 
 /* 更新动画 */
 void SpriteAnim::update(const float &delta_time) {
-  m_frame_timer += delta_time;
+  if (m_is_finished) {
+    return;
+  }
 
+  m_frame_timer += delta_time;
   if (m_frame_timer >= m_frame_interval) {
+    if (!m_is_loop) {
+      m_is_finished = true;
+    }
     m_frame_timer -= m_frame_interval;
     m_current_frame = (m_current_frame + 1) % m_total_frames;
   }

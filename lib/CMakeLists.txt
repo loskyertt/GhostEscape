@@ -11,6 +11,7 @@ add_library(gamedll SHARED
   core/ObjectWorld.cpp
   core/ObjectAffiliate.cpp
   core/Scene.cpp
+  core/Actor.cpp
   affiliate/Sprite.cpp
   affiliate/SpriteAnim.cpp
   SceneMain.cpp

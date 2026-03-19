@@ -26,9 +26,16 @@ void Object::handleEvents(SDL_Event &event) {
 
 /* 更新 */
 void Object::update(const float &delta_time) {
-  for (auto &child : m_children) {
-    if (child->getActiveState()) {
-      child->update(delta_time);
+  for (auto it = m_children.begin(); it != m_children.end();) {
+    auto &child = *it;  // 使用引用来避免复制 unique_ptr
+    if (child->getNeedRmove()) {
+      child->clean();  // 一定要在 erase 之前调用 clean()，
+      it = m_children.erase(it);
+    } else {
+      if (child->getActiveState()) {
+        child->update(delta_time);
+      }
+      ++it;
     }
   }
 }

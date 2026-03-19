@@ -10,12 +10,16 @@
 
 #include "ObjectWorld.h"
 
-#include "glm/fwd.hpp"
+#include <glm/fwd.hpp>
 
 class Actor : public ObjectWorld {
  protected:
   glm::vec2 m_velocity = glm::vec2(0);  // 速度
   float m_max_speed = 100.0f;           // 默认最大速度
+
+ public:
+  /* 玩家位置移动 */
+  void move(const float &delta_time);
 
   // getters
  public:

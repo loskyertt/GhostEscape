@@ -25,6 +25,7 @@ class Object {
   std::vector<std::unique_ptr<Object>> m_children;  // 无实体，纯功能
 
   bool m_is_activive = true;
+  bool m_need_remove = false;
 
  public:
   Object();
@@ -57,7 +58,11 @@ class Object {
  public:
   bool getActiveState() { return m_is_activive; }
 
+  bool getNeedRmove() { return m_need_remove; }
+
   // setters
  public:
   void setActive(bool is_active) { m_is_activive = is_active; }
+
+  void setNeedRmove(bool need_remove) { m_need_remove = need_remove; }
 };

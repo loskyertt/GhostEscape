@@ -7,6 +7,7 @@
  */
 
 #include "SceneMain.h"
+#include "Enemy.h"
 #include "Player.h"
 
 #include <glm/fwd.hpp>
@@ -28,6 +29,13 @@ void SceneMain::init() {
   player->setPosition(m_world_size / 2.0f);
   m_player = player.get();            // 先保存原始指针负责日常访问，Scene 存 unique_ptr 负责生命周期
   addObjectWorld(std::move(player));  // Player -> Actor -> ObjectWorld
+
+  // 敌人初始化
+  auto enemy = std::make_unique<Enemy>();
+  enemy->init();
+  enemy->setTargetPlayer(m_player);
+  enemy->setPosition(m_world_size / 2.0f + glm::vec2(200.0f));
+  addObjectWorld(std::move(enemy));
 }
 
 /* 事件处理 */
