@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "Defs.h"
 #include "Object.h"
 #include "core/ObjectScreen.h"
 
@@ -19,7 +20,9 @@ class ObjectAffiliate : public Object {
   glm::vec2 m_offset = glm::vec2(0);  // 物体的偏移量
   glm::vec2 m_size = glm::vec2(0);    // 物体的大小
 
-public:
+  Anchor m_anchor = Anchor::MIDDLE_CENTER;  // 物体的锚点
+
+ public:
   ObjectAffiliate();
   ~ObjectAffiliate() override;
 
@@ -34,14 +37,26 @@ public:
   /* 获取大小 */
   glm::vec2 getSize() { return m_size; }
 
+  /* 获取锚点 */
+  Anchor getAnchor() { return m_anchor; }
+
   // setters
  public:
-  /* 获取父节点 */
+  /* 设置父节点 */
   void setParent(ObjectScreen *screen) { m_parent = screen; }
 
-  /* 获取偏移量 */
+  /* 设置偏移量 */
   void setOffset(glm::vec2 offsset) { m_offset = offsset; }
 
-  /* 获取大小 */
-  void setSize(glm::vec2 size) { m_size = size; }
+  /* 设置大小 */
+  void setSize(const glm::vec2 &size);
+
+  /* 设置锚点 */
+  void setAnchor(Anchor anchor) { m_anchor = anchor; }
+
+  /* 设置缩放 */
+  void setScale(float scale);
+
+  /* 设置物体锚点 */
+  void setOffsetByAnchor(Anchor anchor);
 };

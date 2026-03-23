@@ -23,23 +23,18 @@ void SpriteAnim::update(const float &delta_time) {
 
   m_frame_timer += delta_time;
   if (m_frame_timer >= m_frame_interval) {
-    if (!m_is_loop) {
-      m_is_finished = true;
-    }
     m_frame_timer -= m_frame_interval;
-    m_current_frame = (m_current_frame + 1) % m_total_frames;
+    m_current_frame++;
+    if (!m_is_loop && m_current_frame >= m_total_frames) {
+      m_current_frame = m_total_frames - 1;  // 停在最后一帧
+      m_is_finished = true;
+    } else {
+      m_current_frame = m_current_frame % m_total_frames;
+    }
   }
 
   // 计算材质的 src_rect 的 x 坐标，即从精灵图片的哪处开始裁剪
   m_texture.src_rect.x = m_texture.src_rect.w * static_cast<float>(m_current_frame);
-
-  // if (m_frame_timer >= 1.0f / static_cast<float>(m_fps)) {
-  //   ++m_current_frame;
-  //   if (m_current_frame >= m_total_frames) {
-  //     m_current_frame = 0;
-  //   }
-  //   m_frame_timer = 0;
-  // }
 }
 
 /* 设置材质 */
@@ -53,14 +48,18 @@ void SpriteAnim::setTexture(const Texture &texture) {
 }
 
 /* 创建精灵动画 */
-SpriteAnim *SpriteAnim::addSpriteAnimToObjects(ObjectScreen *parrent, const std::string &file_path, float scale) {
+SpriteAnim *SpriteAnim::addSpriteAnim(ObjectScreen *parrent, const std::string &file_path, float scale, Anchor anchor) {
   auto sprite_anim = std::make_unique<SpriteAnim>();
   sprite_anim->init();
   sprite_anim->setTexture(Texture(file_path));
   sprite_anim->setScale(scale);
   sprite_anim->setParent(parrent);
 
-  SpriteAnim *raw = sprite_anim.get();         // 1.先保存裸指针
-  parrent->addObject(std::move(sprite_anim));  // 2.再转移所有权
-  return raw;                                  // 3.返回裸指针（观察者）
+  SpriteAnim *raw = sprite_anim.get();  // 1.先保存裸指针
+  if (parrent) {
+    // SDL_Log("=== addSpriteAnim 的分界线 ===");
+    parrent->addChild(std::move(sprite_anim));  // 2.再转移所有权
+    // SDL_Log("=== addSpriteAnim 的分界线 ===");
+  }
+  return raw;  // 3.返回裸指针（观察者）
 }

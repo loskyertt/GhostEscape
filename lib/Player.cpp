@@ -7,10 +7,14 @@
  */
 
 #include "Player.h"
+#include "affiliate/Collider.h"
 #include "affiliate/SpriteAnim.h"
 #include "core/Actor.h"
 #include "core/Scene.h"
+#include "raw/States.h"
+#include "world/Effect.h"
 
+#include <algorithm>
 #include <glm/geometric.hpp>
 #include <glm/common.hpp>
 #include <glm/fwd.hpp>
@@ -28,9 +32,14 @@ void Player::init() {
   m_max_speed = 500.0f;  // 设置玩家速度
 
   // === 测试 ===
-  sprite_idle = SpriteAnim::addSpriteAnimToObjects(this, "assets/sprite/ghost-idle.png", 2.0f);
-  sprite_move = SpriteAnim::addSpriteAnimToObjects(this, "assets/sprite/ghost-move.png", 2.0f);
+  sprite_idle = SpriteAnim::addSpriteAnim(this, "assets/sprite/ghost-idle.png", 2.0f);
+  sprite_move = SpriteAnim::addSpriteAnim(this, "assets/sprite/ghost-move.png", 2.0f);
   sprite_move->setActive(false);
+
+  m_collider = Collider::addCollider(this, sprite_idle->getSize() / 2.0f);
+  m_states = States::addStates(this);
+
+  m_effect = Effect::addEffect(nullptr, "assets/effect/1764.png", glm::vec2(0.0f), 2.0f);
 }
 
 /* 事件处理 */
@@ -47,6 +56,7 @@ void Player::update(const float &delta_time) {
   checkState();
   move(delta_time);  // 最后应用速度移动
   syncCamera();
+  checkDeath();
 }
 
 /* 渲染 */
@@ -114,5 +124,18 @@ void Player::changeState(bool is_moving) {
     sprite_move->setActive(false);
     sprite_idle->setCurrentFrame(sprite_move->getCurrentFrame());
     sprite_idle->setFrameTimer(sprite_move->getFrameTimer());
+  }
+}
+
+/* 检查玩家是否死亡 */
+void Player::checkDeath() {
+  // TODO: 实现死亡检查逻辑
+  // 例如：检查生命值、碰撞检测等
+  if (!m_states->getIsAlive()) {
+    // 玩家死亡，可以添加死亡动画或游戏结束逻辑
+    m_effect->setPosition(m_position);
+    m_game.getCurrentScene()->safeAddChild(std::move(m_effect));
+    setActive(false);
+    // setNeedRemove(true);
   }
 }

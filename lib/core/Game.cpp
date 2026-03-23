@@ -35,7 +35,7 @@ Game &Game::getInstance() {
 }
 
 Game::~Game() {
-  clean();
+  SDL_Log("调用 ~Game()：程序退出");
 }
 
 /* 初始化游戏 */
@@ -235,4 +235,17 @@ void Game::renderTexture(const Texture &texture, const glm::vec2 &position, cons
       static_cast<double>(texture.angle),
       NULL,
       texture.is_flip ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
+}
+
+/* 绘制碰撞体（用于调试） */
+void Game::renderColliders(const glm::vec2 &position, const glm::vec2 &size, float alpha) {
+  auto texture = m_asset_store->getImage("assets/UI/circle.png");
+  SDL_FRect rect = {
+      position.x,
+      position.y,
+      size.x,
+      size.y,
+  };
+  SDL_SetTextureAlphaModFloat(texture, alpha);
+  SDL_RenderTexture(m_renderer, texture, NULL, &rect);
 }

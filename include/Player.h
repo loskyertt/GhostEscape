@@ -8,19 +8,29 @@
 
 #pragma once
 
+#include <memory>
 #include "affiliate/SpriteAnim.h"
 #include "core/Actor.h"
+
+class States;
+
+class Effect;
 
 class Player : public Actor {
  private:
   SpriteAnim *sprite_idle = nullptr;
   SpriteAnim *sprite_move = nullptr;
+
   bool m_is_moving = false;
+
+  std::unique_ptr<Effect> m_effect = nullptr;
 
  public:
   Player();
+
   ~Player() override;
 
+ public:
   /* 初始化 */
   void init() override;
 
@@ -48,4 +58,7 @@ class Player : public Actor {
 
   /* 改变物体运动状态，让运动状态切换更丝滑 */
   void changeState(bool is_moving);
+
+  /* 检查玩家是否死亡 */
+  void checkDeath();
 };

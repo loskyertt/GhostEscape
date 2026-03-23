@@ -26,7 +26,7 @@ class AssetStore;
 
 struct Texture;
 
-class Game {
+class Game final {
  private:
   Game() = default;
 
@@ -41,7 +41,7 @@ class Game {
 
  private:
   bool m_is_running = true;                // 游戏是否运行
-  glm::vec2 m_screen_size = glm::vec2(0);  // 屏幕大小
+  glm::vec2 m_screen_size = glm::vec2(0);  // 屏幕大小 (width, height)
 
   SDL_Window *m_window = nullptr;      // 窗口
   SDL_Renderer *m_renderer = nullptr;  // 渲染器
@@ -87,14 +87,18 @@ class Game {
   /* 渲染材质 */
   void renderTexture(const Texture &texture, const glm::vec2 &position, const glm::vec2 &size);
 
+  /* 绘制碰撞体（用于调试） */
+  void renderColliders(const glm::vec2 &position, const glm::vec2 &size, float alpha = 0.5f);
+
   // gettters
  public:
   /* 获取屏幕大小 */
-  glm::vec2 getScreenSize() { return m_screen_size; }
+  glm::vec2 getScreenSize() const { return m_screen_size; }
 
   /* 获取当前场景 */
-  Scene *getCurrentScene() { return m_current_scene; }
+  Scene *getCurrentScene() const { return m_current_scene; }
 
   /* 获取资源 */
-  AssetStore *getAssetStore() { return m_asset_store; }
+  AssetStore *getAssetStore() const { return m_asset_store; }
 };
+//

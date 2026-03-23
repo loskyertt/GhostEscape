@@ -40,7 +40,11 @@ class Sprite : public ObjectAffiliate {
 
  public:
   /* 创建静态精灵 */
-  static Sprite *addSpriteToObjects(ObjectScreen *parrent, const std::string &file_path, float scale = 1.0f);
+  static Sprite *addSpriteToObjects(
+      ObjectScreen *parrent,
+      const std::string &file_path,
+      float scale = 1.0f,
+      Anchor anchor = Anchor::MIDDLE_CENTER);
 
   // getters
  public:
@@ -54,9 +58,6 @@ class Sprite : public ObjectAffiliate {
 
   // setters
  public:
-  // 设置图片的大小
-  void setScale(float scale) { m_size *= scale; }
-
   virtual void setTexture(const Texture &texture);
 
   void setFlip(bool is_flip) { m_texture.is_flip = is_flip; }

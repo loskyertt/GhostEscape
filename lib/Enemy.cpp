@@ -7,9 +7,11 @@
  */
 
 #include "Enemy.h"
+#include "affiliate/Collider.h"
 #include "affiliate/SpriteAnim.h"
 #include "core/Actor.h"
 #include "SceneMain.h"
+#include "raw/States.h"
 
 #include <glm/geometric.hpp>
 
@@ -18,32 +20,41 @@
 void Enemy::update(const float &delta_time) {
   Actor::update(delta_time);
 
+  if (!m_target_player->getActiveState()) {
+    return;
+  }
+
   aimTargetPlayer(m_target_player);
   move(delta_time);
 
-  timer += delta_time;
-  if (timer > 2.0f && timer < 4.0f) {
-    // SDL_Log("状态改变为 HURT");
-    changeState(State::HURT);
-  } else if (timer > 4.0f) {
-    changeState(State::DEAD);
-    // SDL_Log("状态改变为 DEAD");
-  }
+  // === 测试代码 ===
+  // timer += delta_time;
+  // if (timer > 2.0f && timer < 4.0f) {
+  //   // SDL_Log("状态改变为 HURT");
+  //   changeState(State::HURT);
+  // } else if (timer > 4.0f) {
+  //   changeState(State::DEAD);
+  //   // SDL_Log("状态改变为 DEAD");
+  // }
 
-  remove();
+  // remove();
+  // m_target_player->getPosition();  // 测试是否当前对象被销毁引发程序崩溃
 
-  m_target_player->getPosition(); // 测试
+  attack();
 }
 
 void Enemy::init() {
-  m_anim_normal = SpriteAnim::addSpriteAnimToObjects(this, "assets/sprite/ghost-Sheet.png", 2.0f);
-  m_anim_hurt = SpriteAnim::addSpriteAnimToObjects(this, "assets/sprite/ghostHurt-Sheet.png", 2.0f);
-  m_anim_die = SpriteAnim::addSpriteAnimToObjects(this, "assets/sprite/ghostDead-Sheet.png", 2.0f);
+  m_anim_normal = SpriteAnim::addSpriteAnim(this, "assets/sprite/ghost-Sheet.png", 2.0f);
+  m_anim_hurt = SpriteAnim::addSpriteAnim(this, "assets/sprite/ghostHurt-Sheet.png", 2.0f);
+  m_anim_die = SpriteAnim::addSpriteAnim(this, "assets/sprite/ghostDead-Sheet.png", 2.0f);
   m_anim_hurt->setActive(false);
   m_anim_die->setActive(false);
   m_anim_die->setIsLoop(false);
 
   m_current_anim = m_anim_normal;
+
+  m_collider = Collider::addCollider(this, m_current_anim->getSize());
+  m_states = States::addStates(this);
 }
 
 /* 向玩家移动 */
@@ -96,7 +107,21 @@ void Enemy::remove() {
 
   if (m_anim_die->getIsFinished()) {
     m_need_remove = true;
-    // m_game.getCurrentScene()->removeObjectWorld(this);
-    // SDL_Log("Enemy removed");
+  }
+}
+
+/* 攻击玩家 */
+void Enemy::attack() {
+  // SDL_Log("调用 Enemy::attack()");
+  if (!m_collider || !m_target_player || !m_target_player->getCollider()) {
+    return;
+  }
+
+  if (m_collider->isColliding(m_target_player->getCollider())) {
+    // TODO: 实现攻击逻辑
+    // SDL_Log("调用 Enemy::attack()：Enemy 正在攻击 player!");
+    if (m_states && m_target_player->getStates()) {
+      m_target_player->takeDamage(m_states->getDamage());
+    }
   }
 }

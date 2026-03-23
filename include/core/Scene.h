@@ -20,8 +20,8 @@ class Scene : public Object {
   glm::vec2 m_world_size = glm::vec2(0);       // 世界大小
   glm::vec2 m_camera_position = glm::vec2(0);  // 相机位置
 
-  std::vector<std::unique_ptr<ObjectWorld>> m_children_world;    // 地图上的元素、角色
   std::vector<std::unique_ptr<ObjectScreen>> m_children_screen;  // 固定在屏幕上的元素
+  std::vector<std::unique_ptr<ObjectWorld>> m_children_world;    // 地图上的元素、角色
 
  public:
   Scene();
@@ -52,20 +52,14 @@ class Scene : public Object {
   glm::vec2 screenToWorld(const glm::vec2 &screen_position) { return screen_position + m_camera_position; }
 
  public:
-  // 关键：告诉编译器，我也要用基类的 addChild
-  // using Object::addChild;
+  /* 添加 Object */
+  void addChild(std::unique_ptr<Object> child) override;
 
-  /* 添加 ObjectScreen */
-  void addObjectScreen(std::unique_ptr<ObjectScreen> child);
+  /* 移除 Object */
+  void removeChild(Object *child) override;
 
-  /* 添加 ObjectWorld */
-  void addObjectWorld(std::unique_ptr<ObjectWorld> child);
-
-  /* 移除 ObjectScreen */
-  void removeObjectScreen(ObjectScreen *child);
-
-  /* 移除 ObjectWorld */
-  void removeObjectWorld(ObjectWorld *child);
+  /* 安全添加子节点 */
+  // void safeAddChild(std::unique_ptr<Object> child) override;
 
   // getters
  public:

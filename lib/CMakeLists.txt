@@ -8,12 +8,16 @@ add_library(gamedll SHARED
   core/AssetStore.cpp
   core/Game.cpp
   core/Object.cpp
+  core/ObjectScreen.cpp
   core/ObjectWorld.cpp
   core/ObjectAffiliate.cpp
   core/Scene.cpp
   core/Actor.cpp
   affiliate/Sprite.cpp
   affiliate/SpriteAnim.cpp
+  affiliate/Collider.cpp
+  raw/States.cpp
+  world/Effect.cpp
   SceneMain.cpp
   Player.cpp
   Enemy.cpp

@@ -7,9 +7,15 @@
  */
 
 #include "core/Scene.h"
-#include <SDL3/SDL_log.h>
+#include "core/Object.h"
+#include "core/Defs.h"
+#include "core/ObjectScreen.h"
 
 #include <glm/fwd.hpp>
+#include <memory>
+#include <utility>
+
+#include <SDL3/SDL_log.h>
 
 Scene::Scene() = default;
 
@@ -21,6 +27,7 @@ void Scene::init() {}
 /* 事件处理 */
 void Scene::handleEvents(SDL_Event &event) {
   Object::handleEvents(event);
+
   for (auto &iter : m_children_screen) {
     if (m_is_activive) {
       iter->handleEvents(event);
@@ -40,9 +47,11 @@ void Scene::update(const float &delta_time) {
   for (auto it = m_children_world.begin(); it != m_children_world.end();) {
     auto &child = *it;  // 使用引用来避免复制 unique_ptr
     if (child->getNeedRmove()) {
-      child->clean();  // 一定要在 erase 之前调用 clean()，
+      child->clean();
       it = m_children_world.erase(it);
-      SDL_Log("world child removed");
+#ifndef NDEBUG
+      SDL_Log("调用 Scene::update() -> child 从 m_children_world 中移除");
+#endif
     } else {
       if (child->getActiveState()) {
         child->update(delta_time);
@@ -54,7 +63,7 @@ void Scene::update(const float &delta_time) {
   for (auto it = m_children_screen.begin(); it != m_children_screen.end();) {
     auto &child = *it;  // 使用引用来避免复制 unique_ptr
     if (child->getNeedRmove()) {
-      child->clean();  // 一定要在 erase 之前调用 clean()，
+      child->clean();
       it = m_children_screen.erase(it);
     } else {
       if (child->getActiveState()) {
@@ -68,11 +77,13 @@ void Scene::update(const float &delta_time) {
 /* 渲染 */
 void Scene::render() {
   Object::render();
+
   for (auto &iter : m_children_world) {
     if (m_is_activive) {
       iter->render();
     }
   }
+
   for (auto &iter : m_children_screen) {
     if (m_is_activive) {
       iter->render();
@@ -83,10 +94,12 @@ void Scene::render() {
 /* 清理 */
 void Scene::clean() {
   Object::clean();
+
   for (auto &iter : m_children_screen) {
     iter->clean();
   }
   m_children_screen.clear();
+
   for (auto &iter : m_children_world) {
     iter->clean();
   }
@@ -94,40 +107,76 @@ void Scene::clean() {
 }
 
 /* 添加 ObjectScreen */
-void Scene::addObjectScreen(std::unique_ptr<ObjectScreen> child) {
-  m_children_screen.push_back(std::move(child));
-}
-
-/* 添加 ObjectWorld */
-void Scene::addObjectWorld(std::unique_ptr<ObjectWorld> child) {
-  m_children_world.push_back(std::move(child));
+void Scene::addChild(std::unique_ptr<Object> child) {
+  switch (child->getType()) {
+    case ObjectType::NONE: {
+      m_children.push_back(std::move(child));
+      SDL_Log("调用 Scene::addChild() -> m_children.push_back(child)");
+      break;
+    }
+    case ObjectType::OBJECT_SCREEN: {
+      // 对于向下转型（父类 -> 子类），需要显示转换
+      auto screen_child = std::unique_ptr<ObjectScreen>(static_cast<ObjectScreen *>(child.release()));
+      m_children_screen.push_back(std::move(screen_child));
+      SDL_Log("调用 Scene::addChild() -> m_children_screen.push_back(child)");
+      break;
+    }
+    case ObjectType::OBJECT_WORLD: {
+      auto world_child = std::unique_ptr<ObjectWorld>(static_cast<ObjectWorld *>(child.release()));
+      m_children_world.push_back(std::move(world_child));
+      SDL_Log("调用 Scene::addChild() -> m_children_world.push_back(child)");
+      break;
+    }
+  }
 }
 
 /* 移除 ObjectScreen */
-void Scene::removeObjectScreen(ObjectScreen *child) {
-  m_children_screen.erase(
-      std::remove_if(
-          m_children_screen.begin(),
-          m_children_screen.end(),
-          [child](const std::unique_ptr<ObjectScreen> &p) {
-            return p.get() == child;  // 比较原始指针地址
-          }),
-      m_children_screen.end());
-  // erase 时 unique_ptr 析构 → 自动 delete
+void Scene::removeChild(Object *child) {
+  switch (child->getType()) {
+    case ObjectType::NONE: {
+      m_children.erase(
+          std::remove_if(
+              m_children.begin(),
+              m_children.end(),
+              [child](const std::unique_ptr<Object> &p) {
+                return p.get() == child;  // 比较原始指针地址
+              }),
+          m_children.end());
+      SDL_Log("调用 Scene::removeChild() -> child 从 m_children 中移除");
+      break;
+    }
+    case ObjectType::OBJECT_SCREEN: {
+      m_children_screen.erase(
+          std::remove_if(
+              m_children_screen.begin(),
+              m_children_screen.end(),
+              [child](const std::unique_ptr<ObjectScreen> &p) {
+                return p.get() == child;  // 比较原始指针地址
+              }),
+          m_children_screen.end());
+      SDL_Log("调用 Scene::removeChild() -> child 从 m_children_screen 中移除");
+      break;
+    }
+    case ObjectType::OBJECT_WORLD: {
+      m_children_world.erase(
+          std::remove_if(
+              m_children_world.begin(),
+              m_children_world.end(),
+              [child](const std::unique_ptr<ObjectWorld> &p) {
+                return p.get() == child;  // 比较原始指针地址
+              }),
+          m_children_world.end());
+      SDL_Log("调用 Scene::removeChild() -> child 从 m_children_world 中移除");
+      break;
+    }
+  }
 }
 
-/* 移除 ObjectWorld */
-void Scene::removeObjectWorld(ObjectWorld *child) {
-  m_children_world.erase(
-      std::remove_if(
-          m_children_world.begin(),
-          m_children_world.end(),
-          [child](const std::unique_ptr<ObjectWorld> &p) {
-            return p.get() == child;  // 比较原始指针地址
-          }),
-      m_children_world.end());
-  // erase 时 unique_ptr 析构 → 自动 delete
-}
+/* 安全添加子节点 */
+// void Scene::safeAddChild(std::unique_ptr<Object> child) {
+//   auto new_child = std::unique_ptr<Object>(static_cast<Object*>(child.release()));
+//   addChild(std::move(new_child));
+// }
 
 /* 设置相机坐标 */
 void Scene::setCameraPosition(const glm::vec2 &camera_position) {

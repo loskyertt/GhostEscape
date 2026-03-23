@@ -11,12 +11,6 @@
 #include "Player.h"
 #include "affiliate/SpriteAnim.h"
 
-enum class State {
-  NORMAL,
-  HURT,
-  DEAD,
-};
-
 class Enemy : public Actor {
  private:
   Player *m_target_player = nullptr;
@@ -27,9 +21,15 @@ class Enemy : public Actor {
   SpriteAnim *m_anim_die = nullptr;
 
  private:
+  enum class State {
+    NORMAL,
+    HURT,
+    DEAD,
+  };
+
   State m_current_state = State::NORMAL;
 
-  float timer = 0.0f;
+  // float timer = 0.0f;
 
  public:
   void update(const float &delta_time) override;
@@ -49,9 +49,12 @@ class Enemy : public Actor {
   /* 删除死亡的 Enemy */
   void remove();
 
+  /* 攻击玩家 */
+  void attack();
+
   // getters
  public:
-  Player *getTargetPlayer() { return m_target_player; }
+  Player *getTargetPlayer() const { return m_target_player; }
 
   // setters
  public:

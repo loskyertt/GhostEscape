@@ -9,6 +9,7 @@
 #pragma once
 
 #include "affiliate/Sprite.h"
+#include "core/Defs.h"
 
 #include <string>
 
@@ -37,7 +38,11 @@ class SpriteAnim : public Sprite {
 
  public:
   /* 创建精灵动画 */
-  static SpriteAnim *addSpriteAnimToObjects(ObjectScreen *parrent, const std::string &file_path, float scale = 1.0f);
+  static SpriteAnim *addSpriteAnim(
+      ObjectScreen *parrent,
+      const std::string &file_path,
+      float scale = 1.0f,
+      Anchor anchor = Anchor::MIDDLE_CENTER);
 
   // getters
  public:

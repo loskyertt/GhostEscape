@@ -8,6 +8,11 @@
 
 #include "core/ObjectWorld.h"
 #include "SceneMain.h"
+#include "core/Defs.h"
+
+void ObjectWorld::init() {
+  m_type = ObjectType::OBJECT_WORLD;
+}
 
 /* 同步更新物体的坐标 */
 void ObjectWorld::update(const float &delta_time) {

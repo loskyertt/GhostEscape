@@ -34,7 +34,6 @@ class AssetStore {
   /* 释放资源 */
   void clean();
 
-  // 载入资源
  public:
   /* 载入图片 */
   void loadImage(const std::string &file_path);
@@ -49,7 +48,6 @@ class AssetStore {
   /* 载入字体 */
   void loadFont(const std::string &file_path, const float &font_size);
 
-  // getters
  public:
   /* 获取图片资源 */
   SDL_Texture *getImage(const std::string &file_path);

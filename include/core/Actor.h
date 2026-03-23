@@ -12,8 +12,12 @@
 
 #include <glm/fwd.hpp>
 
+class States;
+
 class Actor : public ObjectWorld {
  protected:
+  States *m_states = nullptr;  // 状态
+
   glm::vec2 m_velocity = glm::vec2(0);  // 速度
   float m_max_speed = 100.0f;           // 默认最大速度
 
@@ -21,16 +25,28 @@ class Actor : public ObjectWorld {
   /* 玩家位置移动 */
   void move(const float &delta_time);
 
+  /* 受到伤害 */
+  void takeDamage(float damage);
+
+  /* 物体是否存活 */
+  bool isAlive() const;
+
   // getters
  public:
+  /* 获取状态 */
+  States *getStates() const { return m_states; }
+
   /* 获取速度 */
-  glm::vec2 getVelocity() { return m_velocity; }
+  glm::vec2 getVelocity() const { return m_velocity; }
 
   /* 获取最大速度 */
-  float getMaxSpeed() { return m_max_speed; }
+  float getMaxSpeed() const { return m_max_speed; }
 
   // setters
  public:
+  /* 设置状态 */
+  void setStates(States *states) { m_states = states; }
+
   /* 设置速度 */
   void setVelocity(const glm::vec2 &velocity) { m_velocity = velocity; }
 

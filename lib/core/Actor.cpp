@@ -8,6 +8,7 @@
 
 #include "SceneMain.h"
 #include "core/Actor.h"
+#include "raw/States.h"
 
 /* 玩家位置移动 */
 void Actor::move(const float &delta_time) {
@@ -28,4 +29,18 @@ void Actor::move(const float &delta_time) {
    */
   // 玩家位置限制
   m_position = glm::clamp(m_position, glm::vec2(0), m_game.getCurrentScene()->getWorldSize());
+}
+
+/* 受到伤害 */
+void Actor::takeDamage(float damage) {
+  if (!m_states) {
+    return;
+  }
+
+  m_states->takeDamage(damage);
+}
+
+/* 物体是否存活 */
+bool Actor::isAlive() const {
+  return m_states && m_states->getIsAlive();
 }
