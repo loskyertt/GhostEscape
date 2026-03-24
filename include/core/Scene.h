@@ -12,7 +12,6 @@
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 
-#include <memory>
 #include <vector>
 
 class Scene : public Object {
@@ -20,8 +19,8 @@ class Scene : public Object {
   glm::vec2 m_world_size = glm::vec2(0);       // 世界大小
   glm::vec2 m_camera_position = glm::vec2(0);  // 相机位置
 
-  std::vector<std::unique_ptr<ObjectScreen>> m_children_screen;  // 固定在屏幕上的元素
-  std::vector<std::unique_ptr<ObjectWorld>> m_children_world;    // 地图上的元素、角色
+  std::vector<ObjectScreen *> m_children_screen;  // 固定在屏幕上的元素
+  std::vector<ObjectWorld *> m_children_world;    // 地图上的元素、角色
 
  public:
   Scene();
@@ -43,6 +42,12 @@ class Scene : public Object {
   /* 清理 */
   void clean() override;
 
+  /* 添加 Object */
+  void addChild(Object *child) override;
+
+  /* 移除 Object */
+  void removeChild(Object *child) override;
+
   // 坐标转换
  public:
   /* 世界坐标 -> 渲染坐标 */
@@ -50,16 +55,6 @@ class Scene : public Object {
 
   /* 渲染坐标 -> 世界坐标 */
   glm::vec2 screenToWorld(const glm::vec2 &screen_position) { return screen_position + m_camera_position; }
-
- public:
-  /* 添加 Object */
-  void addChild(std::unique_ptr<Object> child) override;
-
-  /* 移除 Object */
-  void removeChild(Object *child) override;
-
-  /* 安全添加子节点 */
-  // void safeAddChild(std::unique_ptr<Object> child) override;
 
   // getters
  public:

@@ -10,17 +10,18 @@
 
 /* 添加碰撞体到对象 */
 Collider *Collider::addCollider(ObjectScreen *parent, glm::vec2 size, Type type, Anchor anchor) {
-  auto collider = std::make_unique<Collider>();
+  auto collider = new Collider();
   collider->init();
   collider->setParent(parent);
   collider->setSize(size);
   collider->setType(type);
   collider->setOffsetByAnchor(anchor);
 
-  auto raw = collider.get();  // 先保存裸指针
-  parent->addChild(std::move(collider));
+  if (parent) {
+    parent->addChild(std::move(collider));
+  }
 
-  return raw;
+  return collider;
 }
 
 /* 绘制碰撞体的边界框 */

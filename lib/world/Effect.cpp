@@ -22,7 +22,7 @@ void Effect::checkFinish() {
     m_need_remove = true;
     if (m_next_object) {
       // 此时: m_next_object 指向有效对象
-      m_game.getCurrentScene()->safeAddChild(std::move(m_next_object));
+      m_game.getCurrentScene()->safeAddChild(m_next_object);
       /*
        * 此时:
        * - m_next_object 变为 nullptr
@@ -34,32 +34,26 @@ void Effect::checkFinish() {
 }
 
 /* 添加特效到对象世界 */
-std::unique_ptr<Effect> Effect::addEffect(
-    Object *parent,
-    const std::string &file_path,
-    glm::vec2 pos,
-    float scale,
-    std::unique_ptr<ObjectWorld> next_object) {
+Effect *
+Effect::addEffect(Object *parent, const std::string &file_path, glm::vec2 pos, float scale, ObjectWorld *next_object) {
 
 #ifndef NDEBUG
   SDL_Log("调用 Effect::addEffect()");
 #endif
 
-  auto effect = std::make_unique<Effect>();
+  auto effect = new Effect();
   effect->init();
   // 让 SpriteAnim 挂在新创建的 Effect 下
-  effect->m_sprite_anim = SpriteAnim::addSpriteAnim(effect.get(), file_path, scale);
+  effect->m_sprite_anim = SpriteAnim::addSpriteAnim(effect, file_path, scale);
   effect->m_sprite_anim->setIsLoop(false);
   effect->setPosition(pos);
   effect->setNextObject(std::move(next_object));
 
   // Effect 挂在 parent 下
   if (parent) {
-    SDL_Log("=== addEffect 的分界线 ===");
     parent->addChild(std::move(effect));
-    SDL_Log("=== addEffect 的分界线 ===");
     return nullptr;
   }
 
-  return std::move(effect);  // 显式移动
+  return effect;  // 显式移动
 }

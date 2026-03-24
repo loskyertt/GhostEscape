@@ -40,15 +40,17 @@ void Sprite::render() {
 
 /* 创建静态精灵 */
 Sprite *Sprite::addSpriteToObjects(ObjectScreen *parrent, const std::string &file_path, float scale, Anchor anchor) {
-  auto sprite = std::make_unique<Sprite>();
+  auto sprite = new Sprite();
   sprite->init();
   sprite->setTexture(Texture(file_path));
   sprite->setScale(scale);
   sprite->setParent(parrent);
 
-  Sprite *raw = sprite.get();             // 1.先保存裸指针
-  parrent->addChild(std::move(sprite));  // 2.再转移所有权
-  return raw;
+  if (parrent) {
+    parrent->addChild(std::move(sprite));
+  }
+
+  return sprite;
 }
 
 void Sprite::setTexture(const Texture &texture) {

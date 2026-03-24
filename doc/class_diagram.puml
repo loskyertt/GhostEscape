@@ -101,10 +101,10 @@ class Scene {
 }
 
 ' ============================================================================
-' Actor 层次结构
+' Entity 层次结构
 ' ============================================================================
 
-class Actor {
+class Entity {
     -m_states: States*
     -m_velocity: vec2
     -m_max_speed: float
@@ -186,7 +186,7 @@ class Collider {
 ' ============================================================================
 
 class States {
-    -m_parent: Actor*
+    -m_parent: Entity*
     -m_health: float
     -m_max_health: float
     -m_mana: float
@@ -203,7 +203,7 @@ class States {
     +regenMana(delta_time: float)
     +takeDamage(damage: float)
     +addStates(): States* <<static>>
-    +getParent(): Actor*
+    +getParent(): Entity*
     +getHealth(): float
     +getMaxHealth(): float
     +getMana(): float
@@ -344,9 +344,9 @@ ObjectAffiliate <|-- Sprite
 ObjectAffiliate <|-- Collider
 Sprite <|-- SpriteAnim
 ObjectScreen <|-- ObjectWorld
-ObjectWorld <|-- Actor
-Actor <|-- Player
-Actor <|-- Enemy
+ObjectWorld <|-- Entity
+Entity <|-- Player
+Entity <|-- Enemy
 ObjectWorld <|-- Effect
 Scene <|-- SceneMain
 
@@ -361,7 +361,7 @@ Scene o-- ObjectWorld : m_children_world
 Object *-- Object : m_children
 ObjectAffiliate o-- ObjectScreen : m_parent
 ObjectWorld *-- Collider : m_collider
-Actor o-- States : m_states
+Entity o-- States : m_states
 Player o-- SpriteAnim : sprite_idle, sprite_move
 Player o-- SpriteAnim : sprite_move
 Enemy o-- Player : m_target_player
@@ -377,6 +377,6 @@ Sprite o-- Texture : m_texture
 
 SceneMain ..> Player
 SceneMain ..> SpriteAnim
-States ..> Actor
+States ..> Entity
 
 @enduml

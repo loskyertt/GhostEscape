@@ -9,7 +9,7 @@
 #include "Player.h"
 #include "affiliate/Collider.h"
 #include "affiliate/SpriteAnim.h"
-#include "core/Actor.h"
+#include "core/Entity.h"
 #include "core/Scene.h"
 #include "raw/States.h"
 #include "world/Effect.h"
@@ -28,7 +28,7 @@ Player::~Player() = default;
 
 /* 初始化 */
 void Player::init() {
-  Actor::init();
+  Entity::init();
   m_max_speed = 500.0f;  // 设置玩家速度
 
   // === 测试 ===
@@ -44,12 +44,12 @@ void Player::init() {
 
 /* 事件处理 */
 void Player::handleEvents(SDL_Event &event) {
-  Actor::handleEvents(event);
+  Entity::handleEvents(event);
 }
 
 /* 更新 */
 void Player::update(const float &delta_time) {
-  Actor::update(delta_time);
+  Entity::update(delta_time);
 
   m_velocity *= 0.9f;  // 先衰减当前速度
   keyboardControl();   // 然后根据按键设置速度
@@ -61,14 +61,14 @@ void Player::update(const float &delta_time) {
 
 /* 渲染 */
 void Player::render() {
-  Actor::render();
+  Entity::render();
 
   // m_game.drawBoundary(m_render_postion, m_render_postion + glm::vec2(20.0f), 5.0f, {1.0f, 0.0, 0.0, 1.0f});
 }
 
 /* 清理 */
 void Player::clean() {
-  Actor::clean();
+  Entity::clean();
 }
 
 /* 键盘控制逻辑 */

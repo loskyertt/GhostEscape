@@ -7,9 +7,8 @@
  */
 
 #include "raw/States.h"
-#include "core/Actor.h"
+#include "core/Entity.h"
 
-#include <memory>
 #include <utility>
 
 void States::update(const float &delta_time) {
@@ -53,7 +52,7 @@ void States::takeDamage(float damage) {
   }
 #ifndef NDEBUG
   SDL_Log(
-      "调用 Actor::takeDamage(): damage = %f, m_health = %f, isAlive = %d",
+      "调用 Entity::takeDamage(): damage = %f, m_health = %f, isAlive = %d",
       static_cast<double>(damage),
       static_cast<double>(m_health),
       m_is_alive);
@@ -69,8 +68,8 @@ void States::takeDamage(float damage) {
   m_invincibility_timer = 0.0f;
 }
 
-States *States::addStates(Actor *parent, float max_health, float max_mana, float mana_regen, float damage) {
-  auto states = std::make_unique<States>();
+States *States::addStates(Entity *parent, float max_health, float max_mana, float mana_regen, float damage) {
+  auto states = new States();
   states->m_parent = parent;
   states->m_health = max_health;
   states->m_max_health = max_health;
@@ -79,8 +78,9 @@ States *States::addStates(Actor *parent, float max_health, float max_mana, float
   states->m_mana_regen = mana_regen;
   states->m_damage = damage;
 
-  auto raw = states.get();
-  parent->addChild(std::move(states));
+  if (parent) {
+    parent->addChild(std::move(states));
+  }
 
-  return raw;
+  return states;
 }

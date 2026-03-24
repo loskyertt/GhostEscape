@@ -8,22 +8,21 @@
 
 #pragma once
 
-#include <memory>
 #include "affiliate/SpriteAnim.h"
-#include "core/Actor.h"
+#include "core/Entity.h"
 
 class States;
 
 class Effect;
 
-class Player : public Actor {
+class Player : public Entity {
  private:
   SpriteAnim *sprite_idle = nullptr;
   SpriteAnim *sprite_move = nullptr;
 
   bool m_is_moving = false;
 
-  std::unique_ptr<Effect> m_effect = nullptr;
+  Effect *m_effect = nullptr;
 
  public:
   Player();

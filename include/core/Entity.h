@@ -1,5 +1,5 @@
 /*
- * @File    :   include\core\Actor.h
+ * @File    :   include\core\Entity.h
  * @Time    :   2026/03/15 23:30:19
  * @Author  :   loskyertt
  * @Github  :   https://github.com/loskyertt
@@ -14,7 +14,7 @@
 
 class States;
 
-class Actor : public ObjectWorld {
+class Entity : public ObjectWorld {
  protected:
   States *m_states = nullptr;  // 状态
 

@@ -6,10 +6,11 @@
  * @Desc    :   .....
  */
 
-#include <SDL3/SDL_log.h>
 #include <affiliate/SpriteAnim.h>
-#include <utility>
-#include "glm/fwd.hpp"
+
+#include <glm/fwd.hpp>
+
+#include <SDL3/SDL_log.h>
 
 SpriteAnim::SpriteAnim() = default;
 
@@ -49,17 +50,14 @@ void SpriteAnim::setTexture(const Texture &texture) {
 
 /* 创建精灵动画 */
 SpriteAnim *SpriteAnim::addSpriteAnim(ObjectScreen *parrent, const std::string &file_path, float scale, Anchor anchor) {
-  auto sprite_anim = std::make_unique<SpriteAnim>();
+  auto sprite_anim = new SpriteAnim();
   sprite_anim->init();
   sprite_anim->setTexture(Texture(file_path));
   sprite_anim->setScale(scale);
   sprite_anim->setParent(parrent);
 
-  SpriteAnim *raw = sprite_anim.get();  // 1.先保存裸指针
   if (parrent) {
-    // SDL_Log("=== addSpriteAnim 的分界线 ===");
-    parrent->addChild(std::move(sprite_anim));  // 2.再转移所有权
-    // SDL_Log("=== addSpriteAnim 的分界线 ===");
+    parrent->addChild(sprite_anim);
   }
-  return raw;  // 3.返回裸指针（观察者）
+  return sprite_anim;
 }

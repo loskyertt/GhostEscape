@@ -12,7 +12,7 @@ add_library(gamedll SHARED
   core/ObjectWorld.cpp
   core/ObjectAffiliate.cpp
   core/Scene.cpp
-  core/Actor.cpp
+  core/Entity.cpp
   affiliate/Sprite.cpp
   affiliate/SpriteAnim.cpp
   affiliate/Collider.cpp

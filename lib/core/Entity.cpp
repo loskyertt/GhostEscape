@@ -1,5 +1,5 @@
 /*
- * @File    :   lib\core\Actor.cpp
+ * @File    :   lib\core\Entity.cpp
  * @Time    :   2026/03/19 21:12:08
  * @Author  :   loskyertt
  * @Github  :   https://github.com/loskyertt
@@ -7,11 +7,11 @@
  */
 
 #include "SceneMain.h"
-#include "core/Actor.h"
+#include "core/Entity.h"
 #include "raw/States.h"
 
 /* 玩家位置移动 */
-void Actor::move(const float &delta_time) {
+void Entity::move(const float &delta_time) {
   setPosition(m_position += m_velocity * delta_time);
   // SDL_Log(
   //     "delta_time: %f, position: (%f, %f), velocity: (%f, %f)",
@@ -32,7 +32,7 @@ void Actor::move(const float &delta_time) {
 }
 
 /* 受到伤害 */
-void Actor::takeDamage(float damage) {
+void Entity::takeDamage(float damage) {
   if (!m_states) {
     return;
   }
@@ -41,6 +41,6 @@ void Actor::takeDamage(float damage) {
 }
 
 /* 物体是否存活 */
-bool Actor::isAlive() const {
+bool Entity::isAlive() const {
   return m_states && m_states->getIsAlive();
 }

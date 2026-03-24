@@ -13,9 +13,6 @@
 
 #include <glm/fwd.hpp>
 
-#include <memory>
-#include <utility>
-
 SceneMain::SceneMain() = default;
 SceneMain::~SceneMain() = default;
 
@@ -25,26 +22,21 @@ void SceneMain::init() {
   m_camera_position = m_world_size / 2.0f - m_game.getScreenSize() / 2.0f;
 
   // 玩家初始化
-  auto player = std::make_unique<Player>();
-  player->init();
-  player->setPosition(m_world_size / 2.0f);
-  m_player = player.get();            // 先保存原始指针负责日常访问，Scene 存 unique_ptr 负责生命周期
-  addChild(std::move(player));  // Player -> Actor -> ObjectWorld
+  m_player = new Player();
+  m_player->init();
+  m_player->setPosition(m_world_size / 2.0f);
+  addChild(m_player);  // Player -> Entity -> ObjectWorld
 
   // 敌人初始化
-  auto enemy = std::make_unique<Enemy>();
+  auto enemy = new Enemy();
   enemy->init();
   enemy->setTargetPlayer(m_player);
   enemy->setPosition(m_world_size / 2.0f + glm::vec2(200.0f));
   // addObjectWorld(std::move(enemy));
 
   // 特效初始化
-  auto effect = Effect::addEffect(
-      this,
-      "assets/effect/184_3.png",
-      m_world_size / 2.0f + glm::vec2(200.0f),
-      2.0f,
-      std::move(enemy));
+  auto effect =
+      Effect::addEffect(this, "assets/effect/184_3.png", m_world_size / 2.0f + glm::vec2(200.0f), 2.0f, enemy);
 }
 
 /* 事件处理 */

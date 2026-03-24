@@ -9,7 +9,7 @@
 #include "Enemy.h"
 #include "affiliate/Collider.h"
 #include "affiliate/SpriteAnim.h"
-#include "core/Actor.h"
+#include "core/Entity.h"
 #include "SceneMain.h"
 #include "raw/States.h"
 
@@ -18,7 +18,7 @@
 #include <SDL3/SDL_log.h>
 
 void Enemy::update(const float &delta_time) {
-  Actor::update(delta_time);
+  Entity::update(delta_time);
 
   if (!m_target_player->getActiveState()) {
     return;

@@ -11,7 +11,6 @@
 #include "Game.h"
 #include "Defs.h"
 
-#include <memory>
 #include <vector>
 
 /*
@@ -23,8 +22,8 @@
 class Object {
  protected:
   Game &m_game = Game::getInstance();
-  std::vector<std::unique_ptr<Object>> m_children;       // 无实体，纯功能
-  std::vector<std::unique_ptr<Object>> m_children_back;  // 用于存储待添加的子对象
+  std::vector<Object *> m_children;       // 无实体，纯功能
+  std::vector<Object *> m_children_back;  // 用于存储待添加的子对象
 
   bool m_is_activive = true;   // 物体是否处于活动状态
   bool m_need_remove = false;  // 是否需要移除该物体
@@ -51,15 +50,15 @@ class Object {
   /* 清理 */
   virtual void clean();
 
- public:
   /* 添加 Object */
-  virtual void addChild(std::unique_ptr<Object> child);
+  virtual void addChild(Object *child);
 
   /* 移除 Object */
   virtual void removeChild(Object *child);
 
+ public:
   /* 安全添加子节点 */
-  void safeAddChild(std::unique_ptr<Object> child);
+  void safeAddChild(Object *child);
 
   // getters
  public:

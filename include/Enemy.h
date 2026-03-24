@@ -11,7 +11,7 @@
 #include "Player.h"
 #include "affiliate/SpriteAnim.h"
 
-class Enemy : public Actor {
+class Enemy : public Entity {
  private:
   Player *m_target_player = nullptr;
   SpriteAnim *m_current_anim = nullptr;

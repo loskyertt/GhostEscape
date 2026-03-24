@@ -10,11 +10,11 @@
 
 #include "core/Object.h"
 
-class Actor;
+class Entity;
 
 class States : public Object {
  protected:
-  Actor *m_parent = nullptr;  // 父节点
+  Entity *m_parent = nullptr;  // 父节点
 
   float m_health = 100.0f;      // 当前生命值
   float m_max_health = 100.0f;  // 最大生命值
@@ -46,7 +46,7 @@ class States : public Object {
 
  public:
   static States *addStates(
-      Actor *parent,
+      Entity *parent,
       float max_health = 100.0f,
       float max_mana = 100.0f,
       float mana_regen = 10.0f,
@@ -54,7 +54,7 @@ class States : public Object {
 
   // getters
  public:
-  Actor *getParent() const { return m_parent; }
+  Entity *getParent() const { return m_parent; }
 
   float getHealth() const { return m_health; }
 
@@ -76,7 +76,7 @@ class States : public Object {
 
   // setters
  public:
-  void setParent(Actor *parent) { m_parent = parent; }
+  void setParent(Entity *parent) { m_parent = parent; }
 
   void setHealth(float health) { m_health = health; }
 

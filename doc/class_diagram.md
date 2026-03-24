@@ -79,7 +79,7 @@ classDiagram
             BOTTOM_RIGHT
         }
 
-        class Actor {
+        class Entity {
             #States* m_states
             #vec2 m_velocity
             #float m_max_speed
@@ -177,7 +177,7 @@ classDiagram
 
     namespace raw {
         class States {
-            -Actor* m_parent
+            -Entity* m_parent
             -float m_health
             -float m_max_health
             -float m_mana
@@ -270,9 +270,9 @@ classDiagram
     ObjectAffiliate <|-- Collider : inherits
     Sprite <|-- SpriteAnim : inherits
     ObjectScreen <|-- ObjectWorld : inherits
-    ObjectWorld <|-- Actor : inherits
-    Actor <|-- Player : inherits
-    Actor <|-- Enemy : inherits
+    ObjectWorld <|-- Entity : inherits
+    Entity <|-- Player : inherits
+    Entity <|-- Enemy : inherits
     ObjectWorld <|-- Effect : inherits
     Scene <|-- SceneMain : inherits
 
@@ -287,7 +287,7 @@ classDiagram
     Object *-- Object : m_children
     ObjectAffiliate o-- ObjectScreen : m_parent
     ObjectWorld *-- Collider : m_collider
-    Actor o-- States : m_states
+    Entity o-- States : m_states
     Player o-- SpriteAnim : sprites
     Enemy o-- Player : m_target_player
     Enemy o-- SpriteAnim : animations
@@ -311,7 +311,7 @@ Game (Singleton)
     └── Scene
         ├── ObjectScreen (屏幕空间对象)
         │   └── ObjectWorld (世界空间对象)
-        │       ├── Actor
+        │       ├── Entity
         │       │   ├── Player
         │       │   └── Enemy
         │       └── Effect
@@ -328,7 +328,7 @@ Game (Singleton)
 | **基础层** | `Object` | 所有游戏对象的基类，提供生命周期管理 |
 | **空间层** | `ObjectScreen` | 屏幕空间对象（固定在屏幕） |
 | | `ObjectWorld` | 世界空间对象（随世界移动） |
-| **实体层** | `Actor` | 游戏角色基类（玩家、敌人） |
+| **实体层** | `Entity` | 游戏角色基类（玩家、敌人） |
 | **组件层** | `ObjectAffiliate` | 可附加到对象的组件 |
 | | `Sprite` | 精灵图渲染组件 |
 | | `SpriteAnim` | 精灵动画组件 |
@@ -351,7 +351,7 @@ Game.run()
             ├── ObjectScreen.update()
             │   └── Sprite.render() / SpriteAnim.render()
             └── ObjectWorld.update()
-                ├── Actor.update()
+                ├── Entity.update()
                 │   └── States.update()
                 └── Collider.render() (调试)
 ```
