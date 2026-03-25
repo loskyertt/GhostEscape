@@ -8,15 +8,17 @@
 
 #pragma once
 
-#include <string>
 #include "affiliate/SpriteAnim.h"
 #include "core/ObjectWorld.h"
-#include "glm/fwd.hpp"
+
+#include <glm/fwd.hpp>
+
+#include <string>
 
 class Effect : public ObjectWorld {
  protected:
   SpriteAnim *m_sprite_anim = nullptr;
-  ObjectWorld *m_next_object;  // 播放完毕后，添加到场景中
+  ObjectWorld *m_next_object = nullptr;  // 播放完毕后，添加到场景中
 
  public:
   void update(const float &delta_time) override;

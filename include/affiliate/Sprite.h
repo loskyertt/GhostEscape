@@ -40,7 +40,7 @@ class Sprite : public ObjectAffiliate {
 
  public:
   /* 创建静态精灵 */
-  static Sprite *addSpriteToObjects(
+  static Sprite *addSprite(
       ObjectScreen *parrent,
       const std::string &file_path,
       float scale = 1.0f,

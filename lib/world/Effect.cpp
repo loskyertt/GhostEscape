@@ -18,17 +18,17 @@ void Effect::update(const float &delta_time) {
 }
 
 void Effect::checkFinish() {
+  // #ifndef NDEBUG
+  //   SDL_Log(">>> Effect::checkFinish() called");
+  // #endif
+
   if (m_sprite_anim && m_sprite_anim->getIsFinished()) {
     m_need_remove = true;
     if (m_next_object) {
-      // 此时: m_next_object 指向有效对象
-      m_game.getCurrentScene()->safeAddChild(m_next_object); // 添加到 SceneMain::m_children_back 中
-      /*
-       * 此时:
-       * - m_next_object 变为 nullptr
-       * - Scene 中的容器现在拥有该对象的所有权
-       * - 原对象没有被删除，只是所有权转移了
-       */
+      m_game.getCurrentScene()->safeAddChild(m_next_object);  // 添加到 SceneMain::m_children_back 中
+#ifndef NDEBUG
+      SDL_Log("m_next_object 安全添加到了容器中......");
+#endif
     }
   }
 }
@@ -38,12 +38,11 @@ Effect *
 Effect::addEffect(Object *parent, const std::string &file_path, glm::vec2 pos, float scale, ObjectWorld *next_object) {
 
 #ifndef NDEBUG
-  SDL_Log("调用 Effect::addEffect()");
+  SDL_Log(">>> Effect::addEffect() called");
 #endif
 
   auto effect = new Effect();
   effect->init();
-  // 让 SpriteAnim 挂在新创建的 Effect 下
   effect->m_sprite_anim = SpriteAnim::addSpriteAnim(effect, file_path, scale);
   effect->m_sprite_anim->setIsLoop(false);
   effect->setPosition(pos);
@@ -52,6 +51,9 @@ Effect::addEffect(Object *parent, const std::string &file_path, glm::vec2 pos, f
   // Effect 挂在 parent 下
   if (parent) {
     parent->addChild(effect);
+    // #ifndef NDEBUG
+    //     SDL_Log("特效已经添加到了容器中......");
+    // #endif
     return nullptr;
   }
 

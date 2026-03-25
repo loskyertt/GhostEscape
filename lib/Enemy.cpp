@@ -44,6 +44,8 @@ void Enemy::update(const float &delta_time) {
 }
 
 void Enemy::init() {
+  Entity::init();
+
   m_anim_normal = SpriteAnim::addSpriteAnim(this, "assets/sprite/ghost-Sheet.png", 2.0f);
   m_anim_hurt = SpriteAnim::addSpriteAnim(this, "assets/sprite/ghostHurt-Sheet.png", 2.0f);
   m_anim_die = SpriteAnim::addSpriteAnim(this, "assets/sprite/ghostDead-Sheet.png", 2.0f);

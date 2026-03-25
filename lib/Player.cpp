@@ -37,6 +37,8 @@ void Player::init() {
 
   m_collider = Collider::addCollider(this, sprite_idle->getSize() / 2.0f);
   m_states = States::addStates(this);
+
+  // 设置玩家的死亡特效
   m_effect = Effect::addEffect(nullptr, "assets/effect/1764.png", glm::vec2(0.0f), 2.0f);
 }
 
@@ -132,7 +134,6 @@ void Player::checkDeath() {
   if (!m_states->getIsAlive()) {
     // 玩家死亡，可以添加死亡动画或游戏结束逻辑
     m_game.getCurrentScene()->safeAddChild(m_effect);
-    m_effect->setPosition(m_position);
     setActive(false);
   }
 }

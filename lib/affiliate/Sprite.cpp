@@ -39,7 +39,7 @@ void Sprite::render() {
 }
 
 /* 创建静态精灵 */
-Sprite *Sprite::addSpriteToObjects(ObjectScreen *parrent, const std::string &file_path, float scale, Anchor anchor) {
+Sprite *Sprite::addSprite(ObjectScreen *parrent, const std::string &file_path, float scale, Anchor anchor) {
   auto sprite = new Sprite();
   sprite->init();
   sprite->setTexture(Texture(file_path));

@@ -36,8 +36,8 @@ void Object::update(const float &delta_time) {
   m_children_back.clear();
 
   for (auto it = m_children.begin(); it != m_children.end();) {
-    auto &child = *it;  // 使用引用来避免复制 unique_ptr
-    if (child->getNeedRmove()) {
+    auto child = *it;
+    if (child->getNeedRemove()) {
       it = m_children.erase(it);  // 从容器中清除
       child->clean();             // 清理子对象
       delete child;
@@ -87,4 +87,7 @@ void Object::removeChild(Object *child) {
 /* 安全添加子节点 */
 void Object::safeAddChild(Object *child) {
   m_children_back.push_back(child);
+  #ifndef NDEBUG
+  SDL_Log("=> 调用 safeAddChild() -> m_children_back.push_back(child)");
+  #endif
 }

@@ -64,7 +64,7 @@ class Object {
  public:
   bool getActiveState() const { return m_is_activive; }
 
-  bool getNeedRmove() const { return m_need_remove; }
+  bool getNeedRemove() const { return m_need_remove; }
 
   ObjectType getType() const { return m_type; }
 

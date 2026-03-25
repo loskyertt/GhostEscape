@@ -7,6 +7,7 @@
  */
 
 #include "SceneMain.h"
+#include <SDL3/SDL_log.h>
 #include "Enemy.h"
 #include "Player.h"
 #include "world/Effect.h"
@@ -20,23 +21,38 @@ SceneMain::~SceneMain() = default;
 void SceneMain::init() {
   Scene::init();
   m_world_size = m_game.getScreenSize() * 3.0f;
-  // m_camera_position = m_world_size / 2.0f - m_game.getScreenSize() / 2.0f;
+  m_camera_position = m_world_size / 2.0f - m_game.getScreenSize() / 2.0f;
 
-  // 玩家初始化
+// 玩家初始化
+#ifndef NDEBUG
+  SDL_Log(">>> SceneMain::init() called: Player init");
+#endif
   m_player = new Player();  // Player -> Entity -> ObjectWorld
   m_player->init();
   m_player->setPosition(m_world_size / 2.0f);
   addChild(m_player);
+#ifndef NDEBUG
+  SDL_Log("玩家已经添加到了容器中......");
+  SDL_Log("");
+#endif
 
-  // 敌人初始化
+// 敌人初始化
+#ifndef NDEBUG
+  SDL_Log(">>> SceneMain::init() calld: Enemy init");
+#endif
   auto enemy = new Enemy();  // Enemy -> Entity -> ObjectWorld
   enemy->init();
   enemy->setTargetPlayer(m_player);
   enemy->setPosition(m_world_size / 2.0f + glm::vec2(200.0f));
-  addChild(enemy);
+  // addChild(enemy);
+
   // 敌人生成特效初始化
   auto effect =
       Effect::addEffect(this, "assets/effect/184_3.png", m_world_size / 2.0f + glm::vec2(200.0f), 2.0f, enemy);
+#ifndef NDEBUG
+  SDL_Log("敌人生成特效已经添加到了容器中......");
+  SDL_Log("");
+#endif
 }
 
 /* 事件处理 */

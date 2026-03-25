@@ -8,5 +8,6 @@
         "--cross-file-rename", // 启用跨文件重命名功能
         "--enable-config", // 允许从 .clangd 文件读取配置
     ],
-    "cmake.buildTask": true
+    "cmake.buildTask": true,
+    "Codegeex.RepoIndex": true
 }
