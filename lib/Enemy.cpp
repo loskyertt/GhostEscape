@@ -103,7 +103,7 @@ void Enemy::changeState(State new_state) {
 
 /* 删除死亡的 Enemy */
 void Enemy::remove() {
-  SDL_Log("调用 Enemy::remove()");
+  // SDL_Log("调用 Enemy::remove()");
 
   if (m_anim_die->getIsFinished()) {
     m_need_remove = true;

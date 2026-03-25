@@ -12,30 +12,28 @@
 #include "core/ObjectScreen.h"
 #include "core/ObjectWorld.h"
 
-#include <algorithm>
 #include <glm/fwd.hpp>
 
 #include <SDL3/SDL_log.h>
+
+#include <algorithm>
 
 Scene::Scene() = default;
 
 Scene::~Scene() = default;
 
-/* 初始化 */
-void Scene::init() {}
-
 /* 事件处理 */
 void Scene::handleEvents(SDL_Event &event) {
   Object::handleEvents(event);
 
-  for (auto &iter : m_children_screen) {
-    if (m_is_activive) {
-      iter->handleEvents(event);
+  for (auto &child : m_children_screen) {
+    if (child->getActiveState()) {
+      child->handleEvents(event);
     }
   }
-  for (auto &iter : m_children_world) {
-    if (m_is_activive) {
-      iter->handleEvents(event);
+  for (auto &child : m_children_world) {
+    if (child->getActiveState()) {
+      child->handleEvents(event);
     }
   }
 }
@@ -47,8 +45,10 @@ void Scene::update(const float &delta_time) {
   for (auto it = m_children_world.begin(); it != m_children_world.end();) {
     auto &child = *it;  // 使用引用来避免复制 unique_ptr
     if (child->getNeedRmove()) {
-      child->clean();
       it = m_children_world.erase(it);
+      child->clean();
+      delete child;
+      child = nullptr;
 #ifndef NDEBUG
       SDL_Log("调用 Scene::update() -> child 从 m_children_world 中移除");
 #endif
@@ -63,8 +63,10 @@ void Scene::update(const float &delta_time) {
   for (auto it = m_children_screen.begin(); it != m_children_screen.end();) {
     auto &child = *it;  // 使用引用来避免复制 unique_ptr
     if (child->getNeedRmove()) {
-      child->clean();
       it = m_children_screen.erase(it);
+      child->clean();
+      delete child;
+      child = nullptr;
     } else {
       if (child->getActiveState()) {
         child->update(delta_time);
@@ -78,15 +80,15 @@ void Scene::update(const float &delta_time) {
 void Scene::render() {
   Object::render();
 
-  for (auto &iter : m_children_world) {
-    if (m_is_activive) {
-      iter->render();
+  for (auto &child : m_children_world) {
+    if (child->getActiveState()) {
+      child->render();
     }
   }
 
-  for (auto &iter : m_children_screen) {
-    if (m_is_activive) {
-      iter->render();
+  for (auto &child : m_children_screen) {
+    if (child->getActiveState()) {
+      child->render();
     }
   }
 }
@@ -95,13 +97,17 @@ void Scene::render() {
 void Scene::clean() {
   Object::clean();
 
-  for (auto &iter : m_children_screen) {
-    iter->clean();
+  for (auto &child : m_children_screen) {
+    child->clean();
+    delete child;
+    child = nullptr;
   }
   m_children_screen.clear();
 
-  for (auto &iter : m_children_world) {
-    iter->clean();
+  for (auto &child : m_children_world) {
+    child->clean();
+    delete child;
+    child = nullptr;
   }
   m_children_world.clear();
 }
@@ -110,7 +116,7 @@ void Scene::clean() {
 void Scene::addChild(Object *child) {
   switch (child->getType()) {
     case ObjectType::NONE: {
-      m_children.push_back(std::move(child));
+      Object::addChild(child);
       SDL_Log("调用 Scene::addChild() -> m_children.push_back(child)");
       break;
     }

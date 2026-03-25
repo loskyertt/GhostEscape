@@ -7,6 +7,7 @@
  */
 
 #include "core/Object.h"
+
 #include <SDL3/SDL_log.h>
 
 #include <algorithm>
@@ -30,15 +31,17 @@ void Object::handleEvents(SDL_Event &event) {
 /* 更新 */
 void Object::update(const float &delta_time) {
   for (auto &child : m_children_back) {
-    m_children.push_back(std::move(child));
+    addChild(child);
   }
   m_children_back.clear();
 
   for (auto it = m_children.begin(); it != m_children.end();) {
     auto &child = *it;  // 使用引用来避免复制 unique_ptr
     if (child->getNeedRmove()) {
-      child->clean();  // 清理子对象
-      it = m_children.erase(it);
+      it = m_children.erase(it);  // 从容器中清除
+      child->clean();             // 清理子对象
+      delete child;
+      child = nullptr;
     } else {
       if (child->getActiveState()) {
         child->update(delta_time);
@@ -59,11 +62,13 @@ void Object::render() {
 
 /* 清理 */
 void Object::clean() {
-#ifndef NDEBUG
-  SDL_Log("调用 Object::clean()");
-#endif
+// #ifndef NDEBUG
+//   SDL_Log("调用 Object::clean()");
+// #endif
   for (auto &child : m_children) {
     child->clean();
+    delete child;
+    child = nullptr;
   }
 
   m_children.clear();  //触发所有子对象的析构

@@ -18,7 +18,7 @@ Collider *Collider::addCollider(ObjectScreen *parent, glm::vec2 size, Type type,
   collider->setOffsetByAnchor(anchor);
 
   if (parent) {
-    parent->addChild(std::move(collider));
+    parent->addChild(collider);
   }
 
   return collider;

@@ -79,7 +79,7 @@ States *States::addStates(Entity *parent, float max_health, float max_mana, floa
   states->m_damage = damage;
 
   if (parent) {
-    parent->addChild(std::move(states));
+    parent->addChild(states);
   }
 
   return states;

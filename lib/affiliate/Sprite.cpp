@@ -47,7 +47,7 @@ Sprite *Sprite::addSpriteToObjects(ObjectScreen *parrent, const std::string &fil
   sprite->setParent(parrent);
 
   if (parrent) {
-    parrent->addChild(std::move(sprite));
+    parrent->addChild(sprite);
   }
 
   return sprite;

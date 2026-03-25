@@ -22,7 +22,7 @@ void Effect::checkFinish() {
     m_need_remove = true;
     if (m_next_object) {
       // 此时: m_next_object 指向有效对象
-      m_game.getCurrentScene()->safeAddChild(m_next_object);
+      m_game.getCurrentScene()->safeAddChild(m_next_object); // 添加到 SceneMain::m_children_back 中
       /*
        * 此时:
        * - m_next_object 变为 nullptr
@@ -47,13 +47,13 @@ Effect::addEffect(Object *parent, const std::string &file_path, glm::vec2 pos, f
   effect->m_sprite_anim = SpriteAnim::addSpriteAnim(effect, file_path, scale);
   effect->m_sprite_anim->setIsLoop(false);
   effect->setPosition(pos);
-  effect->setNextObject(std::move(next_object));
+  effect->setNextObject(next_object);
 
   // Effect 挂在 parent 下
   if (parent) {
-    parent->addChild(std::move(effect));
+    parent->addChild(effect);
     return nullptr;
   }
 
-  return effect;  // 显式移动
+  return effect;
 }

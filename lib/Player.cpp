@@ -14,7 +14,6 @@
 #include "raw/States.h"
 #include "world/Effect.h"
 
-#include <algorithm>
 #include <glm/geometric.hpp>
 #include <glm/common.hpp>
 #include <glm/fwd.hpp>
@@ -38,7 +37,6 @@ void Player::init() {
 
   m_collider = Collider::addCollider(this, sprite_idle->getSize() / 2.0f);
   m_states = States::addStates(this);
-
   m_effect = Effect::addEffect(nullptr, "assets/effect/1764.png", glm::vec2(0.0f), 2.0f);
 }
 
@@ -133,9 +131,8 @@ void Player::checkDeath() {
   // 例如：检查生命值、碰撞检测等
   if (!m_states->getIsAlive()) {
     // 玩家死亡，可以添加死亡动画或游戏结束逻辑
+    m_game.getCurrentScene()->safeAddChild(m_effect);
     m_effect->setPosition(m_position);
-    m_game.getCurrentScene()->safeAddChild(std::move(m_effect));
     setActive(false);
-    // setNeedRemove(true);
   }
 }

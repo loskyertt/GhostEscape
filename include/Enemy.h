@@ -13,12 +13,12 @@
 
 class Enemy : public Entity {
  private:
-  Player *m_target_player = nullptr;
-  SpriteAnim *m_current_anim = nullptr;
+  Player *m_target_player = nullptr;     // 目标玩家
+  SpriteAnim *m_current_anim = nullptr;  // 当前动画
 
-  SpriteAnim *m_anim_normal = nullptr;
-  SpriteAnim *m_anim_hurt = nullptr;
-  SpriteAnim *m_anim_die = nullptr;
+  SpriteAnim *m_anim_normal = nullptr;  // 普通状态动画
+  SpriteAnim *m_anim_hurt = nullptr;    // 受伤状态动画
+  SpriteAnim *m_anim_die = nullptr;     // 死亡状态动画
 
  private:
   enum class State {
@@ -29,7 +29,7 @@ class Enemy : public Entity {
 
   State m_current_state = State::NORMAL;
 
-  // float timer = 0.0f;
+  float timer = 0.0f;
 
  public:
   void update(const float &delta_time) override;

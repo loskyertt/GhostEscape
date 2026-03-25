@@ -18,23 +18,23 @@ SceneMain::~SceneMain() = default;
 
 /* 初始化 */
 void SceneMain::init() {
+  Scene::init();
   m_world_size = m_game.getScreenSize() * 3.0f;
-  m_camera_position = m_world_size / 2.0f - m_game.getScreenSize() / 2.0f;
+  // m_camera_position = m_world_size / 2.0f - m_game.getScreenSize() / 2.0f;
 
   // 玩家初始化
-  m_player = new Player();
+  m_player = new Player();  // Player -> Entity -> ObjectWorld
   m_player->init();
   m_player->setPosition(m_world_size / 2.0f);
-  addChild(m_player);  // Player -> Entity -> ObjectWorld
+  addChild(m_player);
 
   // 敌人初始化
-  auto enemy = new Enemy();
+  auto enemy = new Enemy();  // Enemy -> Entity -> ObjectWorld
   enemy->init();
   enemy->setTargetPlayer(m_player);
   enemy->setPosition(m_world_size / 2.0f + glm::vec2(200.0f));
-  // addObjectWorld(std::move(enemy));
-
-  // 特效初始化
+  addChild(enemy);
+  // 敌人生成特效初始化
   auto effect =
       Effect::addEffect(this, "assets/effect/184_3.png", m_world_size / 2.0f + glm::vec2(200.0f), 2.0f, enemy);
 }

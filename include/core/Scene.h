@@ -27,9 +27,6 @@ class Scene : public Object {
 
   ~Scene() override;
 
-  /* 初始化 */
-  void init() override;
-
   /* 事件处理 */
   void handleEvents(SDL_Event &event) override;
 
