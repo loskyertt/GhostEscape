@@ -22,7 +22,7 @@ void Effect::checkFinish() {
   //   SDL_Log(">>> Effect::checkFinish() called");
   // #endif
 
-  if (m_sprite_anim && m_sprite_anim->getIsFinished()) {
+  if (m_sprite_anim->getIsFinished()) {
     m_need_remove = true;
     if (m_next_object) {
       m_game.getCurrentScene()->safeAddChild(m_next_object);  // 添加到 SceneMain::m_children_back 中
@@ -54,7 +54,6 @@ Effect::addEffect(Object *parent, const std::string &file_path, glm::vec2 pos, f
     // #ifndef NDEBUG
     //     SDL_Log("特效已经添加到了容器中......");
     // #endif
-    return nullptr;
   }
 
   return effect;

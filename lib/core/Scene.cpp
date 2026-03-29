@@ -43,7 +43,9 @@ void Scene::update(const float &delta_time) {
   Object::update(delta_time);
 
   for (auto it = m_children_world.begin(); it != m_children_world.end();) {
-    auto &child = *it;  // 使用引用来避免复制 unique_ptr
+    // 这里不能写成 &child
+    // 由于 child 是一个引用，在 erase(it) 之后，child 变成了一个悬垂引用，它指向的内存已经被释放。
+    auto child = *it;
     if (child->getNeedRemove()) {
       it = m_children_world.erase(it);
       child->clean();
@@ -61,7 +63,7 @@ void Scene::update(const float &delta_time) {
   }
 
   for (auto it = m_children_screen.begin(); it != m_children_screen.end();) {
-    auto child = *it;  // 使用引用来避免复制 unique_ptr
+    auto child = *it;
     if (child->getNeedRemove()) {
       it = m_children_screen.erase(it);
       child->clean();

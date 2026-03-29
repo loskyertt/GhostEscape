@@ -133,6 +133,7 @@ void Player::checkDeath() {
   // 例如：检查生命值、碰撞检测等
   if (!m_states->getIsAlive()) {
     // 玩家死亡，可以添加死亡动画或游戏结束逻辑
+    m_effect->setPosition(m_position);
     m_game.getCurrentScene()->safeAddChild(m_effect);
     setActive(false);
   }
