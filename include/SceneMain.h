@@ -12,13 +12,12 @@
 
 class Player;
 
+class Spawner;
+
 class SceneMain : public Scene {
  private:
-  /*
-   * 玩家实例：
-   * 只是观察者，不拥有所有权，所有权在 Scene::m_children_world 里
-   */
-  Player *m_player;
+  Player *m_player;    // 玩家
+  Spawner *m_spawner;  // 敌人生成器
 
  public:
   SceneMain();

@@ -249,3 +249,22 @@ void Game::renderColliders(const glm::vec2 &position, const glm::vec2 &size, flo
   SDL_SetTextureAlphaModFloat(texture, alpha);
   SDL_RenderTexture(m_renderer, texture, NULL, &rect);
 }
+
+/* 随机数函数 */
+float Game::randomFloat(float min, float max) {
+  std::uniform_real_distribution<float> distribution(min, max);
+  return distribution(gen);
+}
+
+int Game::randomInt(int min, int max) {
+  std::uniform_int_distribution<int> distribution(min, max);
+  return distribution(gen);
+}
+
+glm::vec2 Game::randomVec2(glm::vec2 min, glm::vec2 max) {
+  return glm::vec2(randomFloat(min.x, max.x), randomFloat(min.y, max.y));
+}
+
+glm::ivec2 Game::randomIvec2(glm::ivec2 min, glm::ivec2 max) {
+  return glm::ivec2(randomInt(min.x, max.x), randomInt(min.y, max.y));
+}

@@ -18,6 +18,7 @@
 #include <SDL3/SDL_video.h>
 #include <SDL3_mixer/SDL_mixer.h>
 
+#include <random>
 #include <string>
 
 class Scene;
@@ -55,6 +56,8 @@ class Game final {
   Uint64 m_frame_delay = 0;   // 帧延迟：1,000,000,000 / 60 ≈ 16,666,667 纳秒
   float m_delta_time = 0.0f;  // 帧间隔
 
+  std::mt19937 gen = std::mt19937(std::random_device{}());
+
  public:
   /* 初始化游戏 */
   void init(const std::string &title, int width, int height);
@@ -89,6 +92,15 @@ class Game final {
 
   /* 绘制碰撞体（用于调试） */
   void renderColliders(const glm::vec2 &position, const glm::vec2 &size, float alpha = 0.5f);
+
+  /* 随机数函数 */
+  float randomFloat(float min, float max);
+
+  int randomInt(int min, int max);
+
+  glm::vec2 randomVec2(glm::vec2 min, glm::vec2 max);
+
+  glm::ivec2 randomIvec2(glm::ivec2 min, glm::ivec2 max);
 
   // gettters
  public:

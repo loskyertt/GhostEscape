@@ -10,6 +10,7 @@
 #include <SDL3/SDL_log.h>
 #include "Enemy.h"
 #include "Player.h"
+#include "Spawner.h"
 #include "world/Effect.h"
 
 #include <glm/fwd.hpp>
@@ -36,23 +37,28 @@ void SceneMain::init() {
   SDL_Log("");
 #endif
 
-// 敌人初始化
-#ifndef NDEBUG
-  SDL_Log(">>> SceneMain::init() calld: Enemy init");
-#endif
-  auto enemy = new Enemy();  // Enemy -> Entity -> ObjectWorld
-  enemy->init();
-  enemy->setTargetPlayer(m_player);
-  enemy->setPosition(m_world_size / 2.0f + glm::vec2(200.0f));
-  // addChild(enemy);
+  m_spawner = new Spawner();
+  m_spawner->init();
+  m_spawner->setTargetPlayer(m_player);
+  addChild(m_spawner);
 
-  // 敌人生成特效初始化
-  auto effect =
-      Effect::addEffect(this, "assets/effect/184_3.png", m_world_size / 2.0f + glm::vec2(200.0f), 2.0f, enemy);
-#ifndef NDEBUG
-  SDL_Log("敌人生成特效已经添加到了容器中......");
-  SDL_Log("");
-#endif
+// // 敌人初始化
+// #ifndef NDEBUG
+//   SDL_Log(">>> SceneMain::init() calld: Enemy init");
+// #endif
+//   auto enemy = new Enemy();  // Enemy -> Entity -> ObjectWorld
+//   enemy->init();
+//   enemy->setTargetPlayer(m_player);
+//   enemy->setPosition(m_world_size / 2.0f + glm::vec2(200.0f));
+//   // addChild(enemy);
+
+//   // 敌人生成特效初始化
+//   auto effect =
+//       Effect::addEffect(this, "assets/effect/184_3.png", m_world_size / 2.0f + glm::vec2(200.0f), 2.0f, enemy);
+// #ifndef NDEBUG
+//   SDL_Log("敌人生成特效已经添加到了容器中......");
+//   SDL_Log("");
+// #endif
 }
 
 /* 事件处理 */

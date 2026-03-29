@@ -10,6 +10,7 @@
 
 #include "Player.h"
 #include "affiliate/SpriteAnim.h"
+#include "core/Object.h"
 
 class Enemy : public Entity {
  private:
@@ -51,6 +52,10 @@ class Enemy : public Entity {
 
   /* 攻击玩家 */
   void attack();
+
+ public:
+  /* 创建敌人 */
+  static Enemy *addEnemy(Object *parent, const glm::vec2 &position, Player *target_player);
 
   // getters
  public:

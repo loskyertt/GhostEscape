@@ -127,3 +127,15 @@ void Enemy::attack() {
     }
   }
 }
+
+/* 创建敌人 */
+Enemy *Enemy::addEnemy(Object *parent, const glm::vec2 &position, Player *target_player) {
+  auto enemy = new Enemy();
+  enemy->init();
+  enemy->setPosition(position);
+  enemy->setTargetPlayer(target_player);
+  if (parent) {
+    parent->addChild(enemy);
+  }
+  return enemy;
+}

@@ -21,6 +21,7 @@ add_library(gamedll SHARED
   SceneMain.cpp
   Player.cpp
   Enemy.cpp
+  Spawner.cpp
 )
 
 target_include_directories(gamedll PUBLIC ${PROJECT_SOURCE_DIR}/include)
