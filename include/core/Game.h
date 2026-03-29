@@ -12,6 +12,7 @@
 #include <glm/fwd.hpp>
 
 #include <SDL3/SDL_events.h>
+#include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_pixels.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_stdinc.h>
@@ -41,8 +42,10 @@ class Game final {
   ~Game();
 
  private:
-  bool m_is_running = true;                // 游戏是否运行
-  glm::vec2 m_screen_size = glm::vec2(0);  // 屏幕大小 (width, height)
+  bool m_is_running = true;                  // 游戏是否运行
+  glm::vec2 m_screen_size = glm::vec2(0);    // 屏幕大小 (width, height)
+  glm::vec2 m_mouse_pos = glm::vec2(0);      // 鼠标位置 (x, y)
+  SDL_MouseButtonFlags m_mouse_buttons = 0;  // 鼠标按键状态
 
   SDL_Window *m_window = nullptr;      // 窗口
   SDL_Renderer *m_renderer = nullptr;  // 渲染器
@@ -107,10 +110,23 @@ class Game final {
   /* 获取屏幕大小 */
   glm::vec2 getScreenSize() const { return m_screen_size; }
 
+  /* 获取鼠标位置 */
+  glm::vec2 getMousePos() const { return m_mouse_pos; }
+
+  /* 获取鼠标按键状态 */
+  SDL_MouseButtonFlags getMouseButtons() const { return m_mouse_buttons; }
+
   /* 获取当前场景 */
   Scene *getCurrentScene() const { return m_current_scene; }
 
   /* 获取资源 */
   AssetStore *getAssetStore() const { return m_asset_store; }
+
+  // setters
+ public:
+  /* 设置鼠标位置 */
+  void setMousePos(const glm::vec2 &pos) { m_mouse_pos = pos; }
+
+  /* 设置鼠标按键状态 */
+  void setMouseButtons(SDL_MouseButtonFlags buttons) { m_mouse_buttons = buttons; }
 };
-//

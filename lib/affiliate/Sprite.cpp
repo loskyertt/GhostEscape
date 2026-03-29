@@ -42,6 +42,7 @@ void Sprite::render() {
 Sprite *Sprite::addSprite(ObjectScreen *parrent, const std::string &file_path, float scale, Anchor anchor) {
   auto sprite = new Sprite();
   sprite->init();
+  sprite->setAnchor(anchor);
   sprite->setTexture(Texture(file_path));
   sprite->setScale(scale);
   sprite->setParent(parrent);

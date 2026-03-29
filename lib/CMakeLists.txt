@@ -18,6 +18,7 @@ add_library(gamedll SHARED
   affiliate/Collider.cpp
   raw/States.cpp
   world/Effect.cpp
+  screen/UIMouse.cpp
   SceneMain.cpp
   Player.cpp
   Enemy.cpp

@@ -7,20 +7,24 @@
  */
 
 #include "SceneMain.h"
-#include <SDL3/SDL_log.h>
-#include "Enemy.h"
 #include "Player.h"
 #include "Spawner.h"
-#include "world/Effect.h"
+#include "screen/UiMouse.h"
 
 #include <glm/fwd.hpp>
+
+#include <SDL3/SDL_log.h>
+#include <SDL3/SDL_mouse.h>
 
 SceneMain::SceneMain() = default;
 SceneMain::~SceneMain() = default;
 
 /* 初始化 */
 void SceneMain::init() {
-  Scene::init();
+  // Scene::init();
+
+  SDL_HideCursor();
+
   m_world_size = m_game.getScreenSize() * 3.0f;
   m_camera_position = m_world_size / 2.0f - m_game.getScreenSize() / 2.0f;
 
@@ -42,23 +46,25 @@ void SceneMain::init() {
   m_spawner->setTargetPlayer(m_player);
   addChild(m_spawner);
 
-// // 敌人初始化
-// #ifndef NDEBUG
-//   SDL_Log(">>> SceneMain::init() calld: Enemy init");
-// #endif
-//   auto enemy = new Enemy();  // Enemy -> Entity -> ObjectWorld
-//   enemy->init();
-//   enemy->setTargetPlayer(m_player);
-//   enemy->setPosition(m_world_size / 2.0f + glm::vec2(200.0f));
-//   // addChild(enemy);
+  m_ui_mouse = UIMouse::addUIMouse(this, "assets/UI/29.png", "assets/UI/30.png", 1.0f, Anchor::MIDDLE_CENTER);
 
-//   // 敌人生成特效初始化
-//   auto effect =
-//       Effect::addEffect(this, "assets/effect/184_3.png", m_world_size / 2.0f + glm::vec2(200.0f), 2.0f, enemy);
-// #ifndef NDEBUG
-//   SDL_Log("敌人生成特效已经添加到了容器中......");
-//   SDL_Log("");
-// #endif
+  // // 敌人初始化
+  // #ifndef NDEBUG
+  //   SDL_Log(">>> SceneMain::init() calld: Enemy init");
+  // #endif
+  //   auto enemy = new Enemy();  // Enemy -> Entity -> ObjectWorld
+  //   enemy->init();
+  //   enemy->setTargetPlayer(m_player);
+  //   enemy->setPosition(m_world_size / 2.0f + glm::vec2(200.0f));
+  //   // addChild(enemy);
+
+  //   // 敌人生成特效初始化
+  //   auto effect =
+  //       Effect::addEffect(this, "assets/effect/184_3.png", m_world_size / 2.0f + glm::vec2(200.0f), 2.0f, enemy);
+  // #ifndef NDEBUG
+  //   SDL_Log("敌人生成特效已经添加到了容器中......");
+  //   SDL_Log("");
+  // #endif
 }
 
 /* 事件处理 */

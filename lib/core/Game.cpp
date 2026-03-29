@@ -11,7 +11,6 @@
 #include "SceneMain.h"
 #include "affiliate/Sprite.h"
 
-#include <cstddef>
 #include <glm/fwd.hpp>
 
 #include <SDL3/SDL.h>
@@ -27,6 +26,8 @@
 #include <SDL3/SDL_video.h>
 #include <SDL3_mixer/SDL_mixer.h>
 #include <SDL3_ttf/SDL_ttf.h>
+
+#include <cstddef>
 
 /* 单例模式实现 */
 Game &Game::getInstance() {
@@ -125,6 +126,7 @@ void Game::handleEvents() {
 
 /* 更新游戏场景 */
 void Game::update(const float &delta_time) {
+  m_mouse_buttons = SDL_GetMouseState(&m_mouse_pos.x, &m_mouse_pos.y);
   m_current_scene->update(delta_time);
 }
 

@@ -11,13 +11,14 @@
 #include "core/Scene.h"
 
 class Player;
-
 class Spawner;
+class UIMouse;
 
 class SceneMain : public Scene {
  private:
   Player *m_player;    // 玩家
   Spawner *m_spawner;  // 敌人生成器
+  UIMouse *m_ui_mouse;  // UI 鼠标指针
 
  public:
   SceneMain();
