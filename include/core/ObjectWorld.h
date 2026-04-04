@@ -26,6 +26,8 @@ class ObjectWorld : public ObjectScreen {
   /* 同步更新物体的坐标 */
   void update(const float &delta_time) override;
 
+  virtual void takeDamage(float damage) {}
+
   // getters
  public:
   /* 获取物体的世界坐标 */

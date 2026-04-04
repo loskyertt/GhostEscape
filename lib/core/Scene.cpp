@@ -128,7 +128,8 @@ void Scene::addChild(Object *child) {
       SDL_Log("=> 调用 Scene::addChild() -> m_children_screen.push_back(child)");
       break;
     }
-    case ObjectType::OBJECT_WORLD: {
+    case ObjectType::OBJECT_WORLD:
+    case ObjectType::ENEMY: {
       m_children_world.push_back(static_cast<ObjectWorld *>(child));
       SDL_Log("=> 调用 Scene::addChild() -> m_children_world.push_back(child)");
       break;
@@ -151,7 +152,8 @@ void Scene::removeChild(Object *child) {
       SDL_Log("=> 调用 Scene::removeChild() -> child 从 m_children_screen 中移除");
       break;
     }
-    case ObjectType::OBJECT_WORLD: {
+    case ObjectType::OBJECT_WORLD:
+    case ObjectType::ENEMY: {
       m_children_world.erase(
           std::remove(m_children_world.begin(), m_children_world.end(), static_cast<ObjectWorld *>(child)),
           m_children_world.end());

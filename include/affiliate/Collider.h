@@ -12,8 +12,11 @@
 
 #include <glm/fwd.hpp>
 
+class Spell;
+
 class Collider : public ObjectAffiliate {
  protected:
+  friend Spell;
   enum class Type {
     CIRCLE,  // m_size 的 x 轴为直径，默认 y = x
     RECTANGLE,
@@ -23,11 +26,8 @@ class Collider : public ObjectAffiliate {
 
  public:
   /* 添加碰撞体到对象 */
-  static Collider *addCollider(
-      ObjectScreen *parent,
-      glm::vec2 size,
-      Type type = Type::CIRCLE,
-      Anchor anchor = Anchor::MIDDLE_CENTER);
+  static Collider *
+  addCollider(ObjectScreen *parent, glm::vec2 size, Type type = Type::CIRCLE, Anchor anchor = Anchor::MIDDLE_CENTER);
 
  public:
   /* 绘制碰撞体的边界框 */

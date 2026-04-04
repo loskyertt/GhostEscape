@@ -9,6 +9,7 @@
 #include "Enemy.h"
 #include "affiliate/Collider.h"
 #include "affiliate/SpriteAnim.h"
+#include "core/Defs.h"
 #include "core/Entity.h"
 #include "SceneMain.h"
 #include "raw/States.h"
@@ -41,6 +42,10 @@ void Enemy::update(const float &delta_time) {
   // m_target_player->getPosition();  // 测试是否当前对象被销毁引发程序崩溃
 
   attack();
+
+  checkState();
+
+  remove();
 }
 
 void Enemy::init() {
@@ -57,6 +62,8 @@ void Enemy::init() {
 
   m_collider = Collider::addCollider(this, m_current_anim->getSize());
   m_states = States::addStates(this);
+
+  setType(ObjectType::ENEMY);
 }
 
 /* 向玩家移动 */
@@ -71,7 +78,20 @@ void Enemy::aimTargetPlayer(Player *target_player) {
 }
 
 /* 检查当前状态 */
-void Enemy::checkState() {}
+void Enemy::checkState() {
+  State new_state;
+  if (m_states->getHealth() <= 0) {
+    new_state = State::DEAD;
+  } else if (m_states->getIsInvincible()) {
+    new_state = State::HURT;
+  } else {
+    new_state = State::NORMAL;
+  }
+
+  if (new_state != m_current_state) {
+    changeState(new_state);
+  }
+}
 
 /* 切换当前状态 */
 void Enemy::changeState(State new_state) {
@@ -79,10 +99,6 @@ void Enemy::changeState(State new_state) {
   //     "changeState 被调用: new_state=%d, m_current_state=%d",
   //     static_cast<int>(new_state),
   //     static_cast<int>(m_current_state));
-
-  if (new_state == m_current_state) {
-    return;
-  }
 
   m_current_anim->setActive(false);
 

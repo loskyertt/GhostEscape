@@ -56,10 +56,16 @@ class Scene : public Object {
   // getters
  public:
   /* 获取世界大小 */
-  glm::vec2 getWorldSize() { return m_world_size; }
+  glm::vec2 getWorldSize() const { return m_world_size; }
 
   /* 获取相机坐标 */
-  glm::vec2 getCameraPosition() { return m_camera_position; }
+  glm::vec2 getCameraPosition() const { return m_camera_position; }
+
+  /* 获取场景容器 */
+  std::vector<ObjectScreen *> &getChildrenScreen() { return m_children_screen; }
+
+  /* 获取世界容器 */
+  std::vector<ObjectWorld *> &getChildrenWorld() { return m_children_world; }
 
   // setters
  public:

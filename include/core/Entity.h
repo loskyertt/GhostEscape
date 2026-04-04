@@ -26,7 +26,7 @@ class Entity : public ObjectWorld {
   void move(const float &delta_time);
 
   /* 受到伤害 */
-  void takeDamage(float damage);
+  void takeDamage(float damage) override;
 
   /* 物体是否存活 */
   bool isAlive() const;

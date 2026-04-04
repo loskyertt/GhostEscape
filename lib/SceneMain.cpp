@@ -9,10 +9,13 @@
 #include "SceneMain.h"
 #include "Player.h"
 #include "Spawner.h"
+#include "core/Defs.h"
 #include "screen/UiMouse.h"
+#include "world/Spell.h"
 
 #include <glm/fwd.hpp>
 
+#include <SDL3/SDL_events.h>
 #include <SDL3/SDL_log.h>
 #include <SDL3/SDL_mouse.h>
 
@@ -70,6 +73,12 @@ void SceneMain::init() {
 /* 事件处理 */
 void SceneMain::handleEvents(SDL_Event &event) {
   Scene::handleEvents(event);
+  if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+    if (event.button.button == SDL_BUTTON_LEFT) {
+      auto pos = m_game.getMousePos() + m_camera_position;
+      Spell::addSpell(this, "assets/effect/Thunderstrike w blur.png", pos, 120.0f, 3.0f, Anchor::MIDDLE_CENTER);
+    }
+  }
 }
 
 /* 更新 */
