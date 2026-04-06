@@ -6,8 +6,8 @@
  * @Desc    :   .....
  */
 
-#include "core/ObjectScreen.h"
-#include "core/ObjectWorld.h"
+#include "ObjectScreen.h"
+#include "ObjectWorld.h"
 
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>

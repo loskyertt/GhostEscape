@@ -7,7 +7,7 @@
  */
 
 #include "core/ObjectWorld.h"
-#include "SceneMain.h"
+#include "core/game/SceneMain.h"
 #include "core/Defs.h"
 
 void ObjectWorld::init() {

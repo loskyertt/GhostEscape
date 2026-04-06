@@ -6,11 +6,11 @@
  * @Desc    :   .....
  */
 
-#include "SceneMain.h"
-#include "Player.h"
-#include "Spawner.h"
+#include "core/game/SceneMain.h"
+#include "core/game/Player.h"
+#include "core/game/Spawner.h"
 #include "core/Defs.h"
-#include "screen/UiMouse.h"
+#include "screen/UIMouse.h"
 #include "world/Spell.h"
 
 #include <glm/fwd.hpp>

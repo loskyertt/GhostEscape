@@ -1,0 +1,164 @@
+# GhostEscape 项目结构
+
+## 目录结构
+
+```
+project_root/
+├── CMakeLists.txt                          # 顶层构建配置（现代CMake范式）
+├── src/                                    # 源代码目录
+│   ├── CMakeLists.txt                      # 源码构建配置
+│   ├── main.cpp                            # 程序入口（Game单例初始化与运行）
+│   ├── core/                               # 核心业务模块（引擎核心 + 游戏逻辑）
+│   │   ├── include/                        # 对外公开接口头文件
+│   │   │   └── core/
+│   │   │       ├── Defs.h                  #   全局枚举与常量定义（ObjectType, Anchor）
+│   │   │       ├── Object.h                #   所有游戏对象的基类（树形层级管理）
+│   │   │       ├── ObjectScreen.h          #   屏幕空间对象基类（UI元素）
+│   │   │       ├── ObjectWorld.h           #   世界空间对象基类（带世界坐标与相机系统）
+│   │   │       ├── ObjectAffiliate.h       #   附属组件基类（挂载到父对象的视觉/碰撞组件）
+│   │   │       ├── Game.h                  #   游戏引擎单例（SDL窗口/渲染器/资源管理/随机数）
+│   │   │       ├── Scene.h                 #   场景管理器（屏幕/世界对象集合、相机系统）
+│   │   │       ├── Entity.h                #   游戏实体（带状态、速度、最大速度）
+│   │   │       ├── AssetStore.h            #   资源管理器（纹理/声音/字体懒加载缓存）
+│   │   │       └── game/                   #   游戏逻辑（本项目特定内容）
+│   │   │           ├── Player.h            #     玩家角色（WASD移动、相机跟随、武器）
+│   │   │           ├── Enemy.h             #     敌人AI（追踪玩家、状态机、碰撞攻击）
+│   │   │           ├── Spawner.h           #     敌人生成器（定时批量生成）
+│   │   │           ├── WeaponThunder.h     #     雷电武器（鼠标点击施法、冷却/蓝耗）
+│   │   │           └── SceneMain.h         #     主游戏场景（初始化玩家/生成器/UI光标）
+│   │   └── impl/                           # 内部实现源文件和内部私有头文件
+│   │       ├── AssetStore.cpp              # 资源管理器实现
+│   │       ├── Entity.cpp                  # 游戏实体实现
+│   │       ├── Game.cpp                    # 引擎单例实现（主循环、渲染、事件）
+│   │       ├── Object.cpp                  # 对象基类实现（生命周期、子对象管理）
+│   │       ├── ObjectAffiliate.cpp         # 附属组件基类实现
+│   │       ├── ObjectScreen.cpp            # 屏幕对象基类实现
+│   │       ├── ObjectWorld.cpp             # 世界对象基类实现（坐标同步）
+│   │       ├── Scene.cpp                   # 场景管理器实现
+│   │       └── game/                       # 游戏逻辑实现
+│   │           ├── Player.cpp              #   玩家角色实现
+│   │           ├── Enemy.cpp               #   敌人AI实现
+│   │           ├── Spawner.cpp             #   敌人生成器实现
+│   │           ├── WeaponThunder.cpp       #   雷电武器实现
+│   │           └── SceneMain.cpp           #   主游戏场景实现
+│   └── utils/                              # 通用工具模块（可复用于其他项目）
+│       ├── include/
+│       │   ├── affiliate/                  # 视觉/渲染/碰撞组件
+│       │   │   ├── Sprite.h                #   静态精灵渲染（Texture封装）
+│       │   │   ├── SpriteAnim.h            #   帧动画精灵（多帧动画播放）
+│       │   │   └── Collider.h              #   碰撞检测（圆形碰撞）
+│       │   ├── raw/                        # 游戏机制（状态/武器基类）
+│       │   │   ├── States.h                #   实体状态管理（生命/法力/伤害/无敌帧）
+│       │   │   └── Weapon.h                #   武器基类（冷却计时/法力消耗/施法）
+│       │   ├── screen/                     # 屏幕空间 UI 元素
+│       │   │   └── UIMouse.h               #   自定义动画鼠标光标
+│       │   └── world/                      # 世界空间对象（法术/特效）
+│       │       ├── Spell.h                 #   法术/投射物（带伤害、动画、碰撞）
+│       │       └── Effect.h                #   一次性视觉特效（播完可触发后续对象）
+│       └── impl/
+│           ├── affiliate/
+│           │   ├── Sprite.cpp              #   静态精灵实现
+│           │   ├── SpriteAnim.cpp          #   帧动画精灵实现
+│           │   └── Collider.cpp            #   碰撞检测实现
+│           ├── raw/
+│           │   ├── States.cpp              #   实体状态实现
+│           │   └── Weapon.cpp              #   武器基类实现
+│           ├── screen/
+│           │   └── UIMouse.cpp             #   自定义鼠标光标实现
+│           └── world/
+│               ├── Spell.cpp               #   法术/投射物实现
+│               └── Effect.cpp              #   视觉特效实现
+├── include/                                # 项目级公共头文件（供外部库或应用程序集成）
+├── tests/                                  # 测试代码
+│   ├── CMakeLists.txt
+│   ├── test01.cpp ~ test04.cpp             # 测试文件（占位符）
+├── cmake/                                  # 自定义CMake模块
+│   └── checkArch.cmake                     # 架构检测脚本
+├── 3rdparty/                               # 第三方依赖
+│   ├── glm-1.0.3/                          # GLM数学库（头文件 only）
+│   ├── SDL3-3.4.2/                         # SDL3多媒体库
+│   ├── SDL3_image-3.4.0/                   # SDL3图像加载扩展
+│   ├── SDL3_mixer-3.2.0/                   # SDL3音频混音扩展
+│   └── SDL3_ttf-3.2.2/                     # SDL3 TrueType字体扩展
+├── assets/                                 # 游戏资源
+│   ├── bgm/                                # 背景音乐
+│   ├── effect/                             # 特效精灵表
+│   ├── font/                               # 字体文件
+│   ├── sound/                              # 音效文件
+│   ├── sprite/                             # 角色精灵表
+│   └── UI/                                 # UI元素
+├── examples/                               # 独立示例程序
+│   ├── CMakeLists.txt
+│   ├── example01.cpp ~ example04.cpp       # SDL3/GLM使用示例
+├── scripts/                                # 自动化脚本（构建、静态检查、部署）
+└── docs/                                   # 技术文档与架构说明
+    └── project-structure.md                # 项目结构说明（本文件）
+```
+
+## 模块依赖关系
+
+```
+main.cpp
+  └── core (Game单例)
+
+core (引擎核心 + 游戏逻辑)
+  ├── include/core/         # 引擎核心接口
+  │   ├── Defs.h            # 基础枚举（无依赖）
+  │   ├── Object.h          # 基类 → 依赖 Game.h, Defs.h
+  │   ├── ObjectScreen.h    # → 依赖 Object.h
+  │   ├── ObjectWorld.h     # → 依赖 ObjectScreen.h
+  │   ├── ObjectAffiliate.h # → 依赖 Defs.h, Object.h, ObjectScreen.h
+  │   ├── Game.h            # 引擎单例 → 依赖 SDL3, GLM（前向声明 Scene, AssetStore）
+  │   ├── Scene.h           # 场景管理 → 依赖 ObjectScreen.h, ObjectWorld.h, GLM
+  │   ├── Entity.h          # 游戏实体 → 依赖 ObjectWorld.h, GLM（前向声明 States）
+  │   ├── AssetStore.h      # 资源管理 → 依赖 SDL3, SDL3_mixer, SDL3_ttf
+  │   └── game/             # 游戏逻辑 → 依赖 core + utils
+  │       ├── Player.h      # → 依赖 Entity.h, SpriteAnim.h(utils), WeaponThunder.h
+  │       ├── Enemy.h       # → 依赖 Object.h, SpriteAnim.h(utils), Player.h
+  │       ├── Spawner.h     # → 依赖 Object.h（前向声明 Player）
+  │       ├── WeaponThunder.h # → 依赖 Entity.h, Weapon.h(utils)
+  │       └── SceneMain.h   # → 依赖 Scene.h（前向声明 Player, Spawner, UIMouse）
+  └── impl/                 # 引擎核心实现
+      ├── *.cpp             # 对应头文件的实现
+      └── game/*.cpp        # 游戏逻辑实现 → 依赖 core + utils 头文件
+
+utils (通用工具模块)
+  ├── include/
+  │   ├── affiliate/        # 视觉组件 → 依赖 core/ObjectAffiliate.h, SDL3, GLM
+  │   ├── raw/              # 游戏机制 → 依赖 core/Object.h, core/Entity.h, GLM
+  │   ├── screen/           # UI元素   → 依赖 core/ObjectScreen.h, affiliate/Sprite.h
+  │   └── world/            # 世界对象 → 依赖 core/ObjectWorld.h, affiliate/SpriteAnim.h
+  └── impl/                 # 工具模块实现 → 依赖对应头文件 + core + utils
+
+依赖方向:
+  main.cpp → core → utils
+              ↑        │
+              └────────┘
+  (utils 依赖 core 的基类接口，core 的游戏逻辑依赖 utils 的组件)
+```
+
+## 设计原则
+
+### 1. 现代CMake范式
+
+- **目标导向**: 每个模块编译为独立的静态库（`core`, `utils`）
+- **传递依赖**: 使用 `PUBLIC`/`PRIVATE` 控制头文件可见性
+- **包含目录**: `target_include_directories` 精确控制搜索路径
+
+### 2. 头文件组织
+
+- **`include/`**: 对外公开接口，其他模块通过 `#include "模块名/头文件.h"` 引用
+- **`impl/`**: 内部实现，外部不可见，仅包含 `.cpp` 文件
+
+### 3. 模块划分
+
+| 模块 | 职责 | 可复用性 |
+|------|------|----------|
+| `core` | 引擎核心框架 + 本项目游戏逻辑 | 核心框架可复用，game/ 目录为项目特定 |
+| `utils` | 通用组件（渲染、碰撞、状态、武器、UI、特效） | 高，可直接用于其他SDL3项目 |
+
+### 4. 命名规范
+
+- 头文件使用 PascalCase（如 `Player.h`, `SpriteAnim.h`）
+- 包含路径使用小写模块名（如 `#include "affiliate/SpriteAnim.h"`）
+- 所有包含路径相对于模块的 `include/` 目录

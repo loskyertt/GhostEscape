@@ -6,12 +6,12 @@
  * @Desc    :   .....
  */
 
-#include "Enemy.h"
+#include "core/game/Enemy.h"
 #include "affiliate/Collider.h"
 #include "affiliate/SpriteAnim.h"
 #include "core/Defs.h"
 #include "core/Entity.h"
-#include "SceneMain.h"
+#include "core/game/SceneMain.h"
 #include "raw/States.h"
 
 #include <glm/geometric.hpp>

@@ -10,7 +10,7 @@
 
 #include "affiliate/SpriteAnim.h"
 #include "core/Entity.h"
-#include "WeaponThunder.h"
+#include "core/game/WeaponThunder.h"
 
 class States;
 class Effect;

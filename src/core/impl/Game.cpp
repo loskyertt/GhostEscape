@@ -8,7 +8,7 @@
 
 #include "core/Game.h"
 #include "core/AssetStore.h"
-#include "SceneMain.h"
+#include "core/game/SceneMain.h"
 #include "affiliate/Sprite.h"
 
 #include <glm/fwd.hpp>

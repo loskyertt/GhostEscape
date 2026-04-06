@@ -10,9 +10,9 @@
 
 #include "Defs.h"
 #include "Object.h"
-#include "core/ObjectScreen.h"
+#include "ObjectScreen.h"
 
-#include "glm/fwd.hpp"
+#include <glm/fwd.hpp>
 
 class ObjectAffiliate : public Object {
  protected:

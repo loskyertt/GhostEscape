@@ -6,11 +6,11 @@
  * @Desc    :   .....
  */
 
-#include "Spawner.h"
-#include "Enemy.h"
-#include "SceneMain.h"
+#include "core/game/Spawner.h"
+#include "core/game/Enemy.h"
+#include "core/game/SceneMain.h"
 #include "world/Effect.h"
-#include "Player.h"
+#include "core/game/Player.h"
 
 void Spawner::update(const float &delta_time) {
   if (!m_target_player || !m_target_player->getActiveState()) {

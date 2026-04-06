@@ -7,8 +7,8 @@
  */
 
 #include "world/Effect.h"
-#include "SceneMain.h"
 #include "affiliate/SpriteAnim.h"
+#include "core/Scene.h"
 
 #include <SDL3/SDL_log.h>
 
