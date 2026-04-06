@@ -13,17 +13,16 @@
 class Player;
 class Spawner;
 class UIMouse;
+class HUDStates;
 
 class SceneMain : public Scene {
  private:
-  Player *m_player;    // 玩家
-  Spawner *m_spawner;  // 敌人生成器
-  UIMouse *m_ui_mouse;  // UI 鼠标指针
+  Player *m_player;         // 玩家
+  Spawner *m_spawner;       // 敌人生成器
+  UIMouse *m_ui_mouse;      // UI 鼠标指针
+  HUDStates *m_hud_states;  // HUD 状态显示
 
  public:
-  SceneMain();
-  ~SceneMain() override;
-
   /* 初始化 */
   void init() override;
 

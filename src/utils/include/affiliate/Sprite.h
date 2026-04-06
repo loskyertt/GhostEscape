@@ -1,5 +1,5 @@
 /*
- * @File    :   include\affiliate\Sprite.h
+ * @File    :   src\utils\include\affiliate\Sprite.h
  * @Time    :   2026/03/17 16:20:51
  * @Author  :   loskyertt
  * @Github  :   https://github.com/loskyertt
@@ -9,6 +9,7 @@
 #pragma once
 
 #include "core/ObjectAffiliate.h"
+#include "glm/ext/vector_float2.hpp"
 
 #include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_render.h>
@@ -28,7 +29,8 @@ struct Texture {
 class Sprite : public ObjectAffiliate {
  protected:
   Texture m_texture;
-  bool m_is_finished = false;  // 是否播放完毕
+  bool m_is_finished = false;                // 是否播放完毕
+  glm::vec2 m_percentage = glm::vec2(1.0f);  // 动画进度
 
  public:
   Sprite();
@@ -56,6 +58,8 @@ class Sprite : public ObjectAffiliate {
 
   bool getIsFinished() { return m_is_finished; }
 
+  glm::vec2 getPercentage() { return m_percentage; }
+
   // setters
  public:
   virtual void setTexture(const Texture &texture);
@@ -65,4 +69,6 @@ class Sprite : public ObjectAffiliate {
   void setAngle(float angle) { m_texture.angle = angle; }
 
   void setIsFinished(bool is_finished) { m_is_finished = is_finished; }
+
+  void setPercentage(glm::vec2 percentage) { m_percentage = percentage; }
 };

@@ -12,15 +12,13 @@
 #include "core/Defs.h"
 #include "screen/UIMouse.h"
 #include "world/Spell.h"
+#include "screen/HUDStates.h"
 
 #include <glm/fwd.hpp>
 
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_log.h>
 #include <SDL3/SDL_mouse.h>
-
-SceneMain::SceneMain() = default;
-SceneMain::~SceneMain() = default;
 
 /* 初始化 */
 void SceneMain::init() {
@@ -50,6 +48,7 @@ void SceneMain::init() {
   addChild(m_spawner);
 
   m_ui_mouse = UIMouse::addUIMouse(this, "assets/UI/29.png", "assets/UI/30.png", 1.0f, Anchor::MIDDLE_CENTER);
+  m_hud_states = HUDStates::addHUDStates(this, m_player, glm::vec2(30.0f));
 
   // // 敌人初始化
   // #ifndef NDEBUG

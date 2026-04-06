@@ -91,7 +91,11 @@ class Game final {
   drawBoundary(const glm::vec2 &top_left, const glm::vec2 &bottom_right, float boundary_width, const SDL_FColor &color);
 
   /* 渲染材质 */
-  void renderTexture(const Texture &texture, const glm::vec2 &position, const glm::vec2 &size);
+  void renderTexture(
+      const Texture &texture,
+      const glm::vec2 &position,
+      const glm::vec2 &size,
+      const glm::vec2 &mask = glm::vec2(1.0f));
 
   /* 绘制碰撞体（用于调试） */
   void renderColliders(const glm::vec2 &position, const glm::vec2 &size, float alpha = 0.5f);

@@ -5,6 +5,7 @@
  * @Github  :   https://github.com/loskyertt
  * @Desc    :   .....
  */
+#pragma once
 
 #include "core/Defs.h"
 #include "core/ObjectAffiliate.h"

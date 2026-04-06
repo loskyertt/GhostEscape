@@ -35,7 +35,7 @@ void Sprite::render() {
   }
 
   auto pos = m_parent->getRenderPosition() + m_offset;
-  m_game.renderTexture(m_texture, pos, m_size);
+  m_game.renderTexture(m_texture, pos, m_size, m_percentage);
 }
 
 /* 创建静态精灵 */
