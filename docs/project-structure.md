@@ -11,21 +11,21 @@ project_root/
 │   ├── core/                               # 核心业务模块（引擎核心 + 游戏逻辑）
 │   │   ├── include/                        # 对外公开接口头文件
 │   │   │   └── core/
-│   │   │       ├── Defs.h                  #   全局枚举与常量定义（ObjectType, Anchor）
-│   │   │       ├── Object.h                #   所有游戏对象的基类（树形层级管理）
-│   │   │       ├── ObjectScreen.h          #   屏幕空间对象基类（UI元素）
-│   │   │       ├── ObjectWorld.h           #   世界空间对象基类（带世界坐标与相机系统）
-│   │   │       ├── ObjectAffiliate.h       #   附属组件基类（挂载到父对象的视觉/碰撞组件）
-│   │   │       ├── Game.h                  #   游戏引擎单例（SDL窗口/渲染器/资源管理/随机数）
-│   │   │       ├── Scene.h                 #   场景管理器（屏幕/世界对象集合、相机系统）
-│   │   │       ├── Entity.h                #   游戏实体（带状态、速度、最大速度）
-│   │   │       ├── AssetStore.h            #   资源管理器（纹理/声音/字体懒加载缓存）
-│   │   │       └── game/                   #   游戏逻辑（本项目特定内容）
-│   │   │           ├── Player.h            #     玩家角色（WASD移动、相机跟随、武器）
-│   │   │           ├── Enemy.h             #     敌人AI（追踪玩家、状态机、碰撞攻击）
-│   │   │           ├── Spawner.h           #     敌人生成器（定时批量生成）
-│   │   │           ├── WeaponThunder.h     #     雷电武器（鼠标点击施法、冷却/蓝耗）
-│   │   │           └── SceneMain.h         #     主游戏场景（初始化玩家/生成器/UI光标）
+│   │   │       ├── Defs.h                  # 全局枚举与常量定义（ObjectType, Anchor）
+│   │   │       ├── Object.h                # 所有游戏对象的基类（树形层级管理）
+│   │   │       ├── ObjectScreen.h          # 屏幕空间对象基类（UI元素）
+│   │   │       ├── ObjectWorld.h           # 世界空间对象基类（带世界坐标与相机系统）
+│   │   │       ├── ObjectAffiliate.h       # 附属组件基类（挂载到父对象的视觉/碰撞组件）
+│   │   │       ├── Game.h                  # 游戏引擎单例（SDL窗口/渲染器/资源管理/随机数）
+│   │   │       ├── Scene.h                 # 场景管理器（屏幕/世界对象集合、相机系统）
+│   │   │       ├── Entity.h                # 游戏实体（带状态、速度、最大速度）
+│   │   │       ├── AssetStore.h            # 资源管理器（纹理/声音/字体懒加载缓存）
+│   │   │       └── game/                   # 游戏逻辑（本项目特定内容）
+│   │   │           ├── Player.h            # 玩家角色（WASD移动、相机跟随、武器）
+│   │   │           ├── Enemy.h             # 敌人AI（追踪玩家、状态机、碰撞攻击）
+│   │   │           ├── Spawner.h           # 敌人生成器（定时批量生成）
+│   │   │           ├── WeaponThunder.h     # 雷电武器（鼠标点击施法、冷却/蓝耗）
+│   │   │           └── SceneMain.h         # 主游戏场景（初始化玩家/生成器/UI光标）
 │   │   └── impl/                           # 内部实现源文件和内部私有头文件
 │   │       ├── AssetStore.cpp              # 资源管理器实现
 │   │       ├── Entity.cpp                  # 游戏实体实现
@@ -36,38 +36,38 @@ project_root/
 │   │       ├── ObjectWorld.cpp             # 世界对象基类实现（坐标同步）
 │   │       ├── Scene.cpp                   # 场景管理器实现
 │   │       └── game/                       # 游戏逻辑实现
-│   │           ├── Player.cpp              #   玩家角色实现
-│   │           ├── Enemy.cpp               #   敌人AI实现
-│   │           ├── Spawner.cpp             #   敌人生成器实现
-│   │           ├── WeaponThunder.cpp       #   雷电武器实现
-│   │           └── SceneMain.cpp           #   主游戏场景实现
+│   │           ├── Player.cpp              # 玩家角色实现
+│   │           ├── Enemy.cpp               # 敌人AI实现
+│   │           ├── Spawner.cpp             # 敌人生成器实现
+│   │           ├── WeaponThunder.cpp       # 雷电武器实现
+│   │           └── SceneMain.cpp           # 主游戏场景实现
 │   └── utils/                              # 通用工具模块（可复用于其他项目）
 │       ├── include/
 │       │   ├── affiliate/                  # 视觉/渲染/碰撞组件
-│       │   │   ├── Sprite.h                #   静态精灵渲染（Texture封装）
-│       │   │   ├── SpriteAnim.h            #   帧动画精灵（多帧动画播放）
-│       │   │   └── Collider.h              #   碰撞检测（圆形碰撞）
+│       │   │   ├── Sprite.h                # 静态精灵渲染（Texture封装）
+│       │   │   ├── SpriteAnim.h            # 帧动画精灵（多帧动画播放）
+│       │   │   └── Collider.h              # 碰撞检测（圆形碰撞）
 │       │   ├── raw/                        # 游戏机制（状态/武器基类）
-│       │   │   ├── States.h                #   实体状态管理（生命/法力/伤害/无敌帧）
-│       │   │   └── Weapon.h                #   武器基类（冷却计时/法力消耗/施法）
+│       │   │   ├── States.h                # 实体状态管理（生命/法力/伤害/无敌帧）
+│       │   │   └── Weapon.h                # 武器基类（冷却计时/法力消耗/施法）
 │       │   ├── screen/                     # 屏幕空间 UI 元素
-│       │   │   └── UIMouse.h               #   自定义动画鼠标光标
+│       │   │   └── UIMouse.h               # 自定义动画鼠标光标
 │       │   └── world/                      # 世界空间对象（法术/特效）
-│       │       ├── Spell.h                 #   法术/投射物（带伤害、动画、碰撞）
-│       │       └── Effect.h                #   一次性视觉特效（播完可触发后续对象）
+│       │       ├── Spell.h                 # 法术/投射物（带伤害、动画、碰撞）
+│       │       └── Effect.h                # 一次性视觉特效（播完可触发后续对象）
 │       └── impl/
 │           ├── affiliate/
-│           │   ├── Sprite.cpp              #   静态精灵实现
-│           │   ├── SpriteAnim.cpp          #   帧动画精灵实现
-│           │   └── Collider.cpp            #   碰撞检测实现
+│           │   ├── Sprite.cpp              # 静态精灵实现
+│           │   ├── SpriteAnim.cpp          # 帧动画精灵实现
+│           │   └── Collider.cpp            # 碰撞检测实现
 │           ├── raw/
-│           │   ├── States.cpp              #   实体状态实现
-│           │   └── Weapon.cpp              #   武器基类实现
+│           │   ├── States.cpp              # 实体状态实现
+│           │   └── Weapon.cpp              # 武器基类实现
 │           ├── screen/
-│           │   └── UIMouse.cpp             #   自定义鼠标光标实现
+│           │   └── UIMouse.cpp             # 自定义鼠标光标实现
 │           └── world/
-│               ├── Spell.cpp               #   法术/投射物实现
-│               └── Effect.cpp              #   视觉特效实现
+│               ├── Spell.cpp               # 法术/投射物实现
+│               └── Effect.cpp              # 视觉特效实现
 ├── include/                                # 项目级公共头文件（供外部库或应用程序集成）
 ├── tests/                                  # 测试代码
 │   ├── CMakeLists.txt

@@ -6,10 +6,11 @@
  * @Desc    :   .....
  */
 
-#include <string>
 #include "core/Defs.h"
 #include "core/ObjectWorld.h"
 #include "affiliate/SpriteAnim.h"
+
+#include <string>
 
 class Spell : public ObjectWorld {
  protected:

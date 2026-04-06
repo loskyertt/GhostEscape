@@ -87,3 +87,6 @@ palette.map
 
 # public/index.html for httpd
 public/
+
+# obsidian
+.obsidian/

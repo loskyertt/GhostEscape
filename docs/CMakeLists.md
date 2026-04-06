@@ -78,12 +78,8 @@ add_subdirectory(src)
 ## 2. src/CMakeLists.txt
 
 ```cmake
-# ==========================================
 # src/CMakeLists.txt
-# 源码构建配置
-# ==========================================
 
-# 可执行文件名（平台适配）
 set(TARGET ${PROJECT_NAME}-${CMAKE_SYSTEM_NAME})
 
 # ==========================================
@@ -92,23 +88,24 @@ set(TARGET ${PROJECT_NAME}-${CMAKE_SYSTEM_NAME})
 # ==========================================
 add_library(utils STATIC
   # affiliate（视觉/碰撞组件）
-  src/utils/impl/affiliate/Collider.cpp
-  src/utils/impl/affiliate/Sprite.cpp
-  src/utils/impl/affiliate/SpriteAnim.cpp
+  utils/impl/affiliate/Collider.cpp
+  utils/impl/affiliate/Sprite.cpp
+  utils/impl/affiliate/SpriteAnim.cpp
   # raw（游戏机制：状态/武器）
-  src/utils/impl/raw/States.cpp
-  src/utils/impl/raw/Weapon.cpp
+  utils/impl/raw/States.cpp
+  utils/impl/raw/Weapon.cpp
   # screen（屏幕空间 UI）
-  src/utils/impl/screen/UIMouse.cpp
+  utils/impl/screen/UIMouse.cpp
   # world（世界空间对象：法术/特效）
-  src/utils/impl/world/Effect.cpp
-  src/utils/impl/world/Spell.cpp
+  utils/impl/world/Effect.cpp
+  utils/impl/world/Spell.cpp
 )
 
 # utils 包含目录
 target_include_directories(utils
   PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/core/include
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/impl
 )
@@ -128,20 +125,20 @@ target_link_libraries(utils
 # ==========================================
 add_library(core STATIC
   # 引擎核心实现
-  src/core/impl/AssetStore.cpp
-  src/core/impl/Entity.cpp
-  src/core/impl/Game.cpp
-  src/core/impl/Object.cpp
-  src/core/impl/ObjectAffiliate.cpp
-  src/core/impl/ObjectScreen.cpp
-  src/core/impl/ObjectWorld.cpp
-  src/core/impl/Scene.cpp
+  core/impl/AssetStore.cpp
+  core/impl/Entity.cpp
+  core/impl/Game.cpp
+  core/impl/Object.cpp
+  core/impl/ObjectAffiliate.cpp
+  core/impl/ObjectScreen.cpp
+  core/impl/ObjectWorld.cpp
+  core/impl/Scene.cpp
   # 游戏逻辑实现
-  src/core/impl/game/Enemy.cpp
-  src/core/impl/game/Player.cpp
-  src/core/impl/game/SceneMain.cpp
-  src/core/impl/game/Spawner.cpp
-  src/core/impl/game/WeaponThunder.cpp
+  core/impl/game/Enemy.cpp
+  core/impl/game/Player.cpp
+  core/impl/game/SceneMain.cpp
+  core/impl/game/Spawner.cpp
+  core/impl/game/WeaponThunder.cpp
 )
 
 # core 包含目录
