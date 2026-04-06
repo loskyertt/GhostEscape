@@ -21,7 +21,7 @@ void UIMouse::update(const float &deltaTime) {
     m_timer = 0.0f;
   }
 
-  setRenderPosition(m_game.getMousePos());
+  setRenderPosition(m_game.getMousePosition());
 }
 
 UIMouse *UIMouse::addUIMouse(

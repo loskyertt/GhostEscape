@@ -10,9 +10,9 @@
 
 #include "affiliate/SpriteAnim.h"
 #include "core/Entity.h"
+#include "WeaponThunder.h"
 
 class States;
-
 class Effect;
 
 class Player : public Entity {
@@ -24,10 +24,7 @@ class Player : public Entity {
 
   Effect *m_effect = nullptr;
 
- public:
-  Player();
-
-  ~Player() override;
+  WeaponThunder *m_weapon_thunder = nullptr;
 
  public:
   /* 初始化 */

@@ -111,7 +111,7 @@ class Game final {
   glm::vec2 getScreenSize() const { return m_screen_size; }
 
   /* 获取鼠标位置 */
-  glm::vec2 getMousePos() const { return m_mouse_pos; }
+  glm::vec2 getMousePosition() const { return m_mouse_pos; }
 
   /* 获取鼠标按键状态 */
   SDL_MouseButtonFlags getMouseButtons() const { return m_mouse_buttons; }

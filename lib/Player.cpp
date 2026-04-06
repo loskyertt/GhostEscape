@@ -21,10 +21,6 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_keyboard.h>
 
-Player::Player() = default;
-
-Player::~Player() = default;
-
 /* 初始化 */
 void Player::init() {
   Entity::init();
@@ -40,6 +36,9 @@ void Player::init() {
 
   // 设置玩家的死亡特效
   m_effect = Effect::addEffect(nullptr, "assets/effect/1764.png", glm::vec2(0.0f), 2.0f);
+
+  // 创建武器
+  m_weapon_thunder = WeaponThunder::addWeaponThunder(this, 2.0f, 40.0f);
 }
 
 /* 事件处理 */

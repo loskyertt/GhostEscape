@@ -17,6 +17,7 @@ add_library(gamedll SHARED
   affiliate/SpriteAnim.cpp
   affiliate/Collider.cpp
   raw/States.cpp
+  raw/Weapon.cpp
   world/Effect.cpp
   world/Spell.cpp
   screen/UIMouse.cpp
@@ -24,6 +25,7 @@ add_library(gamedll SHARED
   Player.cpp
   Enemy.cpp
   Spawner.cpp
+  WeaponThunder.cpp
 )
 
 target_include_directories(gamedll PUBLIC ${PROJECT_SOURCE_DIR}/include)
