@@ -1,5 +1,5 @@
 /*
- * @File    :   include\core\Entity.h
+ * @File    :   src\core\include\core\Entity.h
  * @Time    :   2026/03/15 23:30:19
  * @Author  :   loskyertt
  * @Github  :   https://github.com/loskyertt
@@ -13,15 +13,19 @@
 #include <glm/fwd.hpp>
 
 class States;
+class AffiliateBar;
 
 class Entity : public ObjectWorld {
  protected:
-  States *m_states = nullptr;  // 状态
+  States *m_states = nullptr;            // 状态
+  AffiliateBar *m_health_bar = nullptr;  // 血量条
 
   glm::vec2 m_velocity = glm::vec2(0);  // 速度
   float m_max_speed = 100.0f;           // 默认最大速度
 
  public:
+  void update(const float &delta_time) override;
+
   /* 玩家位置移动 */
   void move(const float &delta_time);
 
@@ -30,6 +34,9 @@ class Entity : public ObjectWorld {
 
   /* 物体是否存活 */
   bool isAlive() const;
+
+  /* 更新血量条 */
+  void updateHealthBar();
 
   // getters
  public:
@@ -42,6 +49,9 @@ class Entity : public ObjectWorld {
   /* 获取最大速度 */
   float getMaxSpeed() const { return m_max_speed; }
 
+  /* 获取血量条 */
+  AffiliateBar *getHealthBar() const { return m_health_bar; }
+
   // setters
  public:
   /* 设置状态 */
@@ -52,4 +62,7 @@ class Entity : public ObjectWorld {
 
   /* 设置最大速度 */
   void setMaxSpeed(float max_speed) { m_max_speed = max_speed; }
+
+  /* 设置血量条 */
+  void setHealthBar(AffiliateBar *health_bar) { m_health_bar = health_bar; }
 };

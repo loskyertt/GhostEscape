@@ -1,5 +1,5 @@
 /*
- * @File    :   include\Game.h
+ * @File    :   src\core\include\core\Game.h
  * @Time    :   2026/03/15 16:28:26
  * @Author  :   loskyertt
  * @Github  :   https://github.com/loskyertt
@@ -95,6 +95,9 @@ class Game final {
 
   /* 绘制碰撞体（用于调试） */
   void renderColliders(const glm::vec2 &position, const glm::vec2 &size, float alpha = 0.5f);
+
+  /* 绘制血量条 */
+  void renderHorizontalBar(const glm::vec2 &position, const glm::vec2 &size, float percentage, SDL_FColor color);
 
   /* 随机数函数 */
   float randomFloat(float min, float max);

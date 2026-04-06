@@ -1,14 +1,12 @@
 # for each "test/x.cpp", generate target "x"
-message("CMakeLists.txt for test directory")
-
-file(GLOB_RECURSE all_tests *.cpp)
-foreach(v ${all_tests})
+file(GLOB_RECURSE ALL_SRCS *.cpp)
+foreach(v ${ALL_SRCS})
   message("Processing: ${v}")
-  get_filename_component(target_name ${v} NAME_WE) # 生成目标名（去掉路径和扩展名）
+  get_filename_component(TARGET ${v} NAME_WE) # 生成目标名（去掉路径和扩展名）
 
-  add_executable(${target_name} ${v})
+  add_executable(${TARGET} ${v})
 
-  target_link_libraries(${target_name}
+  target_link_libraries(${TARGET}
     PRIVATE
       ${SDL3_LIBRARIES}
       SDL3_image::SDL3_image
@@ -16,13 +14,4 @@ foreach(v ${all_tests})
       SDL3_ttf::SDL3_ttf
       glm::glm
   )
-
-  # target_compile_options(${target_name} PRIVATE -Wall -Wextra -Werror)
-
-  # MSVC UTF-8 支持
-  if(MSVC)
-    target_compile_options(${target_name} PRIVATE /utf-8)
-  endif()
 endforeach()
-
-message(STATUS "--------------------------------------------\n")

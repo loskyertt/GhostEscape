@@ -44,7 +44,7 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/3rdparty/glm-1.0.3)
 add_subdirectory(src)
 
 # 测试模块（可选）
-# add_subdirectory(tests)
+add_subdirectory(tests)
 
 # 示例程序模块（可选）
-# add_subdirectory(examples)
+add_subdirectory(examples)

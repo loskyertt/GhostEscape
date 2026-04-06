@@ -1,5 +1,5 @@
 /*
- * @File    :   include\core\Object.h
+ * @File    :   src\core\include\core\Object.h
  * @Time    :   2026/03/15 18:52:06
  * @Author  :   loskyertt
  * @Github  :   https://github.com/loskyertt
@@ -31,8 +31,6 @@ class Object {
   ObjectType m_type = ObjectType::NONE;  // 当前对象类型
 
  public:
-  Object();
-
   virtual ~Object();
 
   /* 初始化 */

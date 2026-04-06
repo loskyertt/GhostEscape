@@ -22,10 +22,6 @@ class ObjectAffiliate : public Object {
 
   Anchor m_anchor = Anchor::MIDDLE_CENTER;  // 物体的锚点
 
- public:
-  ObjectAffiliate();
-  ~ObjectAffiliate() override;
-
   // getters
  public:
   /* 获取父节点 */

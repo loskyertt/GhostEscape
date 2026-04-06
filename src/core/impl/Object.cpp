@@ -1,5 +1,5 @@
 /*
- * @File    :   lib\core\Object.cpp
+ * @File    :   src\core\impl\Object.cpp
  * @Time    :   2026/03/16 20:37:58
  * @Author  :   loskyertt
  * @Github  :   https://github.com/loskyertt
@@ -11,8 +11,6 @@
 #include <SDL3/SDL_log.h>
 
 #include <algorithm>
-
-Object::Object() = default;
 
 Object::~Object() = default;
 
@@ -62,9 +60,9 @@ void Object::render() {
 
 /* 清理 */
 void Object::clean() {
-// #ifndef NDEBUG
-//   SDL_Log("调用 Object::clean()");
-// #endif
+  // #ifndef NDEBUG
+  //   SDL_Log("调用 Object::clean()");
+  // #endif
   for (auto &child : m_children) {
     child->clean();
     delete child;
@@ -87,7 +85,7 @@ void Object::removeChild(Object *child) {
 /* 安全添加子节点 */
 void Object::safeAddChild(Object *child) {
   m_children_back.push_back(child);
-  #ifndef NDEBUG
+#ifndef NDEBUG
   SDL_Log("=> 调用 safeAddChild() -> m_children_back.push_back(child)");
-  #endif
+#endif
 }

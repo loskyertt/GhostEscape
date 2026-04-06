@@ -8,10 +8,6 @@
 
 #include "core/ObjectAffiliate.h"
 
-ObjectAffiliate::ObjectAffiliate() = default;
-
-ObjectAffiliate::~ObjectAffiliate() = default;
-
 /* 设置大小 */
 void ObjectAffiliate::setSize(const glm::vec2 &size) {
   m_size = size;
@@ -50,13 +46,13 @@ void ObjectAffiliate::setOffsetByAnchor(Anchor anchor) {
       m_offset = glm::vec2(-m_size.x, -m_size.y / 2.0f);
       break;
     case Anchor::BOTTOM_LEFT:
-      m_offset = glm::vec2(0, m_size.y);
+      m_offset = glm::vec2(0, -m_size.y);
       break;
     case Anchor::BOTTOM_CENTER:
-      m_offset = glm::vec2(m_size.x / 2.0f, m_size.y);
+      m_offset = glm::vec2(-m_size.x / 2.0f, -m_size.y);
       break;
     case Anchor::BOTTOM_RIGHT:
-      m_offset = glm::vec2(m_size.x, m_size.y);
+      m_offset = glm::vec2(-m_size.x, -m_size.y);
       break;
   }
 }

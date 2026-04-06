@@ -1,10 +1,8 @@
-# CMakeLists.txt 参考文档
-
 本文档提供基于新项目结构的完整 CMake 构建配置参考。
 
 ---
 
-## 1. 根目录 CMakeLists.txt
+# 1. 根目录 CMakeLists.txt
 
 ```cmake
 # ==========================================
@@ -75,7 +73,7 @@ add_subdirectory(src)
 
 ---
 
-## 2. src/CMakeLists.txt
+# 2. src/CMakeLists.txt
 
 ```cmake
 # src/CMakeLists.txt
@@ -181,9 +179,9 @@ target_compile_definitions(${TARGET} PRIVATE
 
 ---
 
-## 3. 关键设计说明
+# 3. 关键设计说明
 
-### 3.1 模块顺序
+## 3.1 模块顺序
 
 ```
 utils 必须在 core 之前定义
@@ -191,21 +189,21 @@ utils 必须在 core 之前定义
   └── core:  引擎核心 + 游戏逻辑（依赖 utils）
 ```
 
-### 3.2 包含目录策略
+## 3.2 包含目录策略
 
 | 模块 | PUBLIC 目录 | PRIVATE 目录 |
 |------|-------------|--------------|
 | `utils` | `utils/include/` | `utils/impl/` |
 | `core` | `core/include/` | `core/impl/` + `utils/include/` |
 
-### 3.3 链接属性
+## 3.3 链接属性
 
 - **utils**: SDL、GLM 等库使用 `PUBLIC`，因为 utils 的头文件会被 core 使用
 - **core**: 对外暴露引擎接口使用 `PUBLIC`，内部游戏逻辑使用 `PRIVATE` 依赖 utils
 
 ---
 
-## 4. 编译验证命令
+# 4. 编译验证命令
 
 ```bash
 # 使用 CMake 配置（Debug 模式）
@@ -221,14 +219,14 @@ cmake --build build --config Debug
 
 ---
 
-## 5. 常见问题
+# 5. 常见问题
 
-### Q: LSP 提示头文件找不到？
+#### Q: LSP 提示头文件找不到？
 
 - 确保 `.clangd` 或 IDE 配置了正确的 include 路径
 - CMake 会自动生成 `compile_commands.json`，大部分现代 IDE 可自动识别
 
-### Q: 如何添加新的源文件？
+#### Q: 如何添加新的源文件？
 
 1. 在对应模块的 `impl/` 目录添加 `.cpp` 文件
 2. 将文件路径添加到对应 `add_library()` 的文件列表中

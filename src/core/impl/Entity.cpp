@@ -6,9 +6,17 @@
  * @Desc    :   .....
  */
 
+#include "core/ObjectWorld.h"
 #include "core/Scene.h"
 #include "core/Entity.h"
 #include "raw/States.h"
+#include "affiliate/AffiliateBar.h"
+
+/* 更新 */
+void Entity::update(const float &delta_time) {
+  ObjectWorld::update(delta_time);
+  updateHealthBar();
+}
 
 /* 玩家位置移动 */
 void Entity::move(const float &delta_time) {
@@ -43,4 +51,12 @@ void Entity::takeDamage(float damage) {
 /* 物体是否存活 */
 bool Entity::isAlive() const {
   return m_states && m_states->getIsAlive();
+}
+
+/* 更新血量条 */
+void Entity::updateHealthBar() {
+  if (!m_states || !m_health_bar) {
+    return;
+  }
+  m_health_bar->setPercentage(m_states->getHealth() / m_states->getMaxHealth());
 }

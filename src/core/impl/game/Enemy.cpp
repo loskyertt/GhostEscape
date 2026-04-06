@@ -9,9 +9,11 @@
 #include "core/game/Enemy.h"
 #include "affiliate/Collider.h"
 #include "affiliate/SpriteAnim.h"
+#include "affiliate/AffiliateBar.h"
 #include "core/Defs.h"
 #include "core/Entity.h"
 #include "core/game/SceneMain.h"
+#include "glm/ext/vector_float2.hpp"
 #include "raw/States.h"
 
 #include <glm/geometric.hpp>
@@ -62,6 +64,10 @@ void Enemy::init() {
 
   m_collider = Collider::addCollider(this, m_current_anim->getSize());
   m_states = States::addStates(this);
+
+  auto size = m_anim_normal->getSize();
+  m_health_bar = AffiliateBar::addAffiliateBar(this, glm::vec2(size.x - 10.0f, 10.0f), Anchor::BOTTOM_CENTER);
+  m_health_bar->setOffset(m_health_bar->getOffset() + glm::vec2(0, size.y / 2.0f - 5.0f));
 
   setType(ObjectType::ENEMY);
 }
