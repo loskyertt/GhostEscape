@@ -324,3 +324,16 @@ glm::vec2 Game::randomVec2(glm::vec2 min, glm::vec2 max) {
 glm::ivec2 Game::randomIvec2(glm::ivec2 min, glm::ivec2 max) {
   return glm::ivec2(randomInt(min.x, max.x), randomInt(min.y, max.y));
 }
+
+/* 增加分数 */
+void Game::addScore(int score) {
+  setScore(m_score += score);
+}
+
+/* 设置分数 */
+void Game::setScore(int score) {
+  m_score = score;
+  if (score > m_high_score) {
+    m_high_score = score;
+  }
+}

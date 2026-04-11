@@ -15,6 +15,7 @@ class Spell;
 class Weapon : public Object {
  protected:
   Entity *m_parent = nullptr;
+
   float m_cool_down = 1.0f;
   float m_mana_cost = 0.0f;
   float m_cool_down_timer = 0.0f;

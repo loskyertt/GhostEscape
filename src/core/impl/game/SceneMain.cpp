@@ -10,9 +10,11 @@
 #include "core/game/Player.h"
 #include "core/game/Spawner.h"
 #include "core/Defs.h"
-#include "screen/UIMouse.h"
+
 #include "world/Spell.h"
+#include "screen/UIMouse.h"
 #include "screen/HUDStates.h"
+#include "screen/HUDText.h"
 
 #include <glm/fwd.hpp>
 
@@ -47,8 +49,14 @@ void SceneMain::init() {
   m_spawner->setTargetPlayer(m_player);
   addChild(m_spawner);
 
-  m_ui_mouse = UIMouse::addUIMouse(this, "assets/UI/29.png", "assets/UI/30.png", 1.0f, Anchor::MIDDLE_CENTER);
   m_hud_states = HUDStates::addHUDStates(this, m_player, glm::vec2(30.0f));
+  m_text_score = HUDText::addHUDText(
+      this,
+      "Score: 0",
+      glm::vec2(m_game.getScreenSize().x - 120.0f, 30.0f),
+      glm::vec2(200.0f, 50.0f));
+
+  m_ui_mouse = UIMouse::addUIMouse(this, "assets/UI/29.png", "assets/UI/30.png", 1.0f, Anchor::MIDDLE_CENTER);
 
   // // 敌人初始化
   // #ifndef NDEBUG
@@ -77,6 +85,7 @@ void SceneMain::handleEvents(SDL_Event &event) {
 /* 更新 */
 void SceneMain::update(const float &delta_time) {
   Scene::update(delta_time);
+  updateScore();
   // m_camera_position += glm::vec2(20.0f, 20.0f) * delta_time;
 }
 
@@ -97,4 +106,11 @@ void SceneMain::renderBackground() {
   auto end = m_world_size - m_camera_position;
   m_game.drawGrid(start, end, 80.0f, {0.5f, 0.5f, 0.5f, 0.1f});
   m_game.drawBoundary(start, end, 5.0f, {1.0f, 1.0f, 1.0f, 1.0f});
+}
+
+/* 更新得分 */
+void SceneMain::updateScore() {
+  if (m_text_score) {
+    m_text_score->setText("Score: " + std::to_string(m_game.getScore()));
+  }
 }

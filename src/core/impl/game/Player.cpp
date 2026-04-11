@@ -42,8 +42,8 @@ void Player::init() {
   // 创建武器
   m_weapon_thunder = WeaponThunder::addWeaponThunder(this, 2.0f, 40.0f);
 
-
-  TextLable::addTextLable(this, "Player", "assets/font/VonwaonBitmap-16px.ttf", 16.0f);
+  // --- 测试 ---
+  // TextLable::addTextLable(this, "Player", "assets/font/VonwaonBitmap-16px.ttf", 16.0f);
 }
 
 /* 事件处理 */

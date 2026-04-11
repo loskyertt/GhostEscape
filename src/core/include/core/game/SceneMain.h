@@ -14,13 +14,15 @@ class Player;
 class Spawner;
 class UIMouse;
 class HUDStates;
+class HUDText;
 
 class SceneMain : public Scene {
  private:
-  Player *m_player;         // 玩家
-  Spawner *m_spawner;       // 敌人生成器
-  UIMouse *m_ui_mouse;      // UI 鼠标指针
-  HUDStates *m_hud_states;  // HUD 状态显示
+  Player *m_player = nullptr;         // 玩家
+  Spawner *m_spawner = nullptr;       // 敌人生成器
+  UIMouse *m_ui_mouse = nullptr;      // UI 鼠标指针
+  HUDStates *m_hud_states = nullptr;  // HUD 状态显示
+  HUDText *m_text_score = nullptr;    // HUD 得分显示
 
  public:
   /* 初始化 */
@@ -41,4 +43,7 @@ class SceneMain : public Scene {
  private:
   /* 绘制背景 */
   void renderBackground();
+
+  /* 更新得分 */
+  void updateScore();
 };

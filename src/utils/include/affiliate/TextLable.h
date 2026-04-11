@@ -45,6 +45,10 @@ class TextLable : public ObjectAffiliate {
       float font_size,
       Anchor anchor = Anchor::MIDDLE_CENTER);
 
+  // getters
+ public:
+  std::string getText() const { return m_ttf_text->text; }
+
   // setters
  public:
   /* 用于初始化时设置字体和字体大小 */

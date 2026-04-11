@@ -120,6 +120,7 @@ void Enemy::changeState(State new_state) {
     case State::DEAD:
       m_current_anim = m_anim_die;
       m_current_anim->setActive(true);
+      m_game.addScore(m_score);
       break;
   }
   m_current_state = new_state;

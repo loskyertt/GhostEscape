@@ -9,8 +9,9 @@
 #pragma once
 
 #include "core/game/Player.h"
-#include "affiliate/SpriteAnim.h"
 #include "core/Object.h"
+
+#include "affiliate/SpriteAnim.h"
 
 class Enemy : public Entity {
  private:
@@ -29,8 +30,7 @@ class Enemy : public Entity {
   };
 
   State m_current_state = State::NORMAL;
-
-  float timer = 0.0f;
+  int m_score = 10;  // 击败敌人获得的分数
 
  public:
   void update(const float &delta_time) override;

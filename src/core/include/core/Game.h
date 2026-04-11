@@ -61,6 +61,9 @@ class Game final {
   Uint64 m_frame_delay = 0;   // 帧延迟：1,000,000,000 / 60 ≈ 16,666,667 纳秒
   float m_delta_time = 0.0f;  // 帧间隔
 
+  int m_score = 0;
+  int m_high_score = 0;
+
   std::mt19937 gen = std::mt19937(std::random_device{}());
 
  public:
@@ -106,7 +109,7 @@ class Game final {
   void renderHorizontalBar(const glm::vec2 &position, const glm::vec2 &size, float percentage, SDL_FColor color);
 
   /* 创建文本 */
-  TTF_Text* createText(const std::string &text, const std::string &font_path, float font_size);
+  TTF_Text *createText(const std::string &text, const std::string &font_path, float font_size);
 
   /* 随机数函数 */
   float randomFloat(float min, float max);
@@ -116,6 +119,9 @@ class Game final {
   glm::vec2 randomVec2(glm::vec2 min, glm::vec2 max);
 
   glm::ivec2 randomIvec2(glm::ivec2 min, glm::ivec2 max);
+
+  /* 增加分数 */
+  void addScore(int score);
 
   // gettters
  public:
@@ -134,6 +140,12 @@ class Game final {
   /* 获取资源 */
   AssetStore *getAssetStore() const { return m_asset_store; }
 
+  /* 获取分数 */
+  int getScore() const { return m_score; }
+
+  /* 获取最高分 */
+  int getHighScore() const { return m_high_score; }
+
   // setters
  public:
   /* 设置鼠标位置 */
@@ -141,4 +153,10 @@ class Game final {
 
   /* 设置鼠标按键状态 */
   void setMouseButtons(SDL_MouseButtonFlags buttons) { m_mouse_buttons = buttons; }
+
+  /* 设置分数 */
+  void setScore(int score);
+
+  /* 设置最高分 */
+  void setHighScore(int high_score) { m_high_score = high_score; }
 };
