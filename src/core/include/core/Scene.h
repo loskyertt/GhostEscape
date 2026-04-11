@@ -5,6 +5,7 @@
  * @Github  :   https://github.com/loskyertt
  * @Desc    :   .....
  */
+#pragma once
 
 #include "ObjectScreen.h"
 #include "ObjectWorld.h"

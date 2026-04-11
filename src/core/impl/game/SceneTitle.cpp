@@ -7,6 +7,7 @@
  */
 
 #include "core/game/SceneTitle.h"
+#include "core/game/SceneMain.h"
 
 #include "screen/HUDText.h"
 #include "screen/HUDButton.h"
@@ -40,10 +41,28 @@ void SceneTitle::init() {
       "assets/font/VonwaonBitmap-16px.ttf",
       32.0f);
 
+  // 开始按钮
+  m_start_button = HUDButton::addHUDButton(
+      this,
+      m_game.getScreenSize() / 2.0f + glm::vec2(-200.0f, 200.0f),
+      "assets/UI/A_Start1.png",
+      "assets/UI/A_Start2.png",
+      "assets/UI/A_Start3.png",
+      2.0f);
+
+  // 作者按钮
+  m_credits_button = HUDButton::addHUDButton(
+      this,
+      m_game.getScreenSize() / 2.0f + glm::vec2(0.0f, 200.0f),
+      "assets/UI/A_Credits1.png",
+      "assets/UI/A_Credits2.png",
+      "assets/UI/A_Credits3.png",
+      2.0f);
+
   // 退出按钮
   m_quit_button = HUDButton::addHUDButton(
       this,
-      m_game.getScreenSize() / 2.0f + glm::vec2(200.0f),
+      m_game.getScreenSize() / 2.0f + glm::vec2(200.0f, 200.0f),
       "assets/UI/A_Quit1.png",
       "assets/UI/A_Quit2.png",
       "assets/UI/A_Quit3.png",
@@ -63,6 +82,7 @@ void SceneTitle::update(const float &delta_time) {
   updateColor();
 
   checkButtonQuit();
+  checkButtonStart();
 }
 
 /* 渲染 */
@@ -93,5 +113,13 @@ void SceneTitle::checkButtonQuit() {
   // TODO: 实现按钮退出检查逻辑
   if (m_quit_button && m_quit_button->getIsTriggered()) {
     m_game.quit();
+  }
+}
+
+void SceneTitle::checkButtonStart() {
+  // TODO: 实现按钮开始检查逻辑
+  if (m_start_button && m_start_button->getIsTriggered()) {
+    auto scene_main = new SceneMain();
+    m_game.safeChangeScene(scene_main);
   }
 }

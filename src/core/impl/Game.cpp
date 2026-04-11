@@ -114,6 +114,10 @@ void Game::init(const std::string &title, int width, int height) {
 void Game::run() {
   while (m_is_running) {
     auto start = SDL_GetTicksNS();
+    if (m_next_scene) {
+      changeScene(m_next_scene);
+      m_next_scene = nullptr;
+    }
 
     handleEvents();
     update(m_delta_time);
@@ -133,6 +137,16 @@ void Game::run() {
     }
     // SDL_Log("FPS: %f", 1.0 / static_cast<double>(m_delta_time));
   }
+}
+
+/* 切换场景 */
+void Game::changeScene(Scene *scene) {
+  if (m_current_scene) {
+    m_current_scene->clean();
+    delete m_current_scene;
+  }
+  m_current_scene = scene;
+  m_current_scene->init();
 }
 
 /* 事件处理 */

@@ -56,6 +56,7 @@ class Game final {
   TTF_TextEngine *m_ttf_engine = nullptr;  // 字体引擎
 
   Scene *m_current_scene;     // 当前场景
+  Scene *m_next_scene;        // 下一个场景
   AssetStore *m_asset_store;  // 资源库
 
  private:
@@ -77,6 +78,12 @@ class Game final {
 
   /* 退出游戏 */
   void quit() { m_is_running = false; }
+
+  /* 切换场景 */
+  void changeScene(Scene *scene);
+
+  /* 安全切换场景 */
+  void safeChangeScene(Scene *scene) { m_next_scene = scene; }
 
  private:
   /* 事件处理 */

@@ -48,4 +48,6 @@ class SceneTitle : public Scene {
   void updateColor();
 
   void checkButtonQuit();
+
+  void checkButtonStart();
 };
