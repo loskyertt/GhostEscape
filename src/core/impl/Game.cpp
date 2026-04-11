@@ -405,6 +405,12 @@ void Game::addScore(int score) {
   setScore(m_score += score);
 }
 
+/* 判断鼠标是否在材质范围内 */
+bool Game::isMouseInRect(const glm::vec2 &top_left, const glm::vec2 &bottom_right) {
+  return m_mouse_pos.x >= top_left.x && m_mouse_pos.x <= bottom_right.x && m_mouse_pos.y >= top_left.y &&
+      m_mouse_pos.y <= bottom_right.y;
+}
+
 /* 设置分数 */
 void Game::setScore(int score) {
   m_score = score;

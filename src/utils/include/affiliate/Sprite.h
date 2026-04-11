@@ -41,7 +41,15 @@ class Sprite : public ObjectAffiliate {
   void render() override;
 
  public:
-  /* 创建静态精灵 */
+  /**
+   * @brief 创建精灵
+   *
+   * - @param parrent 父对象
+   * - @param file_path 精灵文件路径
+   * - @param scale 缩放比例
+   * - @param anchor 锚点
+   * - @return Sprite* 精灵对象
+   */
   static Sprite *addSprite(
       ObjectScreen *parrent,
       const std::string &file_path,

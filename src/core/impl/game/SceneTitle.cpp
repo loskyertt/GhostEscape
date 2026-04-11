@@ -9,6 +9,7 @@
 #include "core/game/SceneTitle.h"
 
 #include "screen/HUDText.h"
+#include "screen/HUDButton.h"
 
 #include <glm/fwd.hpp>
 
@@ -38,6 +39,15 @@ void SceneTitle::init() {
       glm::vec2(200.0f, 50.0f),
       "assets/font/VonwaonBitmap-16px.ttf",
       32.0f);
+
+  // 退出按钮
+  m_quit_button = HUDButton::addHUDButton(
+      this,
+      m_game.getScreenSize() / 2.0f + glm::vec2(200.0f),
+      "assets/UI/A_Quit1.png",
+      "assets/UI/A_Quit2.png",
+      "assets/UI/A_Quit3.png",
+      2.0f);
 }
 
 /* 事件处理 */
@@ -51,6 +61,8 @@ void SceneTitle::update(const float &delta_time) {
 
   m_color_timer += delta_time;
   updateColor();
+
+  checkButtonQuit();
 }
 
 /* 渲染 */
@@ -75,4 +87,11 @@ void SceneTitle::updateColor() {
   m_boundary_color.r = 0.5f + 0.5f * sinf(m_color_timer * 0.9f);
   m_boundary_color.g = 0.5f + 0.5f * sinf(m_color_timer * 0.8f);
   m_boundary_color.b = 0.5f + 0.5f * sinf(m_color_timer * 0.7f);
+}
+
+void SceneTitle::checkButtonQuit() {
+  // TODO: 实现按钮退出检查逻辑
+  if (m_quit_button && m_quit_button->getIsTriggered()) {
+    m_game.quit();
+  }
 }

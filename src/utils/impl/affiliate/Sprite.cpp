@@ -38,7 +38,6 @@ void Sprite::render() {
   m_game.renderTexture(m_texture, pos, m_size, m_percentage);
 }
 
-/* 创建静态精灵 */
 Sprite *Sprite::addSprite(ObjectScreen *parrent, const std::string &file_path, float scale, Anchor anchor) {
   auto sprite = new Sprite();
   sprite->init();

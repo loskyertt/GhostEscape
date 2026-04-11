@@ -12,11 +12,17 @@
 
 #include <SDL3/SDL_pixels.h>
 
+class HUDButton;
+
 class SceneTitle : public Scene {
  protected:
   SDL_FColor m_boundary_color{0.5f, 0.5f, 0.5f, 1.0f};
 
   float m_color_timer = 0.0f;
+
+  HUDButton *m_start_button = nullptr;
+  HUDButton *m_credits_button = nullptr;
+  HUDButton *m_quit_button = nullptr;
 
  public:
   /* 初始化 */
@@ -40,4 +46,6 @@ class SceneTitle : public Scene {
 
   /* 更新颜色 */
   void updateColor();
+
+  void checkButtonQuit();
 };

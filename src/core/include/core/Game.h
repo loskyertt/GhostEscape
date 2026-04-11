@@ -75,6 +75,9 @@ class Game final {
   /* 运行游戏 */
   void run();
 
+  /* 退出游戏 */
+  void quit() { m_is_running = false; }
+
  private:
   /* 事件处理 */
   void handleEvents();
@@ -145,6 +148,9 @@ class Game final {
 
   /* 增加分数 */
   void addScore(int score);
+
+  /* 判断鼠标是否在材质范围内 */
+  bool isMouseInRect(const glm::vec2 &top_left, const glm::vec2 &bottom_right);
 
   // gettters
  public:
