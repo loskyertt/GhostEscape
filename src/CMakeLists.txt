@@ -12,6 +12,7 @@ add_library(utils STATIC
   utils/impl/affiliate/Sprite.cpp
   utils/impl/affiliate/SpriteAnim.cpp
   utils/impl/affiliate/AffiliateBar.cpp
+  utils/impl/affiliate/TextLable.cpp
   # raw（游戏机制：状态/武器）
   utils/impl/raw/States.cpp
   utils/impl/raw/Weapon.cpp

@@ -18,6 +18,7 @@
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_video.h>
 #include <SDL3_mixer/SDL_mixer.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 #include <random>
 #include <string>
@@ -47,9 +48,10 @@ class Game final {
   glm::vec2 m_mouse_pos = glm::vec2(0);      // 鼠标位置 (x, y)
   SDL_MouseButtonFlags m_mouse_buttons = 0;  // 鼠标按键状态
 
-  SDL_Window *m_window = nullptr;      // 窗口
-  SDL_Renderer *m_renderer = nullptr;  // 渲染器
-  MIX_Mixer *m_mixer = nullptr;        // 混音器
+  SDL_Window *m_window = nullptr;          // 窗口
+  SDL_Renderer *m_renderer = nullptr;      // 渲染器
+  MIX_Mixer *m_mixer = nullptr;            // 混音器
+  TTF_TextEngine *m_ttf_engine = nullptr;  // 字体引擎
 
   Scene *m_current_scene;     // 当前场景
   AssetStore *m_asset_store;  // 资源库
@@ -97,11 +99,14 @@ class Game final {
       const glm::vec2 &size,
       const glm::vec2 &mask = glm::vec2(1.0f));
 
-  /* 绘制碰撞体（用于调试） */
+  /* 渲染碰撞体（用于调试） */
   void renderColliders(const glm::vec2 &position, const glm::vec2 &size, float alpha = 0.5f);
 
-  /* 绘制血量条 */
+  /* 渲染血量条 */
   void renderHorizontalBar(const glm::vec2 &position, const glm::vec2 &size, float percentage, SDL_FColor color);
+
+  /* 创建文本 */
+  TTF_Text* createText(const std::string &text, const std::string &font_path, float font_size);
 
   /* 随机数函数 */
   float randomFloat(float min, float max);

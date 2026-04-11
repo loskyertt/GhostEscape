@@ -71,9 +71,22 @@ void Game::init(const std::string &title, int width, int height) {
 
   // === 创建窗口与渲染器 ===
   SDL_CreateWindowAndRenderer(title.c_str(), width, height, SDL_WINDOW_RESIZABLE, &m_window, &m_renderer);
+  if (!m_window || !m_renderer) {
+    SDL_Log("SDL_CreateWindowAndRenderer Error: %s", SDL_GetError());
+    SDL_Quit();
+    return;
+  }
 
   // === 设置窗口逻辑分辨率 ===
   SDL_SetRenderLogicalPresentation(m_renderer, width, height, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+
+  // === 设置字体 ===
+  m_ttf_engine = TTF_CreateRendererTextEngine(m_renderer);
+  if (!m_ttf_engine) {
+    SDL_Log("TTF_CreateRendererTextEngine Error: %s", SDL_GetError());
+    SDL_Quit();
+    return;
+  }
 
   // === 计算帧延迟 ===
   m_frame_delay = 1000000000 / m_FPS;
@@ -150,6 +163,10 @@ void Game::clean() {
   if (m_asset_store) {
     m_asset_store->clean();
     delete m_asset_store;
+  }
+
+  if (m_ttf_engine) {
+    TTF_DestroyRendererTextEngine(m_ttf_engine);
   }
 
   // 释放渲染器和窗口
@@ -250,7 +267,7 @@ void Game::renderTexture(
       texture.is_flip ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
-/* 绘制碰撞体（用于调试） */
+/* 渲染碰撞体（用于调试） */
 void Game::renderColliders(const glm::vec2 &position, const glm::vec2 &size, float alpha) {
   auto texture = m_asset_store->getImage("assets/UI/circle.png");
   SDL_FRect rect = {
@@ -263,7 +280,7 @@ void Game::renderColliders(const glm::vec2 &position, const glm::vec2 &size, flo
   SDL_RenderTexture(m_renderer, texture, NULL, &rect);
 }
 
-/* 绘制血量条 */
+/* 渲染血量条 */
 void Game::renderHorizontalBar(const glm::vec2 &position, const glm::vec2 &size, float percentage, SDL_FColor color) {
   SDL_SetRenderDrawColorFloat(m_renderer, color.r, color.g, color.b, color.a);
 
@@ -282,6 +299,11 @@ void Game::renderHorizontalBar(const glm::vec2 &position, const glm::vec2 &size,
   SDL_RenderRect(m_renderer, &boundary_rect);
   SDL_RenderFillRect(m_renderer, &fill_rect);
   SDL_SetRenderDrawColorFloat(m_renderer, 0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+/* 创建文本 */
+TTF_Text *Game::createText(const std::string &text, const std::string &font_path, float font_size) {
+  return TTF_CreateText(m_ttf_engine, m_asset_store->getFont(font_path, font_size), text.c_str(), 0);
 }
 
 /* 随机数函数 */
