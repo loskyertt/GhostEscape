@@ -62,6 +62,7 @@ add_library(core STATIC
   core/impl/game/Enemy.cpp
   core/impl/game/Player.cpp
   core/impl/game/SceneMain.cpp
+  core/impl/game/SceneTitle.cpp
   core/impl/game/Spawner.cpp
   core/impl/game/WeaponThunder.cpp
 )

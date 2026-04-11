@@ -93,11 +93,25 @@ class Game final {
   /* 绘制网格 */
   void drawGrid(const glm::vec2 &top_left, const glm::vec2 &bottom_right, float grid_width, const SDL_FColor &color);
 
-  /* 绘制边框 */
+  /**
+   * @brief 绘制边框
+   *
+   * - @param top_left 左上角位置
+   * - @param bottom_right 右下角位置
+   * - @param boundary_width 边框宽度
+   * - @param color 边框颜色
+   */
   void
   drawBoundary(const glm::vec2 &top_left, const glm::vec2 &bottom_right, float boundary_width, const SDL_FColor &color);
 
-  /* 渲染材质 */
+  /**
+   * @brief 渲染材质
+   *
+   * - @param texture 纹理
+   * - @param position 位置
+   * - @param size 大小
+   * - @param mask 模板（默认为1.0f）
+   */
   void renderTexture(
       const Texture &texture,
       const glm::vec2 &position,

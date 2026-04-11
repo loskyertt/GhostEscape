@@ -24,7 +24,7 @@ class AssetStore {
  private:
   std::unordered_map<std::string, SDL_Texture *> m_textures;  // 容器：材质
   std::unordered_map<std::string, MIX_Audio *> m_sounds;      // 容器：音效或音乐
-  std::unordered_map<std::string, TTF_Font *> m_fonts;        // 容器：字体
+  std::unordered_map<std::string, TTF_Font *> m_fonts;        // container: fonts (key: "path:size")
 
  public:
   /* 设置 render 和 mixer */
@@ -41,10 +41,11 @@ class AssetStore {
   /* 载入图片 */
   void loadImage(const std::string &file_path);
 
-  /*
-   * 载入声音资源
-   * @param file_path 文件路径，资源的唯一标识，后续用这个 key 来获取
-   * @param predecode true=预解码（音效），false=流式（背景音乐）
+  /**
+   * @brief 载入声音资源
+   *
+   * - @param file_path 文件路径，资源的唯一标识，后续用这个 key 来获取
+   * - @param predecode true=预解码（音效），false=流式（背景音乐）
    */
   void loadSound(const std::string &file_path, bool predecode);
 
@@ -55,9 +56,11 @@ class AssetStore {
   /* 获取图片资源 */
   SDL_Texture *getImage(const std::string &file_path);
 
-  /*
-   * 获取声音资源（必须先 loadSound，否则返回 nullptr）
-   * @param file_path 与 loadSound 时传入的 file_path 一致
+  /**
+   * @brief 获取声音资源（必须先 loadSound，否则返回 nullptr）
+   *
+   * - @param file_path 与 loadSound 时传入的 file_path 一致
+   * - @return MIX_Audio*
    */
   MIX_Audio *getSound(const std::string &file_path);
 

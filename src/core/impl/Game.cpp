@@ -8,7 +8,7 @@
 
 #include "core/Game.h"
 #include "core/AssetStore.h"
-#include "core/game/SceneMain.h"
+#include "core/game/SceneTitle.h"
 
 #include "affiliate/Sprite.h"
 
@@ -106,7 +106,7 @@ void Game::init(const std::string &title, int width, int height) {
   }
 
   // === 创建场景 ===
-  m_current_scene = new SceneMain();
+  m_current_scene = new SceneTitle();
   m_current_scene->init();
 }
 

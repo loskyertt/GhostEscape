@@ -74,8 +74,9 @@ void AssetStore::loadFont(const std::string &file_path, const float &font_size) 
     SDL_Log("Failed to load font: %s", SDL_GetError());
     return;
   }
-
-  m_fonts.emplace(file_path, font);
+  // 使用 "路径:大小" 作为键，这样不同大小的同种字体会被分别缓存和加载。
+  std::string key = file_path + ":" + std::to_string(static_cast<int>(font_size));
+  m_fonts[key] = font;
 }
 
 /* 获取图片资源 */
@@ -112,15 +113,17 @@ MIX_Audio *AssetStore::getSound(const std::string &file_path) {
 
 /* 获取字体资源 */
 TTF_Font *AssetStore::getFont(const std::string &file_path, const float &font_size) {
-  auto iter = m_fonts.find(file_path);
+  // Use "path:size" as the key to match the format used in loadFont
+  std::string key = file_path + ":" + std::to_string(static_cast<int>(font_size));
+  auto iter = m_fonts.find(key);
 
-  // 第一次找：如果没找到，就载入容器
+  // First search: if not found, load into container
   if (iter == m_fonts.end()) {
     loadFont(file_path, font_size);
-    iter = m_fonts.find(file_path);
+    iter = m_fonts.find(key);
   }
 
-  // 第二次找：如果载入容器后也没找到，表明确实没有该资源
+  // Second search: if still not found after loading, the resource truly doesn't exist
   if (iter == m_fonts.end()) {
     SDL_Log("Failed to get font: %s", SDL_GetError());
     return nullptr;

@@ -30,15 +30,15 @@ class HUDText : public ObjectScreen {
   /**
   * @brief 添加一个HUD文本
   *
-  * @param parent 父对象
-  * @param text 文本内容
-  * @param position 位置
-  * @param size 大小
-  * @param font_path 字体路径
-  * @param font_size 字体大小
-  * @param bg_path 背景图片路径
-  * @param anchor 锚点
-  * @return HUDText*
+  * - @param parent 父对象
+  * - @param text 文本内容
+  * - @param render_position 位置
+  * - @param size 大小
+  * - @param font_path 字体路径
+  * - @param font_size 字体大小
+  * - @param bg_path 背景图片路径
+  * - @param anchor 锚点
+  * - @return HUDText*
   */
   static HUDText *addHUDText(
       Object *parent,
