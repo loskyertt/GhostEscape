@@ -19,6 +19,7 @@ add_library(utils STATIC
   # screen（屏幕空间 UI）
   utils/impl/screen/UIMouse.cpp
   utils/impl/screen/HUDStates.cpp
+  utils/impl/screen/HUDSkill.cpp
   # world（世界空间对象：法术/特效）
   utils/impl/world/Effect.cpp
   utils/impl/world/Spell.cpp

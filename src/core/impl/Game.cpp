@@ -245,14 +245,14 @@ void Game::renderTexture(
     const glm::vec2 &mask) {
   SDL_FRect src_rect = {
       texture.src_rect.x,
-      texture.src_rect.y,
+      texture.src_rect.y + texture.src_rect.h * (1.0f - mask.y),
       texture.src_rect.w * mask.x,
       texture.src_rect.h * mask.y,
   };
 
   SDL_FRect dst_rect = {
       position.x,
-      position.y,
+      position.y + size.y * (1.0f - mask.y),
       size.x * mask.x,
       size.y * mask.y,
   };

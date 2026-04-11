@@ -8,9 +8,17 @@
 
 #include "core/Entity.h"
 #include "raw/Weapon.h"
+#include "screen/HUDSkill.h"
 
 class WeaponThunder : public Weapon {
+ protected:
+  HUDSkill *m_hud_skill = nullptr;
+
  public:
+  virtual void init() override;
+
+  virtual void update(const float &delta_time) override;
+
   void handleEvents(SDL_Event &event) override;
 
  public:

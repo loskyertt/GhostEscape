@@ -8,11 +8,26 @@
 
 #include "core/game/WeaponThunder.h"
 #include "core/Defs.h"
-#include "world/Spell.h"
 #include "core/Scene.h"
+
+#include "world/Spell.h"
 
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_mouse.h>
+
+void WeaponThunder::init() {
+  Weapon::init();
+  auto scene = m_game.getCurrentScene();
+  auto pos = glm::vec2(m_game.getScreenSize().x - 300, 30);
+  m_hud_skill = HUDSkill::addHUDSkill(scene, "assets/UI/Electric-Icon.png", pos, 0.14f, Anchor::MIDDLE_CENTER);
+}
+
+void WeaponThunder::update(const float &delta_time) {
+  Weapon::update(delta_time);
+  if (m_hud_skill) {
+    m_hud_skill->setPercentage(m_cool_down_timer / m_cool_down);
+  }
+}
 
 void WeaponThunder::handleEvents(SDL_Event &event) {
   if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
