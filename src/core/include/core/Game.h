@@ -51,6 +51,8 @@ class Game final {
   SDL_Window *m_window = nullptr;          // 窗口
   SDL_Renderer *m_renderer = nullptr;      // 渲染器
   MIX_Mixer *m_mixer = nullptr;            // 混音器
+  MIX_Track *m_music_track = nullptr;      // 音乐（长音频）轨道
+  MIX_Track *m_sfx_track = nullptr;        // 音效（短音频）轨道
   TTF_TextEngine *m_ttf_engine = nullptr;  // 字体引擎
 
   Scene *m_current_scene;     // 当前场景
@@ -113,12 +115,19 @@ class Game final {
 
   /* 随机数函数 */
   float randomFloat(float min, float max);
-
   int randomInt(int min, int max);
-
   glm::vec2 randomVec2(glm::vec2 min, glm::vec2 max);
-
   glm::ivec2 randomIvec2(glm::ivec2 min, glm::ivec2 max);
+
+  /* 音频函数 */
+  void playMusic(const std::string &music_path, bool loop = true);
+  void stopMusic();
+  void pauseMusic();
+  void resumeMusic();
+  void playSound(const std::string &sound_path);
+  void stopSound();
+  void pauseSound();
+  void resumeSound();
 
   /* 增加分数 */
   void addScore(int score);

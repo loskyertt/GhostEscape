@@ -6,8 +6,9 @@
  * @Desc    :   .....
  */
 
-#include "affiliate/TextLable.h"
 #include "core/AssetStore.h"
+
+#include "affiliate/TextLable.h"
 #include "glm/fwd.hpp"
 
 #include <SDL3_ttf/SDL_ttf.h>

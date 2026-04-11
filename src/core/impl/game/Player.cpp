@@ -75,6 +75,17 @@ void Player::clean() {
   Entity::clean();
 }
 
+/* 受到伤害 */
+void Player::takeDamage(float damage) {
+  // 如果玩家处于无敌状态，则不受到伤害
+  if (!m_states || m_states->getIsInvincible()) {
+    return;
+  }
+  Entity::takeDamage(damage);
+  m_game.playSound("assets/sound/hit-flesh-02-266309.mp3");
+}
+
+
 /* 键盘控制逻辑 */
 void Player::keyboardControl() {
   auto currentKeyStates = SDL_GetKeyboardState(NULL);
@@ -140,5 +151,6 @@ void Player::checkDeath() {
     m_effect->setPosition(m_position);
     m_game.getCurrentScene()->safeAddChild(m_effect);
     setActive(false);
+    m_game.playSound("assets/sound/female-scream-02-89290.mp3");
   }
 }

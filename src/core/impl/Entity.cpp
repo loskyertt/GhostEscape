@@ -9,6 +9,7 @@
 #include "core/ObjectWorld.h"
 #include "core/Scene.h"
 #include "core/Entity.h"
+
 #include "raw/States.h"
 #include "affiliate/AffiliateBar.h"
 

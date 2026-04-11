@@ -13,6 +13,7 @@
 #include "core/ObjectScreen.h"
 
 #include <glm/fwd.hpp>
+
 #include <string>
 
 class TextLable;

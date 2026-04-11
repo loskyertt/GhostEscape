@@ -42,6 +42,9 @@ class Player : public Entity {
   /* 清理 */
   void clean() override;
 
+  /* 受到伤害 */
+  void takeDamage(float damage) override;
+
  public:
   /* 键盘控制逻辑 */
   void keyboardControl();

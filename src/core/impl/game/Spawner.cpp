@@ -20,7 +20,8 @@ void Spawner::update(const float &delta_time) {
   m_timer += delta_time;
   if (m_timer >= m_interval) {
     m_timer = 0.0f;
-    // TODO: spawn objects
+    // TODO: spawn enemy
+    m_game.playSound("assets/sound/silly-ghost-sound-242342.mp3");
     for (int i = 0; i < m_num; i++) {
       auto position = m_game.randomVec2(
           m_game.getCurrentScene()->getCameraPosition(),

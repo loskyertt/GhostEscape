@@ -9,6 +9,7 @@
 #include "core/Game.h"
 #include "core/AssetStore.h"
 #include "core/game/SceneMain.h"
+
 #include "affiliate/Sprite.h"
 
 #include <glm/fwd.hpp>
@@ -94,6 +95,16 @@ void Game::init(const std::string &title, int width, int height) {
   // === 创建资源管理器 ===
   m_asset_store = new AssetStore(m_renderer, m_mixer);
 
+  // === 创建音频轨道 ===
+  m_music_track = MIX_CreateTrack(m_mixer);
+  if (!m_music_track) {
+    SDL_Log("MIX_CreateTrack (music) Error: %s", SDL_GetError());
+  }
+  m_sfx_track = MIX_CreateTrack(m_mixer);
+  if (!m_sfx_track) {
+    SDL_Log("MIX_CreateTrack (sfx) Error: %s", SDL_GetError());
+  }
+
   // === 创建场景 ===
   m_current_scene = new SceneMain();
   m_current_scene->init();
@@ -159,6 +170,21 @@ void Game::clean() {
     delete m_current_scene;
   }
 
+  // 先停止所有轨道
+  if (m_mixer) {
+    MIX_StopAllTracks(m_mixer, 500);
+  }
+
+  // 销毁轨道
+  if (m_music_track) {
+    MIX_DestroyTrack(m_music_track);
+    m_music_track = nullptr;
+  }
+  if (m_sfx_track) {
+    MIX_DestroyTrack(m_sfx_track);
+    m_sfx_track = nullptr;
+  }
+
   // 清理资源
   if (m_asset_store) {
     m_asset_store->clean();
@@ -169,7 +195,7 @@ void Game::clean() {
     TTF_DestroyRendererTextEngine(m_ttf_engine);
   }
 
-  // 释放渲染器和窗口
+  // 销毁渲染器和窗口
   if (m_renderer) {
     SDL_DestroyRenderer(m_renderer);
   }
@@ -182,14 +208,9 @@ void Game::clean() {
     MIX_DestroyMixer(m_mixer);
   }
 
-  // 退出 MIX
-  MIX_Quit();
-
-  // 退出 TTF
-  TTF_Quit();
-
-  // 退出 SDL
-  SDL_Quit();
+  MIX_Quit();  // 退出 MIX
+  TTF_Quit();  // 退出 TTF
+  SDL_Quit();  // 退出 SDL
 }
 
 /* 绘制网格 */
@@ -323,6 +344,60 @@ glm::vec2 Game::randomVec2(glm::vec2 min, glm::vec2 max) {
 
 glm::ivec2 Game::randomIvec2(glm::ivec2 min, glm::ivec2 max) {
   return glm::ivec2(randomInt(min.x, max.x), randomInt(min.y, max.y));
+}
+
+/* 音频函数 */
+void Game::playMusic(const std::string &music_path, bool loop) {
+  // 背景音乐固定流式加载（predecode = false）
+  if (!m_asset_store->hasSound(music_path)) {
+    m_asset_store->loadSound(music_path, false);
+  }
+
+  MIX_Audio *audio = m_asset_store->getSound(music_path);
+  if (!audio)
+    return;
+  MIX_SetTrackAudio(m_music_track, audio);
+  SDL_PropertiesID props = SDL_CreateProperties();
+  SDL_SetNumberProperty(props, MIX_PROP_PLAY_LOOPS_NUMBER, loop ? -1 : 0);
+  MIX_PlayTrack(m_music_track, props);
+  SDL_DestroyProperties(props);
+}
+
+void Game::stopMusic() {
+  MIX_StopTrack(m_music_track, 500);
+}
+
+void Game::pauseMusic() {
+  MIX_PauseTrack(m_music_track);
+}
+
+void Game::resumeMusic() {
+  MIX_ResumeTrack(m_music_track);
+}
+
+void Game::playSound(const std::string &sound_path) {
+  // 音效固定预解码加载（predecode = true）
+  if (!m_asset_store->hasSound(sound_path)) {
+    m_asset_store->loadSound(sound_path, true);
+  }
+
+  MIX_Audio *audio = m_asset_store->getSound(sound_path);
+  if (!audio)
+    return;
+  MIX_SetTrackAudio(m_sfx_track, audio);
+  MIX_PlayTrack(m_sfx_track, 0);
+}
+
+void Game::stopSound() {
+  MIX_StopTrack(m_sfx_track, 500);
+}
+
+void Game::pauseSound() {
+  MIX_PauseTrack(m_sfx_track);
+}
+
+void Game::resumeSound() {
+  MIX_ResumeTrack(m_sfx_track);
 }
 
 /* 增加分数 */

@@ -34,6 +34,9 @@ class AssetStore {
   /* 释放资源 */
   void clean();
 
+  /* 检查声音资源是否存在 */
+  bool hasSound(const std::string &file_path);
+
  public:
   /* 载入图片 */
   void loadImage(const std::string &file_path);

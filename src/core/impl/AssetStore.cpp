@@ -34,6 +34,11 @@ void AssetStore::clean() {
   m_fonts.clear();
 }
 
+/* 检查声音资源是否存在 */
+bool AssetStore::hasSound(const std::string &file_path) {
+  return m_sounds.count(file_path) > 0;
+}
+
 /* 载入图片 */
 void AssetStore::loadImage(const std::string &file_path) {
   SDL_Texture *texture = IMG_LoadTexture(m_renderer, file_path.c_str());

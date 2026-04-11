@@ -33,6 +33,7 @@ void WeaponThunder::handleEvents(SDL_Event &event) {
   if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
     if (event.button.button == SDL_BUTTON_LEFT) {
       if (canAttack()) {
+        m_game.playSound("assets/sound/big-thunder.mp3");
         auto pos = m_game.getMousePosition() + m_game.getCurrentScene()->getCameraPosition();
         auto spell =
             Spell::addSpell(nullptr, "assets/effect/Thunderstrike w blur.png", pos, 40.0f, 3.0f, Anchor::MIDDLE_CENTER);
