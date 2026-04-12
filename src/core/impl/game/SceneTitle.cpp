@@ -19,9 +19,11 @@
 
 #include <string>
 #include <cmath>
+#include <fstream>
 
 void SceneTitle::init() {
   Scene::init();
+  loadDate("data/score.dat");
   SDL_ShowCursor();
   m_game.playMusic("assets/bgm/Spooky music.mp3");
 
@@ -110,6 +112,16 @@ void SceneTitle::render() {
 
 void SceneTitle::clean() {
   Scene::clean();
+}
+
+void SceneTitle::loadDate(const std::string &file_path) {
+  int score = 0;
+  std::ifstream file(file_path, std::ios::binary);  // 以二进制形式保存
+  if (file.is_open()) {
+    file.read(reinterpret_cast<char *>(&score), sizeof(score));
+    file.close();
+  }
+  m_game.setHighScore(score);
 }
 
 void SceneTitle::renderBackground() {

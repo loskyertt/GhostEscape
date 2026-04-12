@@ -46,6 +46,9 @@ class SceneMain : public Scene {
   /* 清理 */
   void clean() override;
 
+  /* 保存数据 */
+  void saveData(const std::string &file_path) override;
+
  private:
   /* 绘制背景 */
   void renderBackground();

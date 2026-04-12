@@ -13,6 +13,7 @@
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 
+#include <string>
 #include <vector>
 
 class Scene : public Object {
@@ -47,6 +48,12 @@ class Scene : public Object {
 
   /* 移除 Object */
   void removeChild(Object *child) override;
+
+  /* 保存数据 */
+  virtual void saveData(const std::string &file_path) {}
+
+  /* 载入存档 */
+  virtual void loadDate(const std::string &file_path) {}
 
   /* 世界坐标 -> 渲染坐标 */
   glm::vec2 worldToScreen(const glm::vec2 &world_position) { return world_position - m_camera_position; }

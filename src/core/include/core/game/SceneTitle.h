@@ -43,6 +43,9 @@ class SceneTitle : public Scene {
   /* 清理 */
   void clean() override;
 
+  /* 载入数据 */
+  void loadDate(const std::string &file_path) override;
+
  private:
   /* 渲染背景 */
   void renderBackground();

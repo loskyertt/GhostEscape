@@ -19,7 +19,9 @@
 #include "screen/HUDText.h"
 #include "screen/HUDButton.h"
 
+#include <fstream>
 #include <glm/fwd.hpp>
+#include <ios>
 
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_log.h>
@@ -113,6 +115,7 @@ void SceneMain::update(const float &delta_time) {
 
   if (m_player && !m_player->getActiveState()) {
     m_end_timer->start();
+    saveData("data/score.dat");
   }
   checkEndTimer();
 }
@@ -124,6 +127,15 @@ void SceneMain::render() {
 
 void SceneMain::clean() {
   Scene::clean();
+}
+
+void SceneMain::saveData(const std::string &file_path) {
+  auto score = m_game.getHighScore();
+  std::ofstream file(file_path, std::ios::binary);  // 以二进制形式保存
+  if (file.is_open()) {
+    file.write(reinterpret_cast<const char *>(&score), sizeof(score));
+    file.close();
+  }
 }
 
 void SceneMain::renderBackground() {
@@ -165,6 +177,7 @@ void SceneMain::checkButtonBack() {
   // TODO: 实现按钮返回检查逻辑
   if (m_button_back && m_button_back->getIsTriggered()) {
     // TODO: 返回主菜单
+    saveData("data/score.dat");
     m_game.setScore(0);
     auto scene_title = new SceneTitle();
     m_game.safeChangeScene(scene_title);
