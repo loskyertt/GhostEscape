@@ -12,6 +12,7 @@
 #include "core/game/Spawner.h"
 #include "core/Defs.h"
 
+#include "raw/Timer.h"
 #include "world/Spell.h"
 #include "screen/UIMouse.h"
 #include "screen/HUDStates.h"
@@ -51,6 +52,8 @@ void SceneMain::init() {
   m_spawner->init();
   m_spawner->setTargetPlayer(m_player);
   addChild(m_spawner);
+
+  m_end_timer = Timer::addTimer(this);
 
   m_button_pause = HUDButton::addHUDButton(this,
       m_game.getScreenSize() - glm::vec2(230.0f, 30.0f),
@@ -107,6 +110,11 @@ void SceneMain::update(const float &delta_time) {
   checkButtonPause();
   checkButtonRestart();
   checkButtonBack();
+
+  if (m_player && !m_player->getActiveState()) {
+    m_end_timer->start();
+  }
+  checkEndTimer();
 }
 
 void SceneMain::render() {
@@ -147,6 +155,7 @@ void SceneMain::checkButtonRestart() {
   // TODO: 实现按钮重新开始检查逻辑
   if (m_button_restart && m_button_restart->getIsTriggered()) {
     // TODO: 重新开始游戏
+    m_game.setScore(0);
     auto new_scene = new SceneMain();
     m_game.safeChangeScene(new_scene);  // 或者当前场景先 clean 再 init
   }
@@ -156,7 +165,22 @@ void SceneMain::checkButtonBack() {
   // TODO: 实现按钮返回检查逻辑
   if (m_button_back && m_button_back->getIsTriggered()) {
     // TODO: 返回主菜单
+    m_game.setScore(0);
     auto scene_title = new SceneTitle();
     m_game.safeChangeScene(scene_title);
   }
+}
+
+void SceneMain::checkEndTimer() {
+  if (m_end_timer && !m_end_timer->timeOut()) {
+    return;
+  }
+  // TODO: 游戏结束
+  pause();
+  m_button_restart->setRenderPosition(m_game.getScreenSize() / 2.0f - glm::vec2(200.0f, 0));
+  m_button_restart->setScale(4.0f);
+  m_button_back->setRenderPosition(m_game.getScreenSize() / 2.0f + glm::vec2(200.0f, 0));
+  m_button_back->setScale(4.0f);
+  m_button_pause->setActive(false);
+  m_end_timer->stop();
 }

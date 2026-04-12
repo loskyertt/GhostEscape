@@ -10,11 +10,11 @@
 #include "core/Entity.h"
 #include "core/Scene.h"
 
-#include "raw/States.h"
 #include "world/Effect.h"
 #include "affiliate/Collider.h"
 #include "affiliate/SpriteAnim.h"
-#include "affiliate/TextLable.h"
+#include "raw/States.h"
+#include "raw/Timer.h"
 
 #include <glm/geometric.hpp>
 #include <glm/common.hpp>
@@ -26,6 +26,10 @@
 /* 初始化 */
 void Player::init() {
   Entity::init();
+
+  m_timer_flash = Timer::addTimer(this, 0.6f);
+  m_timer_flash->start();
+
   m_max_speed = 500.0f;  // 设置玩家速度
 
   // === 测试 ===
@@ -65,6 +69,9 @@ void Player::update(const float &delta_time) {
 
 /* 渲染 */
 void Player::render() {
+  if (m_states && m_states->getIsInvincible() && m_timer_flash->getProgress() < 0.5f) {
+    return;
+  }
   Entity::render();
 
   // m_game.drawBoundary(m_render_postion, m_render_postion + glm::vec2(20.0f), 5.0f, {1.0f, 0.0, 0.0, 1.0f});
@@ -84,7 +91,6 @@ void Player::takeDamage(float damage) {
   Entity::takeDamage(damage);
   m_game.playSound("assets/sound/hit-flesh-02-266309.mp3");
 }
-
 
 /* 键盘控制逻辑 */
 void Player::keyboardControl() {

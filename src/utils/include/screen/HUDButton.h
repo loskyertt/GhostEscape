@@ -75,4 +75,6 @@ class HUDButton : public ObjectScreen {
   void setIsHovered(bool hovered) { m_is_hovered = hovered; }
 
   void setIsPressed(bool pressed) { m_is_pressed = pressed; }
+
+  void setScale(float scale);
 };

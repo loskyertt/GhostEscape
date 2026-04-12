@@ -107,3 +107,9 @@ bool HUDButton::getIsTriggered() {
   }
   return false;
 }
+
+void HUDButton::setScale(float scale) {
+  m_sprite_normal->setScale(scale);
+  m_sprite_hover->setScale(scale);
+  m_sprite_pressed->setScale(scale);
+}

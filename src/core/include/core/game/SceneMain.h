@@ -16,6 +16,7 @@ class UIMouse;
 class HUDStates;
 class HUDText;
 class HUDButton;
+class Timer;
 
 class SceneMain : public Scene {
  private:
@@ -27,6 +28,7 @@ class SceneMain : public Scene {
   HUDButton *m_button_pause = nullptr;    // 暂停按钮
   HUDButton *m_button_restart = nullptr;  // 重新开始按钮
   HUDButton *m_button_back = nullptr;     // 返回按钮
+  Timer *m_end_timer = nullptr;           // 结束计时器
 
  public:
   /* 初始化 */
@@ -54,4 +56,6 @@ class SceneMain : public Scene {
   void checkButtonPause();
   void checkButtonRestart();
   void checkButtonBack();
+
+  void checkEndTimer();
 };

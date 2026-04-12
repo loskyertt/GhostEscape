@@ -16,6 +16,7 @@ add_library(utils STATIC
   # raw（游戏机制：状态/武器）
   utils/impl/raw/States.cpp
   utils/impl/raw/Weapon.cpp
+  utils/impl/raw/Timer.cpp
   # screen（屏幕空间 UI）
   utils/impl/screen/UIMouse.cpp
   utils/impl/screen/HUDStates.cpp

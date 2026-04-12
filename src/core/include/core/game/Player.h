@@ -14,17 +14,17 @@
 
 class States;
 class Effect;
+class Timer;
 
 class Player : public Entity {
  private:
   SpriteAnim *sprite_idle = nullptr;
   SpriteAnim *sprite_move = nullptr;
+  Effect *m_effect = nullptr;
+  WeaponThunder *m_weapon_thunder = nullptr;
+  Timer *m_timer_flash = nullptr;  // 实现玩家受伤闪烁效果的计时器
 
   bool m_is_moving = false;
-
-  Effect *m_effect = nullptr;
-
-  WeaponThunder *m_weapon_thunder = nullptr;
 
  public:
   /* 初始化 */
