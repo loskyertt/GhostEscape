@@ -111,8 +111,10 @@ class Game final {
    * - @param boundary_width 边框宽度
    * - @param color 边框颜色
    */
-  void
-  drawBoundary(const glm::vec2 &top_left, const glm::vec2 &bottom_right, float boundary_width, const SDL_FColor &color);
+  void drawBoundary(const glm::vec2 &top_left,
+      const glm::vec2 &bottom_right,
+      float boundary_width,
+      const SDL_FColor &color);
 
   /**
    * @brief 渲染材质
@@ -122,8 +124,7 @@ class Game final {
    * - @param size 大小
    * - @param mask 模板（默认为1.0f）
    */
-  void renderTexture(
-      const Texture &texture,
+  void renderTexture(const Texture &texture,
       const glm::vec2 &position,
       const glm::vec2 &size,
       const glm::vec2 &mask = glm::vec2(1.0f));
@@ -158,6 +159,9 @@ class Game final {
 
   /* 判断鼠标是否在材质范围内 */
   bool isMouseInRect(const glm::vec2 &top_left, const glm::vec2 &bottom_right);
+
+  /* 文本载入 */
+  std::string loadText(const std::string &file_path);
 
   // gettters
  public:

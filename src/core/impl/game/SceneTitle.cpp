@@ -7,6 +7,7 @@
  */
 
 #include "core/game/SceneTitle.h"
+#include <SDL3/SDL_events.h>
 #include "core/game/SceneMain.h"
 
 #include "screen/HUDText.h"
@@ -17,14 +18,12 @@
 #include <string>
 #include <cmath>
 
-/* 初始化 */
 void SceneTitle::init() {
   Scene::init();
 
   // 标题文本
   auto size = glm::vec2(m_game.getScreenSize().x / 2.0f, m_game.getScreenSize().y / 3.0f);
-  HUDText::addHUDText(
-      this,
+  HUDText::addHUDText(this,
       "幽灵逃生",
       m_game.getScreenSize() / 2.0f - glm::vec2(0.0f, 100.0f),
       size,
@@ -33,8 +32,7 @@ void SceneTitle::init() {
 
   // 得分文本
   auto score_text = "最高分：" + std::to_string(m_game.getHighScore());
-  HUDText::addHUDText(
-      this,
+  HUDText::addHUDText(this,
       score_text,
       m_game.getScreenSize() / 2.0f + glm::vec2(0.0f, 100.0f),
       glm::vec2(200.0f, 50.0f),
@@ -42,8 +40,7 @@ void SceneTitle::init() {
       32.0f);
 
   // 开始按钮
-  m_start_button = HUDButton::addHUDButton(
-      this,
+  m_start_button = HUDButton::addHUDButton(this,
       m_game.getScreenSize() / 2.0f + glm::vec2(-200.0f, 200.0f),
       "assets/UI/A_Start1.png",
       "assets/UI/A_Start2.png",
@@ -51,8 +48,7 @@ void SceneTitle::init() {
       2.0f);
 
   // 作者按钮
-  m_credits_button = HUDButton::addHUDButton(
-      this,
+  m_credits_button = HUDButton::addHUDButton(this,
       m_game.getScreenSize() / 2.0f + glm::vec2(0.0f, 200.0f),
       "assets/UI/A_Credits1.png",
       "assets/UI/A_Credits2.png",
@@ -60,50 +56,65 @@ void SceneTitle::init() {
       2.0f);
 
   // 退出按钮
-  m_quit_button = HUDButton::addHUDButton(
-      this,
+  m_quit_button = HUDButton::addHUDButton(this,
       m_game.getScreenSize() / 2.0f + glm::vec2(200.0f, 200.0f),
       "assets/UI/A_Quit1.png",
       "assets/UI/A_Quit2.png",
       "assets/UI/A_Quit3.png",
       2.0f);
+
+  // 作者文本
+  auto text = m_game.loadText("assets/credits.txt");
+  m_credits_text = HUDText::addHUDText(this,
+      text,
+      m_game.getScreenSize() / 2.0f,
+      glm::vec2(500.0f),
+      "assets/font/VonwaonBitmap-16px.ttf",
+      16.0f);
+  m_credits_text->setBgSizeByText();
+  m_credits_text->setActive(false);
 }
 
-/* 事件处理 */
 void SceneTitle::handleEvents(SDL_Event &event) {
+  if (m_credits_text && m_credits_text->getActiveState() && event.type == SDL_EVENT_MOUSE_BUTTON_UP) {
+    m_credits_text->setActive(false);
+    return;
+  }
+
   Scene::handleEvents(event);
 }
 
-/* 更新 */
 void SceneTitle::update(const float &delta_time) {
-  Scene::update(delta_time);
-
   m_color_timer += delta_time;
   updateColor();
 
+  if (m_credits_text && m_credits_text->getActiveState()) {
+    return;  // 后续的更新部分不执行
+  }
+
+  Scene::update(delta_time);
+
   checkButtonQuit();
   checkButtonStart();
+  checkButtonCredits();
 }
 
-/* 渲染 */
 void SceneTitle::render() {
   renderBackground();
   Scene::render();
 }
 
-/* 清理 */
 void SceneTitle::clean() {
   Scene::clean();
 }
 
-/* 渲染背景 */
 void SceneTitle::renderBackground() {
   m_game.drawBoundary(glm::vec2(30.0f), m_game.getScreenSize() - glm::vec2(30.0f), 10.0f, m_boundary_color);
 }
 
-/* 更新颜色 */
 void SceneTitle::updateColor() {
-  // TODO: 实现颜色更新逻辑
+  // 注：sinf函数返回值在 [-1, 1] 范围内，需要映射到 [0, 1] 范围
+  // 保证频率不同，可实现颜色交替变化的功能
   m_boundary_color.r = 0.5f + 0.5f * sinf(m_color_timer * 0.9f);
   m_boundary_color.g = 0.5f + 0.5f * sinf(m_color_timer * 0.8f);
   m_boundary_color.b = 0.5f + 0.5f * sinf(m_color_timer * 0.7f);
@@ -121,5 +132,12 @@ void SceneTitle::checkButtonStart() {
   if (m_start_button && m_start_button->getIsTriggered()) {
     auto scene_main = new SceneMain();
     m_game.safeChangeScene(scene_main);
+  }
+}
+
+void SceneTitle::checkButtonCredits() {
+  // TODO: 实现按钮凭据检查逻辑
+  if (m_credits_button && m_credits_button->getIsTriggered()) {
+    m_credits_text->setActive(true);
   }
 }

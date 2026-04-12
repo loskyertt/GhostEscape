@@ -13,6 +13,7 @@
 #include <SDL3/SDL_pixels.h>
 
 class HUDButton;
+class HUDText;
 
 class SceneTitle : public Scene {
  protected:
@@ -23,6 +24,8 @@ class SceneTitle : public Scene {
   HUDButton *m_start_button = nullptr;
   HUDButton *m_credits_button = nullptr;
   HUDButton *m_quit_button = nullptr;
+
+  HUDText *m_credits_text = nullptr;
 
  public:
   /* 初始化 */
@@ -48,6 +51,6 @@ class SceneTitle : public Scene {
   void updateColor();
 
   void checkButtonQuit();
-
   void checkButtonStart();
+  void checkButtonCredits();
 };

@@ -40,8 +40,7 @@ class HUDText : public ObjectScreen {
   * - @param anchor 锚点
   * - @return HUDText*
   */
-  static HUDText *addHUDText(
-      Object *parent,
+  static HUDText *addHUDText(Object *parent,
       const std::string &text,
       const glm::vec2 &render_position,
       const glm::vec2 &size,
@@ -69,4 +68,7 @@ class HUDText : public ObjectScreen {
   void setText(const std::string &text);
 
   void setSpriteBackground(const std::string &file_path);
+
+  /* 根据文字内容调节背景大小 */
+  void setBgSizeByText(float margin = 50.0f);
 };

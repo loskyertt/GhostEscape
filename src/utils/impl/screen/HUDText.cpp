@@ -10,8 +10,7 @@
 #include "affiliate/TextLable.h"
 #include "affiliate/Sprite.h"
 
-HUDText *HUDText::addHUDText(
-    Object *parent,
+HUDText *HUDText::addHUDText(Object *parent,
     const std::string &text,
     const glm::vec2 &render_position,
     const glm::vec2 &size,
@@ -58,4 +57,9 @@ void HUDText::setSpriteBackground(const std::string &file_path) {
   } else {
     m_sprite_bg = Sprite::addSprite(this, file_path);
   }
+}
+
+void HUDText::setBgSizeByText(float margin) {
+  auto text_size = m_text_lable->getSize();
+  setSize(text_size + glm::vec2(margin));
 }

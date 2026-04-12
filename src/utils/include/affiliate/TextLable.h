@@ -38,8 +38,7 @@ class TextLable : public ObjectAffiliate {
   * @param anchor 锚点位置
   * @return TextLable*
   */
-  static TextLable *addTextLable(
-      ObjectScreen *parent,
+  static TextLable *addTextLable(ObjectScreen *parent,
       const std::string &text,
       const std::string &font_path,
       float font_size,
@@ -55,7 +54,7 @@ class TextLable : public ObjectAffiliate {
   void setFont(const std::string &font_path, float font_size);
 
   /* 传入的是文本信息 */
-  void setText(const std::string &text) { TTF_SetTextString(m_ttf_text, text.c_str(), text.length()); }
+  void setText(const std::string &text);
 
   /* 用于后期修改字体路径 */
   void setFontPath(const std::string &font_path);

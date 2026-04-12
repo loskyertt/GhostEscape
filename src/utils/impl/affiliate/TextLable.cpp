@@ -27,8 +27,7 @@ void TextLable::clean() {
   }
 }
 
-TextLable *TextLable::addTextLable(
-    ObjectScreen *parent,
+TextLable *TextLable::addTextLable(ObjectScreen *parent,
     const std::string &text,
     const std::string &font_path,
     float font_size,
@@ -55,6 +54,13 @@ void TextLable::setFont(const std::string &font_path, float font_size) {
     m_ttf_text = m_game.createText("", font_path, font_size);
   }
   TTF_SetTextFont(m_ttf_text, font);
+
+  updateFontSize();
+}
+
+void TextLable::setText(const std::string &text) {
+  TTF_SetTextString(m_ttf_text, text.c_str(), text.length());
+  updateFontSize();
 }
 
 void TextLable::setFontPath(const std::string &font_path) {
@@ -62,6 +68,8 @@ void TextLable::setFontPath(const std::string &font_path) {
   // 从 AssetStore 里获取字体
   auto font = m_game.getAssetStore()->getFont(font_path, m_font_size);
   TTF_SetTextFont(m_ttf_text, font);
+
+  updateFontSize();
 }
 
 void TextLable::setFontSize(float font_size) {
@@ -69,6 +77,8 @@ void TextLable::setFontSize(float font_size) {
   // 从 AssetStore 里获取字体
   auto font = m_game.getAssetStore()->getFont(m_font_path, m_font_size);
   TTF_SetTextFont(m_ttf_text, font);
+
+  updateFontSize();
 }
 
 void TextLable::updateFontSize() {

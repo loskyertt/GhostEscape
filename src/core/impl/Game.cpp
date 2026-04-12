@@ -28,9 +28,11 @@
 #include <SDL3_mixer/SDL_mixer.h>
 #include <SDL3_ttf/SDL_ttf.h>
 
+#include <fstream>
+#include <sstream>
 #include <cstddef>
+#include <string>
 
-/* 单例模式实现 */
 Game &Game::getInstance() {
   static Game instance;
   return instance;
@@ -40,7 +42,6 @@ Game::~Game() {
   SDL_Log("调用 ~Game()：程序退出");
 }
 
-/* 初始化游戏 */
 void Game::init(const std::string &title, int width, int height) {
   m_screen_size = glm::vec2(width, height);
 
@@ -110,7 +111,6 @@ void Game::init(const std::string &title, int width, int height) {
   m_current_scene->init();
 }
 
-/* 运行游戏，执行主循环 */
 void Game::run() {
   while (m_is_running) {
     auto start = SDL_GetTicksNS();
@@ -139,7 +139,6 @@ void Game::run() {
   }
 }
 
-/* 切换场景 */
 void Game::changeScene(Scene *scene) {
   if (m_current_scene) {
     m_current_scene->clean();
@@ -149,7 +148,6 @@ void Game::changeScene(Scene *scene) {
   m_current_scene->init();
 }
 
-/* 事件处理 */
 void Game::handleEvents() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
@@ -162,13 +160,11 @@ void Game::handleEvents() {
   }
 }
 
-/* 更新游戏场景 */
 void Game::update(const float &delta_time) {
   m_mouse_buttons = SDL_GetMouseState(&m_mouse_pos.x, &m_mouse_pos.y);
   m_current_scene->update(delta_time);
 }
 
-/* 渲染游戏 */
 void Game::render() {
   SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);  // 先设清屏色
   SDL_RenderClear(m_renderer);                       // 再清屏
@@ -176,7 +172,6 @@ void Game::render() {
   SDL_RenderPresent(m_renderer);
 }
 
-/* 清理游戏资源 */
 void Game::clean() {
   // 清理场景
   if (m_current_scene) {
@@ -227,9 +222,7 @@ void Game::clean() {
   SDL_Quit();  // 退出 SDL
 }
 
-/* 绘制网格 */
-void Game::drawGrid(
-    const glm::vec2 &top_left,
+void Game::drawGrid(const glm::vec2 &top_left,
     const glm::vec2 &bottom_right,
     float grid_width,
     const SDL_FColor &color) {
@@ -250,9 +243,7 @@ void Game::drawGrid(
   SDL_SetRenderDrawColorFloat(m_renderer, 0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-/* 绘制边框 */
-void Game::drawBoundary(
-    const glm::vec2 &top_left,
+void Game::drawBoundary(const glm::vec2 &top_left,
     const glm::vec2 &bottom_right,
     float boundary_width,
     const SDL_FColor &color) {
@@ -272,9 +263,7 @@ void Game::drawBoundary(
   SDL_SetRenderDrawColorFloat(m_renderer, 0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-/* 渲染材质 */
-void Game::renderTexture(
-    const Texture &texture,
+void Game::renderTexture(const Texture &texture,
     const glm::vec2 &position,
     const glm::vec2 &size,
     const glm::vec2 &mask) {
@@ -292,8 +281,7 @@ void Game::renderTexture(
       size.y * mask.y,
   };
 
-  SDL_RenderTextureRotated(
-      m_renderer,
+  SDL_RenderTextureRotated(m_renderer,
       texture.texture,
       &src_rect,
       &dst_rect,
@@ -302,7 +290,6 @@ void Game::renderTexture(
       texture.is_flip ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
-/* 渲染碰撞体（用于调试） */
 void Game::renderColliders(const glm::vec2 &position, const glm::vec2 &size, float alpha) {
   auto texture = m_asset_store->getImage("assets/UI/circle.png");
   SDL_FRect rect = {
@@ -315,7 +302,6 @@ void Game::renderColliders(const glm::vec2 &position, const glm::vec2 &size, flo
   SDL_RenderTexture(m_renderer, texture, NULL, &rect);
 }
 
-/* 渲染血量条 */
 void Game::renderHorizontalBar(const glm::vec2 &position, const glm::vec2 &size, float percentage, SDL_FColor color) {
   SDL_SetRenderDrawColorFloat(m_renderer, color.r, color.g, color.b, color.a);
 
@@ -336,12 +322,10 @@ void Game::renderHorizontalBar(const glm::vec2 &position, const glm::vec2 &size,
   SDL_SetRenderDrawColorFloat(m_renderer, 0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-/* 创建文本 */
 TTF_Text *Game::createText(const std::string &text, const std::string &font_path, float font_size) {
   return TTF_CreateText(m_ttf_engine, m_asset_store->getFont(font_path, font_size), text.c_str(), 0);
 }
 
-/* 随机数函数 */
 float Game::randomFloat(float min, float max) {
   std::uniform_real_distribution<float> distribution(min, max);
   return distribution(gen);
@@ -360,7 +344,6 @@ glm::ivec2 Game::randomIvec2(glm::ivec2 min, glm::ivec2 max) {
   return glm::ivec2(randomInt(min.x, max.x), randomInt(min.y, max.y));
 }
 
-/* 音频函数 */
 void Game::playMusic(const std::string &music_path, bool loop) {
   // 背景音乐固定流式加载（predecode = false）
   if (!m_asset_store->hasSound(music_path)) {
@@ -414,18 +397,25 @@ void Game::resumeSound() {
   MIX_ResumeTrack(m_sfx_track);
 }
 
-/* 增加分数 */
 void Game::addScore(int score) {
   setScore(m_score += score);
 }
 
-/* 判断鼠标是否在材质范围内 */
 bool Game::isMouseInRect(const glm::vec2 &top_left, const glm::vec2 &bottom_right) {
   return m_mouse_pos.x >= top_left.x && m_mouse_pos.x <= bottom_right.x && m_mouse_pos.y >= top_left.y &&
       m_mouse_pos.y <= bottom_right.y;
 }
 
-/* 设置分数 */
+std::string Game::loadText(const std::string &file_path) {
+  std::ifstream file(file_path);
+  std::string line;
+  std::string text = "";
+  while (std::getline(file, line)) {
+    text += line + "\n";
+  }
+  return text;
+}
+
 void Game::setScore(int score) {
   m_score = score;
   if (score > m_high_score) {
