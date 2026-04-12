@@ -21,18 +21,18 @@ class SceneTitle : public Scene {
 
   float m_color_timer = 0.0f;
 
-  HUDButton *m_start_button = nullptr;
-  HUDButton *m_credits_button = nullptr;
-  HUDButton *m_quit_button = nullptr;
+  HUDButton *m_button_start = nullptr;
+  HUDButton *m_button_credits = nullptr;
+  HUDButton *m_button_quit = nullptr;
 
-  HUDText *m_credits_text = nullptr;
+  HUDText *m_text_credits = nullptr;
 
  public:
   /* 初始化 */
   void init() override;
 
   /* 事件处理 */
-  void handleEvents(SDL_Event &event) override;
+  bool handleEvents(SDL_Event &event) override;
 
   /* 更新 */
   void update(const float &delta_time) override;

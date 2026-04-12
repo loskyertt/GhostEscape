@@ -19,7 +19,7 @@ class WeaponThunder : public Weapon {
 
   virtual void update(const float &delta_time) override;
 
-  void handleEvents(SDL_Event &event) override;
+  bool handleEvents(SDL_Event &event) override;
 
  public:
   static WeaponThunder *addWeaponThunder(Entity *parent, float cool_down, float mana_cost);

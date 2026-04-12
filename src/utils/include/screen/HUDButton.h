@@ -32,7 +32,7 @@ class HUDButton : public ObjectScreen {
   Sprite *m_sprite_pressed = nullptr;  // 按下（event）状态
 
  public:
-  void handleEvents(SDL_Event &event) override;
+  bool handleEvents(SDL_Event &event) override;
 
   void update(const float &delta_time) override;
 
@@ -43,7 +43,8 @@ class HUDButton : public ObjectScreen {
   /**
   * @brief 添加HUD按钮
   *
-  * - @param m_parent 父对象
+  * - @param parent 父对象
+  * - @param render_position 渲染位置
   * - @param file_path1 正常状态图片路径
   * - @param file_path2 悬停状态图片路径
   * - @param file_path3 按下状态图片路径
@@ -51,8 +52,7 @@ class HUDButton : public ObjectScreen {
   * - @param anchor 锚点
   * - @return HUDButton*
   */
-  static HUDButton *addHUDButton(
-      Object *parent,
+  static HUDButton *addHUDButton(Object *parent,
       const glm::vec2 &render_position,
       const std::string &file_path1,
       const std::string &file_path2,

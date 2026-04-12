@@ -14,19 +14,19 @@
 
 Object::~Object() = default;
 
-/* 初始化 */
 void Object::init() {}
 
-/* 事件处理 */
-void Object::handleEvents(SDL_Event &event) {
+bool Object::handleEvents(SDL_Event &event) {
   for (auto &child : m_children) {
     if (child->getActiveState()) {
-      child->handleEvents(event);
+      if (child->handleEvents(event)) {
+        return true;  // 容器中后面的事件不会再处理
+      }
     }
   }
+  return false;
 }
 
-/* 更新 */
 void Object::update(const float &delta_time) {
   for (auto &child : m_children_back) {
     addChild(child);
@@ -49,7 +49,6 @@ void Object::update(const float &delta_time) {
   }
 }
 
-/* 渲染 */
 void Object::render() {
   for (auto &child : m_children) {
     if (child->getActiveState()) {
@@ -58,7 +57,6 @@ void Object::render() {
   }
 }
 
-/* 清理 */
 void Object::clean() {
   // #ifndef NDEBUG
   //   SDL_Log("调用 Object::clean()");
@@ -72,17 +70,14 @@ void Object::clean() {
   m_children.clear();  //触发所有子对象的析构
 }
 
-/* 添加 Object */
 void Object::addChild(Object *child) {
   m_children.push_back(child);
 }
 
-/* 移除 Object */
 void Object::removeChild(Object *child) {
   m_children.erase(std::remove(m_children.begin(), m_children.end(), child), m_children.end());
 }
 
-/* 安全添加子节点 */
 void Object::safeAddChild(Object *child) {
   m_children_back.push_back(child);
 #ifndef NDEBUG

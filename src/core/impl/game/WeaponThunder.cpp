@@ -29,7 +29,7 @@ void WeaponThunder::update(const float &delta_time) {
   }
 }
 
-void WeaponThunder::handleEvents(SDL_Event &event) {
+bool WeaponThunder::handleEvents(SDL_Event &event) {
   if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
     if (event.button.button == SDL_BUTTON_LEFT) {
       if (canAttack()) {
@@ -38,9 +38,11 @@ void WeaponThunder::handleEvents(SDL_Event &event) {
         auto spell =
             Spell::addSpell(nullptr, "assets/effect/Thunderstrike w blur.png", pos, 40.0f, 3.0f, Anchor::MIDDLE_CENTER);
         attack(pos, spell);
+        return true;
       }
     }
   }
+  return false;
 }
 
 WeaponThunder *WeaponThunder::addWeaponThunder(Entity *parent, float cool_down, float mana_cost) {

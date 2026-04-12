@@ -20,8 +20,10 @@ class Scene : public Object {
   glm::vec2 m_world_size = glm::vec2(0);       // 世界大小
   glm::vec2 m_camera_position = glm::vec2(0);  // 相机位置
 
-  std::vector<ObjectScreen *> m_children_screen;  // 固定在屏幕上的元素
-  std::vector<ObjectWorld *> m_children_world;    // 地图上的元素、角色
+  std::vector<ObjectScreen *> m_children_screen;  // 固定在屏幕上的元素（比如按钮）
+  std::vector<ObjectWorld *> m_children_world;    // 地图上的元素、实体（玩家、敌人）等
+
+  bool m_is_pause = false;  // 是否暂停
 
  public:
   Scene();
@@ -29,7 +31,7 @@ class Scene : public Object {
   ~Scene() override;
 
   /* 事件处理 */
-  void handleEvents(SDL_Event &event) override;
+  bool handleEvents(SDL_Event &event) override;
 
   /* 更新 */
   void update(const float &delta_time) override;
@@ -46,13 +48,14 @@ class Scene : public Object {
   /* 移除 Object */
   void removeChild(Object *child) override;
 
-  // 坐标转换
- public:
   /* 世界坐标 -> 渲染坐标 */
   glm::vec2 worldToScreen(const glm::vec2 &world_position) { return world_position - m_camera_position; }
 
   /* 渲染坐标 -> 世界坐标 */
   glm::vec2 screenToWorld(const glm::vec2 &screen_position) { return screen_position + m_camera_position; }
+
+  void pause();
+  void resume();
 
   // getters
  public:

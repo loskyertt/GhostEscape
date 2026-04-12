@@ -47,8 +47,8 @@ void Player::init() {
 }
 
 /* 事件处理 */
-void Player::handleEvents(SDL_Event &event) {
-  Entity::handleEvents(event);
+bool Player::handleEvents(SDL_Event &event) {
+  return Entity::handleEvents(event);
 }
 
 /* 更新 */

@@ -7,7 +7,6 @@
  */
 
 #include "core/game/SceneTitle.h"
-#include <SDL3/SDL_events.h>
 #include "core/game/SceneMain.h"
 
 #include "screen/HUDText.h"
@@ -15,11 +14,16 @@
 
 #include <glm/fwd.hpp>
 
+#include <SDL3/SDL_events.h>
+#include <SDL3/SDL_mouse.h>
+
 #include <string>
 #include <cmath>
 
 void SceneTitle::init() {
   Scene::init();
+  SDL_ShowCursor();
+  m_game.playMusic("assets/bgm/Spooky music.mp3");
 
   // 标题文本
   auto size = glm::vec2(m_game.getScreenSize().x / 2.0f, m_game.getScreenSize().y / 3.0f);
@@ -40,7 +44,7 @@ void SceneTitle::init() {
       32.0f);
 
   // 开始按钮
-  m_start_button = HUDButton::addHUDButton(this,
+  m_button_start = HUDButton::addHUDButton(this,
       m_game.getScreenSize() / 2.0f + glm::vec2(-200.0f, 200.0f),
       "assets/UI/A_Start1.png",
       "assets/UI/A_Start2.png",
@@ -48,7 +52,7 @@ void SceneTitle::init() {
       2.0f);
 
   // 作者按钮
-  m_credits_button = HUDButton::addHUDButton(this,
+  m_button_credits = HUDButton::addHUDButton(this,
       m_game.getScreenSize() / 2.0f + glm::vec2(0.0f, 200.0f),
       "assets/UI/A_Credits1.png",
       "assets/UI/A_Credits2.png",
@@ -56,7 +60,7 @@ void SceneTitle::init() {
       2.0f);
 
   // 退出按钮
-  m_quit_button = HUDButton::addHUDButton(this,
+  m_button_quit = HUDButton::addHUDButton(this,
       m_game.getScreenSize() / 2.0f + glm::vec2(200.0f, 200.0f),
       "assets/UI/A_Quit1.png",
       "assets/UI/A_Quit2.png",
@@ -65,30 +69,30 @@ void SceneTitle::init() {
 
   // 作者文本
   auto text = m_game.loadText("assets/credits.txt");
-  m_credits_text = HUDText::addHUDText(this,
+  m_text_credits = HUDText::addHUDText(this,
       text,
       m_game.getScreenSize() / 2.0f,
       glm::vec2(500.0f),
       "assets/font/VonwaonBitmap-16px.ttf",
       16.0f);
-  m_credits_text->setBgSizeByText();
-  m_credits_text->setActive(false);
+  m_text_credits->setBgSizeByText();
+  m_text_credits->setActive(false);
 }
 
-void SceneTitle::handleEvents(SDL_Event &event) {
-  if (m_credits_text && m_credits_text->getActiveState() && event.type == SDL_EVENT_MOUSE_BUTTON_UP) {
-    m_credits_text->setActive(false);
-    return;
+bool SceneTitle::handleEvents(SDL_Event &event) {
+  if (m_text_credits && m_text_credits->getActiveState() && event.type == SDL_EVENT_MOUSE_BUTTON_UP) {
+    m_text_credits->setActive(false);
+    return true;
   }
 
-  Scene::handleEvents(event);
+  return Scene::handleEvents(event);
 }
 
 void SceneTitle::update(const float &delta_time) {
   m_color_timer += delta_time;
   updateColor();
 
-  if (m_credits_text && m_credits_text->getActiveState()) {
+  if (m_text_credits && m_text_credits->getActiveState()) {
     return;  // 后续的更新部分不执行
   }
 
@@ -122,14 +126,14 @@ void SceneTitle::updateColor() {
 
 void SceneTitle::checkButtonQuit() {
   // TODO: 实现按钮退出检查逻辑
-  if (m_quit_button && m_quit_button->getIsTriggered()) {
+  if (m_button_quit && m_button_quit->getIsTriggered()) {
     m_game.quit();
   }
 }
 
 void SceneTitle::checkButtonStart() {
   // TODO: 实现按钮开始检查逻辑
-  if (m_start_button && m_start_button->getIsTriggered()) {
+  if (m_button_start && m_button_start->getIsTriggered()) {
     auto scene_main = new SceneMain();
     m_game.safeChangeScene(scene_main);
   }
@@ -137,7 +141,7 @@ void SceneTitle::checkButtonStart() {
 
 void SceneTitle::checkButtonCredits() {
   // TODO: 实现按钮凭据检查逻辑
-  if (m_credits_button && m_credits_button->getIsTriggered()) {
-    m_credits_text->setActive(true);
+  if (m_button_credits && m_button_credits->getIsTriggered()) {
+    m_text_credits->setActive(true);
   }
 }

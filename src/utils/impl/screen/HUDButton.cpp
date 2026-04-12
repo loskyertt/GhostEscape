@@ -12,13 +12,14 @@
 #include "affiliate/Sprite.h"
 #include "core/ObjectScreen.h"
 
-void HUDButton::handleEvents(SDL_Event &event) {
+bool HUDButton::handleEvents(SDL_Event &event) {
   // 判断鼠标按键按下
   if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
     // 判断鼠标左键
     if (event.button.button == SDL_BUTTON_LEFT && m_is_hovered) {
       m_is_pressed = true;
       m_game.playSound("assets/sound/UI_button08.wav");
+      return true;
     }
   } else if (event.type == SDL_EVENT_MOUSE_BUTTON_UP) {
     // 判断鼠标左键
@@ -27,9 +28,11 @@ void HUDButton::handleEvents(SDL_Event &event) {
       // 如果在图片区域里抬起，则触发点击事件
       if (m_is_hovered) {
         m_is_triggered = true;
+        return true;
       }
     }
   }
+  return false;
 }
 
 void HUDButton::update(const float &delta_time) {
@@ -74,8 +77,7 @@ void HUDButton::checkState() {
   }
 }
 
-HUDButton *HUDButton::addHUDButton(
-    Object *parent,
+HUDButton *HUDButton::addHUDButton(Object *parent,
     const glm::vec2 &render_position,
     const std::string &file_path1,
     const std::string &file_path2,

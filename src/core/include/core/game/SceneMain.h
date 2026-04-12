@@ -15,21 +15,25 @@ class Spawner;
 class UIMouse;
 class HUDStates;
 class HUDText;
+class HUDButton;
 
 class SceneMain : public Scene {
  private:
-  Player *m_player = nullptr;         // 玩家
-  Spawner *m_spawner = nullptr;       // 敌人生成器
-  UIMouse *m_ui_mouse = nullptr;      // UI 鼠标指针
-  HUDStates *m_hud_states = nullptr;  // HUD 状态显示
-  HUDText *m_text_score = nullptr;    // HUD 得分显示
+  Player *m_player = nullptr;             // 玩家
+  Spawner *m_spawner = nullptr;           // 敌人生成器
+  UIMouse *m_ui_mouse = nullptr;          // UI 鼠标指针
+  HUDStates *m_hud_states = nullptr;      // HUD 状态显示
+  HUDText *m_text_score = nullptr;        // HUD 得分显示
+  HUDButton *m_button_pause = nullptr;    // 暂停按钮
+  HUDButton *m_button_restart = nullptr;  // 重新开始按钮
+  HUDButton *m_button_back = nullptr;     // 返回按钮
 
  public:
   /* 初始化 */
   void init() override;
 
   /* 事件处理 */
-  void handleEvents(SDL_Event &event) override;
+  bool handleEvents(SDL_Event &event) override;
 
   /* 更新 */
   void update(const float &delta_time) override;
@@ -46,4 +50,8 @@ class SceneMain : public Scene {
 
   /* 更新得分 */
   void updateScore();
+
+  void checkButtonPause();
+  void checkButtonRestart();
+  void checkButtonBack();
 };

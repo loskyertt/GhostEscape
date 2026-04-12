@@ -22,43 +22,51 @@ Scene::Scene() = default;
 
 Scene::~Scene() = default;
 
-/* 事件处理 */
-void Scene::handleEvents(SDL_Event &event) {
-  Object::handleEvents(event);
+bool Scene::handleEvents(SDL_Event &event) {
 
   for (auto &child : m_children_screen) {
     if (child->getActiveState()) {
-      child->handleEvents(event);
+      if (child->handleEvents(event)) {
+        return true;
+      }
     }
   }
+
+  if (m_is_pause) {
+    return false;
+  }
+  Object::handleEvents(event);
   for (auto &child : m_children_world) {
     if (child->getActiveState()) {
-      child->handleEvents(event);
+      if (child->handleEvents(event)) {
+        return true;
+      }
     }
   }
+  return false;
 }
 
-/* 更新 */
 void Scene::update(const float &delta_time) {
-  Object::update(delta_time);
-
-  for (auto it = m_children_world.begin(); it != m_children_world.end();) {
-    // 这里不能写成 &child
-    // 由于 child 是一个引用，在 erase(it) 之后，child 变成了一个悬垂引用，它指向的内存已经被释放。
-    auto child = *it;
-    if (child->getNeedRemove()) {
-      it = m_children_world.erase(it);
-      child->clean();
-      delete child;
-      child = nullptr;
+  if (!m_is_pause) {
+    Object::update(delta_time);
+    for (auto it = m_children_world.begin(); it != m_children_world.end();) {
+      // 这里不能写成 &child
+      // 由于 child 是一个引用，在 erase(it) 之后，child 变成了一个悬垂引用，它指向的内存已经被释放。
+      auto child = *it;
+      if (child->getNeedRemove()) {
+        it = m_children_world.erase(it);
+        child->clean();
+        delete child;
+        child = nullptr;
 #ifndef NDEBUG
-      SDL_Log("=> 调用 Scene::update() -> child 从 m_children_world 中移除");
+        SDL_Log("=> 调用 Scene::update() -> child 从 m_children_world 中移除");
 #endif
-    } else {
-      if (child->getActiveState()) {
-        child->update(delta_time);
+      } else {
+        if (child->getActiveState()) {
+          child->update(delta_time);
+        }
+        ++it;
       }
-      ++it;
     }
   }
 
@@ -78,7 +86,6 @@ void Scene::update(const float &delta_time) {
   }
 }
 
-/* 渲染 */
 void Scene::render() {
   Object::render();
 
@@ -95,7 +102,6 @@ void Scene::render() {
   }
 }
 
-/* 清理 */
 void Scene::clean() {
   Object::clean();
 
@@ -114,7 +120,6 @@ void Scene::clean() {
   m_children_world.clear();
 }
 
-/* 添加 ObjectScreen */
 void Scene::addChild(Object *child) {
   switch (child->getType()) {
     case ObjectType::NONE: {
@@ -137,7 +142,6 @@ void Scene::addChild(Object *child) {
   }
 }
 
-/* 移除 ObjectScreen */
 void Scene::removeChild(Object *child) {
   switch (child->getType()) {
     case ObjectType::NONE: {
@@ -163,10 +167,21 @@ void Scene::removeChild(Object *child) {
   }
 }
 
-/* 设置相机坐标 */
 void Scene::setCameraPosition(const glm::vec2 &camera_position) {
   m_camera_position = camera_position;
   // 相机位置限制：[-30, world_size - screen_size + 30]
   m_camera_position =
       glm::clamp(m_camera_position, glm::vec2(-30.0f), m_world_size - m_game.getScreenSize() + glm::vec2(30.0f));
+}
+
+void Scene::pause() {
+  m_is_pause = true;
+  m_game.pauseMusic();
+  m_game.pauseSound();
+}
+
+void Scene::resume() {
+  m_is_pause = false;
+  m_game.resumeMusic();
+  m_game.resumeSound();
 }

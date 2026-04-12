@@ -31,7 +31,7 @@ class Player : public Entity {
   void init() override;
 
   /* 事件处理 */
-  void handleEvents(SDL_Event &event) override;
+  bool handleEvents(SDL_Event &event) override;
 
   /* 更新 */
   void update(const float &delta_time) override;

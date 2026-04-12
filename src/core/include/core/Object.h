@@ -36,8 +36,14 @@ class Object {
   /* 初始化 */
   virtual void init();
 
-  /* 事件处理 */
-  virtual void handleEvents(SDL_Event &event);
+  /**
+   * @brief 处理事件：事件如果被处理，则返回 true，否则继续向下传递（每次传递时检查是否已被处理）
+   *
+   * - @param event 事件
+   * - @return true 事件被处理
+   * - @return false 事件未被处理
+   */
+  virtual bool handleEvents(SDL_Event &event);
 
   /* 更新 */
   virtual void update(const float &delta_time);
