@@ -103,6 +103,8 @@ bool HUDButton::getIsTriggered() {
   // 触发后需要重置（保证只触发一次）
   if (m_is_triggered) {
     m_is_triggered = false;
+    m_is_pressed = false;
+    m_is_hovered = false;
     return true;
   }
   return false;

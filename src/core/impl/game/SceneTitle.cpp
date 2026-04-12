@@ -81,7 +81,7 @@ void SceneTitle::init() {
   m_text_credits->setBgSizeByText();
   m_text_credits->setActive(false);
 
-  UIMouse::addUIMouse(this,
+  m_ui_mouse = UIMouse::addUIMouse(this,
       "assets/UI/pointer_c_shaded.png",
       "assets/UI/pointer_c_shaded.png",
       1.0f,
@@ -102,6 +102,7 @@ void SceneTitle::update(const float &delta_time) {
   updateColor();
 
   if (m_text_credits && m_text_credits->getActiveState()) {
+    m_ui_mouse->update(delta_time);
     return;  // 后续的更新部分不执行
   }
 

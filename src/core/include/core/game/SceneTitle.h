@@ -14,6 +14,7 @@
 
 class HUDButton;
 class HUDText;
+class UIMouse;
 
 class SceneTitle : public Scene {
  protected:
@@ -26,6 +27,8 @@ class SceneTitle : public Scene {
   HUDButton *m_button_quit = nullptr;
 
   HUDText *m_text_credits = nullptr;
+
+  UIMouse *m_ui_mouse = nullptr;
 
  public:
   /* 初始化 */

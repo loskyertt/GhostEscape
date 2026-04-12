@@ -9,8 +9,8 @@
 #include "screen/UiMouse.h"
 #include "affiliate/Sprite.h"
 
-void UIMouse::update(const float &deltaTime) {
-  m_timer += deltaTime;
+void UIMouse::update(const float &delta_time) {
+  m_timer += delta_time;
   if (m_timer < 0.3f) {
     m_sprite1->setActive(true);
     m_sprite2->setActive(false);
