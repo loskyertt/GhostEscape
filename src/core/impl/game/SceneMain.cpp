@@ -6,11 +6,11 @@
  * @Desc    :   .....
  */
 
+#include "core/Defs.h"
 #include "core/game/SceneMain.h"
 #include "core/game/SceneTitle.h"
 #include "core/game/Player.h"
 #include "core/game/Spawner.h"
-#include "core/Defs.h"
 
 #include "raw/BackgroundStar.h"
 #include "raw/Timer.h"
@@ -20,13 +20,14 @@
 #include "screen/HUDText.h"
 #include "screen/HUDButton.h"
 
-#include <fstream>
 #include <glm/fwd.hpp>
-#include <ios>
 
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_log.h>
 #include <SDL3/SDL_mouse.h>
+
+#include <fstream>
+#include <ios>
 
 void SceneMain::init() {
   Scene::init();
@@ -108,6 +109,8 @@ bool SceneMain::handleEvents(SDL_Event &event) {
 }
 
 void SceneMain::update(const float &delta_time) {
+  checkSlowDown(const_cast<float &>(delta_time));
+
   Scene::update(delta_time);
   updateScore();
   // m_camera_position += glm::vec2(20.0f, 20.0f) * delta_time;
@@ -199,4 +202,10 @@ void SceneMain::checkEndTimer() {
   m_button_back->setScale(4.0f);
   m_button_pause->setActive(false);
   m_end_timer->stop();
+}
+
+void SceneMain::checkSlowDown(float &delta_time) {
+  if (m_game.getMouseButtons() & SDL_BUTTON_RMASK) {
+    delta_time *= 0.4f;
+  }
 }

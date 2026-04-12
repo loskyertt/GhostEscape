@@ -173,6 +173,9 @@ class Game final {
   /* 文本载入 */
   std::string loadText(const std::string &file_path);
 
+  /* 更新鼠标位置 */
+  void updateMouse();
+
   // gettters
  public:
   /* 获取屏幕大小 */

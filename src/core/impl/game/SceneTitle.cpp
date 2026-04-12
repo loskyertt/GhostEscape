@@ -11,6 +11,7 @@
 
 #include "screen/HUDText.h"
 #include "screen/HUDButton.h"
+#include "screen/UIMouse.h"
 
 #include <glm/fwd.hpp>
 
@@ -24,7 +25,7 @@
 void SceneTitle::init() {
   Scene::init();
   loadDate("data/score.dat");
-  SDL_ShowCursor();
+  SDL_HideCursor();
   m_game.playMusic("assets/bgm/Spooky music.mp3");
 
   // 标题文本
@@ -79,6 +80,12 @@ void SceneTitle::init() {
       16.0f);
   m_text_credits->setBgSizeByText();
   m_text_credits->setActive(false);
+
+  UIMouse::addUIMouse(this,
+      "assets/UI/pointer_c_shaded.png",
+      "assets/UI/pointer_c_shaded.png",
+      1.0f,
+      Anchor::TOP_LEFT);
 }
 
 bool SceneTitle::handleEvents(SDL_Event &event) {

@@ -428,6 +428,21 @@ std::string Game::loadText(const std::string &file_path) {
   return text;
 }
 
+void Game::updateMouse() {
+  m_mouse_buttons = SDL_GetMouseState(&m_mouse_pos.x, &m_mouse_pos.y);
+
+  // 限制比例
+  int w, h;
+  SDL_GetWindowSize(m_window, &w, &h);
+  SDL_SetWindowAspectRatio(m_window, m_screen_size.x / m_screen_size.y, m_screen_size.x / m_screen_size.y);
+  m_mouse_pos *= m_screen_size / glm::vec2(w, h);
+
+  // 不限制比例
+  // SDL_FRect rect;
+  // SDL_GetRenderLogicalPresentationRect(m_renderer, &rect);
+  // m_mouse_pos = (m_mouse_pos - glm::vec2{rect.x, rect.y}) * m_screen_size / glm::vec2{rect.w, rect.h};
+}
+
 void Game::setScore(int score) {
   m_score = score;
   if (score > m_high_score) {

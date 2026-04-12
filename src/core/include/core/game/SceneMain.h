@@ -61,4 +61,6 @@ class SceneMain : public Scene {
   void checkButtonBack();
 
   void checkEndTimer();
+
+  void checkSlowDown(float &delta_time);
 };
