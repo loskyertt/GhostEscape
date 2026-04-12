@@ -22,6 +22,7 @@
 
 #include <random>
 #include <string>
+#include <vector>
 
 class Scene;
 
@@ -115,6 +116,15 @@ class Game final {
       const glm::vec2 &bottom_right,
       float boundary_width,
       const SDL_FColor &color);
+
+  /**
+   * @brief 绘制点
+   *
+   * - @param points 点的坐标
+   * - @param render_position 渲染位置
+   * - @param color 颜色
+   */
+  void drawPoints(const std::vector<glm::vec2> &points, const glm::vec2 &render_position, const SDL_FColor &color);
 
   /**
    * @brief 渲染材质

@@ -12,6 +12,7 @@
 #include "core/game/Spawner.h"
 #include "core/Defs.h"
 
+#include "raw/BackgroundStar.h"
 #include "raw/Timer.h"
 #include "world/Spell.h"
 #include "screen/UIMouse.h"
@@ -50,12 +51,14 @@ void SceneMain::init() {
   SDL_Log("");
 #endif
 
+  BackgroundStar::addBackgroundStar(this, 2000, 0.2f, 0.5f, 0.7f);
+
+  m_end_timer = Timer::addTimer(this);
+
   m_spawner = new Spawner();
   m_spawner->init();
   m_spawner->setTargetPlayer(m_player);
   addChild(m_spawner);
-
-  m_end_timer = Timer::addTimer(this);
 
   m_button_pause = HUDButton::addHUDButton(this,
       m_game.getScreenSize() - glm::vec2(230.0f, 30.0f),

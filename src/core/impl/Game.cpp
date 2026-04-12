@@ -29,7 +29,6 @@
 #include <SDL3_ttf/SDL_ttf.h>
 
 #include <fstream>
-#include <sstream>
 #include <cstddef>
 #include <string>
 
@@ -257,6 +256,19 @@ void Game::drawBoundary(const glm::vec2 &top_left,
         bottom_right.y - top_left.y + i * 2,
     };
     SDL_RenderRect(m_renderer, &rect);
+  }
+
+  // 还原颜色
+  SDL_SetRenderDrawColorFloat(m_renderer, 0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+void Game::drawPoints(const std::vector<glm::vec2> &points, const glm::vec2 &render_position, const SDL_FColor &color) {
+  SDL_SetRenderDrawColorFloat(m_renderer, color.r, color.g, color.b, color.a);
+
+  for (const auto &point : points) {
+    auto x = point.x + render_position.x;
+    auto y = point.y + render_position.y;
+    SDL_RenderPoint(m_renderer, x, y);
   }
 
   // 还原颜色
