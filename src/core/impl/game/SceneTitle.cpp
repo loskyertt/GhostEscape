@@ -26,29 +26,29 @@ void SceneTitle::init() {
   Scene::init();
   loadDate("data/score.dat");
   SDL_HideCursor();
-  m_game.playMusic("assets/bgm/Spooky music.mp3");
+  Game::getInstance().playMusic("assets/bgm/Spooky music.mp3");
 
   // 标题文本
-  auto size = glm::vec2(m_game.getScreenSize().x / 2.0f, m_game.getScreenSize().y / 3.0f);
+  auto size = glm::vec2(Game::getInstance().getScreenSize().x / 2.0f, Game::getInstance().getScreenSize().y / 3.0f);
   HUDText::addHUDText(this,
       "幽灵逃生",
-      m_game.getScreenSize() / 2.0f - glm::vec2(0.0f, 100.0f),
+      Game::getInstance().getScreenSize() / 2.0f - glm::vec2(0.0f, 100.0f),
       size,
       "assets/font/VonwaonBitmap-16px.ttf",
       64.0f);
 
   // 得分文本
-  auto score_text = "最高分：" + std::to_string(m_game.getHighScore());
+  auto score_text = "最高分：" + std::to_string(Game::getInstance().getHighScore());
   HUDText::addHUDText(this,
       score_text,
-      m_game.getScreenSize() / 2.0f + glm::vec2(0.0f, 100.0f),
+      Game::getInstance().getScreenSize() / 2.0f + glm::vec2(0.0f, 100.0f),
       glm::vec2(200.0f, 50.0f),
       "assets/font/VonwaonBitmap-16px.ttf",
       32.0f);
 
   // 开始按钮
   m_button_start = HUDButton::addHUDButton(this,
-      m_game.getScreenSize() / 2.0f + glm::vec2(-200.0f, 200.0f),
+      Game::getInstance().getScreenSize() / 2.0f + glm::vec2(-200.0f, 200.0f),
       "assets/UI/A_Start1.png",
       "assets/UI/A_Start2.png",
       "assets/UI/A_Start3.png",
@@ -56,7 +56,7 @@ void SceneTitle::init() {
 
   // 作者按钮
   m_button_credits = HUDButton::addHUDButton(this,
-      m_game.getScreenSize() / 2.0f + glm::vec2(0.0f, 200.0f),
+      Game::getInstance().getScreenSize() / 2.0f + glm::vec2(0.0f, 200.0f),
       "assets/UI/A_Credits1.png",
       "assets/UI/A_Credits2.png",
       "assets/UI/A_Credits3.png",
@@ -64,17 +64,17 @@ void SceneTitle::init() {
 
   // 退出按钮
   m_button_quit = HUDButton::addHUDButton(this,
-      m_game.getScreenSize() / 2.0f + glm::vec2(200.0f, 200.0f),
+      Game::getInstance().getScreenSize() / 2.0f + glm::vec2(200.0f, 200.0f),
       "assets/UI/A_Quit1.png",
       "assets/UI/A_Quit2.png",
       "assets/UI/A_Quit3.png",
       2.0f);
 
   // 作者文本
-  auto text = m_game.loadText("assets/credits.txt");
+  auto text = Game::getInstance().loadText("assets/credits.txt");
   m_text_credits = HUDText::addHUDText(this,
       text,
-      m_game.getScreenSize() / 2.0f,
+      Game::getInstance().getScreenSize() / 2.0f,
       glm::vec2(500.0f),
       "assets/font/VonwaonBitmap-16px.ttf",
       16.0f);
@@ -129,11 +129,11 @@ void SceneTitle::loadDate(const std::string &file_path) {
     file.read(reinterpret_cast<char *>(&score), sizeof(score));
     file.close();
   }
-  m_game.setHighScore(score);
+  Game::getInstance().setHighScore(score);
 }
 
 void SceneTitle::renderBackground() {
-  m_game.drawBoundary(glm::vec2(30.0f), m_game.getScreenSize() - glm::vec2(30.0f), 10.0f, m_boundary_color);
+  Game::getInstance().drawBoundary(glm::vec2(30.0f), Game::getInstance().getScreenSize() - glm::vec2(30.0f), 10.0f, m_boundary_color);
 }
 
 void SceneTitle::updateColor() {
@@ -147,7 +147,7 @@ void SceneTitle::updateColor() {
 void SceneTitle::checkButtonQuit() {
   // TODO: 实现按钮退出检查逻辑
   if (m_button_quit && m_button_quit->getIsTriggered()) {
-    m_game.quit();
+    Game::getInstance().quit();
   }
 }
 
@@ -155,7 +155,7 @@ void SceneTitle::checkButtonStart() {
   // TODO: 实现按钮开始检查逻辑
   if (m_button_start && m_button_start->getIsTriggered()) {
     auto scene_main = new SceneMain();
-    m_game.safeChangeScene(scene_main);
+    Game::getInstance().safeChangeScene(scene_main);
   }
 }
 

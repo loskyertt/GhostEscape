@@ -49,9 +49,9 @@ void TextLable::setFont(const std::string &font_path, float font_size) {
   m_font_path = font_path;
   m_font_size = font_size;
   // 有可新的 ttf_font，需要载入到 AssetStore 里
-  auto font = m_game.getAssetStore()->getFont(font_path, font_size);
+  auto font = Game::getInstance().getAssetStore()->getFont(font_path, font_size);
   if (!m_ttf_text) {
-    m_ttf_text = m_game.createText("", font_path, font_size);
+    m_ttf_text = Game::getInstance().createText("", font_path, font_size);
   }
   TTF_SetTextFont(m_ttf_text, font);
 
@@ -66,7 +66,7 @@ void TextLable::setText(const std::string &text) {
 void TextLable::setFontPath(const std::string &font_path) {
   m_font_path = font_path;
   // 从 AssetStore 里获取字体
-  auto font = m_game.getAssetStore()->getFont(font_path, m_font_size);
+  auto font = Game::getInstance().getAssetStore()->getFont(font_path, m_font_size);
   TTF_SetTextFont(m_ttf_text, font);
 
   updateFontSize();
@@ -75,7 +75,7 @@ void TextLable::setFontPath(const std::string &font_path) {
 void TextLable::setFontSize(float font_size) {
   m_font_size = font_size;
   // 从 AssetStore 里获取字体
-  auto font = m_game.getAssetStore()->getFont(m_font_path, m_font_size);
+  auto font = Game::getInstance().getAssetStore()->getFont(m_font_path, m_font_size);
   TTF_SetTextFont(m_ttf_text, font);
 
   updateFontSize();

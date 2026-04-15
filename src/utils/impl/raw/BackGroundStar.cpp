@@ -34,10 +34,10 @@ void BackgroundStar::update(const float &delta_time) {
 
 void BackgroundStar::render() {
   Object::render();
-  auto pos = -m_game.getCurrentScene()->getCameraPosition();
-  m_game.drawPoints(m_star_far, pos * m_scale_far, m_color_far);
-  m_game.drawPoints(m_star_middle, pos * m_scale_middle, m_color_middle);
-  m_game.drawPoints(m_star_near, pos * m_scale_near, m_color_near);
+  auto pos = -Game::getInstance().getCurrentScene()->getCameraPosition();
+  Game::getInstance().drawPoints(m_star_far, pos * m_scale_far, m_color_far);
+  Game::getInstance().drawPoints(m_star_middle, pos * m_scale_middle, m_color_middle);
+  Game::getInstance().drawPoints(m_star_near, pos * m_scale_near, m_color_near);
 }
 
 BackgroundStar *BackgroundStar::addBackgroundStar(Object *parent,

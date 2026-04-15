@@ -31,7 +31,7 @@ void Collider::render() {
   ObjectAffiliate::render();
 
   auto pos = m_parent->getRenderPosition() + m_offset;
-  m_game.renderColliders(pos, m_size);
+  Game::getInstance().renderColliders(pos, m_size);
 #endif
 }
 

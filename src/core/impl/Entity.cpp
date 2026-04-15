@@ -37,7 +37,7 @@ void Entity::move(const float &delta_time) {
    * - => 物体的在世界中的坐标范围：x ∈ [0, worldSize.x],  y ∈ [0, worldSize.y]
    */
   // 玩家位置限制
-  m_position = glm::clamp(m_position, glm::vec2(0), m_game.getCurrentScene()->getWorldSize());
+  m_position = glm::clamp(m_position, glm::vec2(0), Game::getInstance().getCurrentScene()->getWorldSize());
 }
 
 /* 受到伤害 */

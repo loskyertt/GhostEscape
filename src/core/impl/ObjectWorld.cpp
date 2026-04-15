@@ -18,17 +18,17 @@ void ObjectWorld::init() {
 void ObjectWorld::update(const float &delta_time) {
   ObjectScreen::update(delta_time);
   // 根据当前的世界坐标同步更新渲染坐标
-  m_render_postion = m_game.getCurrentScene()->worldToScreen(m_position);
+  m_render_postion = Game::getInstance().getCurrentScene()->worldToScreen(m_position);
 }
 
 /* 设置物体的世界坐标（同时更新物体的屏幕坐标） */
 void ObjectWorld::setPosition(const glm::vec2 &position) {
   m_position = position;
-  m_render_postion = m_game.getCurrentScene()->worldToScreen(position);
+  m_render_postion = Game::getInstance().getCurrentScene()->worldToScreen(position);
 }
 
 /* 设置物体的屏幕（渲染）位置（同时更新物体的世界坐标） */
 void ObjectWorld::setRenderPosition(const glm::vec2 &render_position) {
   m_render_postion = render_position;
-  m_position = m_game.getCurrentScene()->screenToWorld(render_position);
+  m_position = Game::getInstance().getCurrentScene()->screenToWorld(render_position);
 }

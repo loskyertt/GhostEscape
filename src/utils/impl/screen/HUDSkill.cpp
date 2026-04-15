@@ -33,7 +33,7 @@ void HUDSkill::render() {
   // 先绘制浅色背景
   SDL_SetTextureColorModFloat(m_icon->getTexture().texture, 0.3f, 0.3f, 0.3f);
   auto pos = getRenderPosition() + m_icon->getOffset();
-  m_game.renderTexture(m_icon->getTexture(), pos, m_icon->getSize());
+  Game::getInstance().renderTexture(m_icon->getTexture(), pos, m_icon->getSize());
   SDL_SetTextureColorModFloat(m_icon->getTexture().texture, 1.0f, 1.0f, 1.0f);
 
   // 然后正常绘制

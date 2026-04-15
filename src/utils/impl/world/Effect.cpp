@@ -25,7 +25,7 @@ void Effect::checkFinish() {
   if (m_sprite_anim->getIsFinished()) {
     m_need_remove = true;
     if (m_next_object) {
-      m_game.getCurrentScene()->safeAddChild(m_next_object);  // 添加到 SceneMain::m_children_back 中
+      Game::getInstance().getCurrentScene()->safeAddChild(m_next_object);  // 添加到 SceneMain::m_children_back 中
 #ifndef NDEBUG
       SDL_Log("m_next_object 安全添加到了容器中......");
 #endif

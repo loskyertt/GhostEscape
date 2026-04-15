@@ -171,17 +171,17 @@ void Scene::setCameraPosition(const glm::vec2 &camera_position) {
   m_camera_position = camera_position;
   // 相机位置限制：[-30, world_size - screen_size + 30]
   m_camera_position =
-      glm::clamp(m_camera_position, glm::vec2(-30.0f), m_world_size - m_game.getScreenSize() + glm::vec2(30.0f));
+      glm::clamp(m_camera_position, glm::vec2(-30.0f), m_world_size - Game::getInstance().getScreenSize() + glm::vec2(30.0f));
 }
 
 void Scene::pause() {
   m_is_pause = true;
-  m_game.pauseMusic();
-  m_game.pauseSound();
+  Game::getInstance().pauseMusic();
+  Game::getInstance().pauseSound();
 }
 
 void Scene::resume() {
   m_is_pause = false;
-  m_game.resumeMusic();
-  m_game.resumeSound();
+  Game::getInstance().resumeMusic();
+  Game::getInstance().resumeSound();
 }

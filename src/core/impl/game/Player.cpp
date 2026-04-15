@@ -74,7 +74,7 @@ void Player::render() {
   }
   Entity::render();
 
-  // m_game.drawBoundary(m_render_postion, m_render_postion + glm::vec2(20.0f), 5.0f, {1.0f, 0.0, 0.0, 1.0f});
+  // Game::getInstance().drawBoundary(m_render_postion, m_render_postion + glm::vec2(20.0f), 5.0f, {1.0f, 0.0, 0.0, 1.0f});
 }
 
 /* 清理 */
@@ -89,7 +89,7 @@ void Player::takeDamage(float damage) {
     return;
   }
   Entity::takeDamage(damage);
-  m_game.playSound("assets/sound/hit-flesh-02-266309.mp3");
+  Game::getInstance().playSound("assets/sound/hit-flesh-02-266309.mp3");
 }
 
 /* 键盘控制逻辑 */
@@ -113,7 +113,7 @@ void Player::keyboardControl() {
 
 /* 相机跟随玩家 */
 void Player::syncCamera() {
-  m_game.getCurrentScene()->setCameraPosition(m_position - m_game.getScreenSize() / 2.0f);
+  Game::getInstance().getCurrentScene()->setCameraPosition(m_position - Game::getInstance().getScreenSize() / 2.0f);
 }
 
 /* 判断当前物体状态 */
@@ -155,8 +155,8 @@ void Player::checkDeath() {
   if (!m_states->getIsAlive()) {
     // 玩家死亡，可以添加死亡动画或游戏结束逻辑
     m_effect->setPosition(m_position);
-    m_game.getCurrentScene()->safeAddChild(m_effect);
+    Game::getInstance().getCurrentScene()->safeAddChild(m_effect);
     setActive(false);
-    m_game.playSound("assets/sound/female-scream-02-89290.mp3");
+    Game::getInstance().playSound("assets/sound/female-scream-02-89290.mp3");
   }
 }

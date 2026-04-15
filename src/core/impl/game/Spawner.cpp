@@ -21,13 +21,13 @@ void Spawner::update(const float &delta_time) {
   if (m_timer >= m_interval) {
     m_timer = 0.0f;
     // TODO: spawn enemy
-    m_game.playSound("assets/sound/silly-ghost-sound-242342.mp3");
+    Game::getInstance().playSound("assets/sound/silly-ghost-sound-242342.mp3");
     for (int i = 0; i < m_num; i++) {
-      auto position = m_game.randomVec2(
-          m_game.getCurrentScene()->getCameraPosition(),
-          m_game.getCurrentScene()->getCameraPosition() + m_game.getScreenSize());
+      auto position = Game::getInstance().randomVec2(
+          Game::getInstance().getCurrentScene()->getCameraPosition(),
+          Game::getInstance().getCurrentScene()->getCameraPosition() + Game::getInstance().getScreenSize());
       Enemy *enemy = Enemy::addEnemy(nullptr, position, m_target_player);
-      Effect::addEffect(m_game.getCurrentScene(), "assets/effect/184_3.png", position, 1.0f, enemy);
+      Effect::addEffect(Game::getInstance().getCurrentScene(), "assets/effect/184_3.png", position, 1.0f, enemy);
     }
   }
 }

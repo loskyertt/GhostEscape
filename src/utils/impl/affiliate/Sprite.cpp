@@ -35,7 +35,7 @@ void Sprite::render() {
   }
 
   auto pos = m_parent->getRenderPosition() + m_offset;
-  m_game.renderTexture(m_texture, pos, m_size, m_percentage);
+  Game::getInstance().renderTexture(m_texture, pos, m_size, m_percentage);
 }
 
 Sprite *Sprite::addSprite(ObjectScreen *parrent, const std::string &file_path, float scale, Anchor anchor) {

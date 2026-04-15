@@ -11,11 +11,11 @@
 void AffiliateBar::render() {
   auto pos = m_parent->getRenderPosition() + m_offset;
   if (m_percentage > 0.7f) {
-    m_game.renderHorizontalBar(pos, m_size, m_percentage, m_color_high);
+    Game::getInstance().renderHorizontalBar(pos, m_size, m_percentage, m_color_high);
   } else if (m_percentage > 0.3f) {
-    m_game.renderHorizontalBar(pos, m_size, m_percentage, m_color_mid);
+    Game::getInstance().renderHorizontalBar(pos, m_size, m_percentage, m_color_mid);
   } else {
-    m_game.renderHorizontalBar(pos, m_size, m_percentage, m_color_low);
+    Game::getInstance().renderHorizontalBar(pos, m_size, m_percentage, m_color_low);
   }
 }
 

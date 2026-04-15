@@ -21,7 +21,6 @@
  */
 class Object {
  protected:
-  Game &m_game = Game::getInstance();
   std::vector<Object *> m_children;       // 无实体，纯功能
   std::vector<Object *> m_children_back;  // 用于存储待添加的子对象
 

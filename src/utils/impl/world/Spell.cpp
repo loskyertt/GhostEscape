@@ -23,7 +23,7 @@ void Spell::update(const float &delta_time) {
 
 void Spell::attack() {
   // TODO: implement attack logic
-  auto objects = m_game.getCurrentScene()->getChildrenWorld();
+  auto objects = Game::getInstance().getCurrentScene()->getChildrenWorld();
   for (auto &object : objects) {
     if (object->getType() != ObjectType::ENEMY) {
       continue;
