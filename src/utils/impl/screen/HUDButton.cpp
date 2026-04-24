@@ -7,10 +7,11 @@
  */
 
 #include "screen/HUDButton.h"
-#include <SDL3/SDL_events.h>
-#include <SDL3/SDL_mouse.h>
 #include "affiliate/Sprite.h"
 #include "core/ObjectScreen.h"
+
+#include <SDL3/SDL_events.h>
+#include <SDL3/SDL_mouse.h>
 
 bool HUDButton::handleEvents(SDL_Event &event) {
   // 判断鼠标按键按下

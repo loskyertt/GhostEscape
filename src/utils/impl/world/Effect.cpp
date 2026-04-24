@@ -17,6 +17,15 @@ void Effect::update(const float &delta_time) {
   checkFinish();
 }
 
+void Effect::clean() {
+  ObjectWorld::clean();
+  if (m_next_object) {  // 如果 m_next_object 添加到了容器中，生命周期就应交给容器管理
+    m_next_object->clean();
+    delete m_next_object;
+    m_next_object = nullptr;
+  }
+}
+
 void Effect::checkFinish() {
   // #ifndef NDEBUG
   //   SDL_Log(">>> Effect::checkFinish() called");
@@ -26,6 +35,7 @@ void Effect::checkFinish() {
     m_need_remove = true;
     if (m_next_object) {
       Game::getInstance().getCurrentScene()->safeAddChild(m_next_object);  // 添加到 SceneMain::m_children_back 中
+      m_next_object = nullptr;
 #ifndef NDEBUG
       SDL_Log("m_next_object 安全添加到了容器中......");
 #endif
@@ -34,8 +44,11 @@ void Effect::checkFinish() {
 }
 
 /* 添加特效到对象世界 */
-Effect *
-Effect::addEffect(Object *parent, const std::string &file_path, glm::vec2 pos, float scale, ObjectWorld *next_object) {
+Effect *Effect::addEffect(Object *parent,
+    const std::string &file_path,
+    glm::vec2 pos,
+    float scale,
+    ObjectWorld *next_object) {
 
 #ifndef NDEBUG
   SDL_Log(">>> Effect::addEffect() called");

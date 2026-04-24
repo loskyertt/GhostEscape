@@ -7,8 +7,8 @@
  */
 
 #include "core/game/Player.h"
+#include "core/game/SceneMain.h"
 #include "core/Entity.h"
-#include "core/Scene.h"
 
 #include "world/Effect.h"
 #include "affiliate/Collider.h"
@@ -41,7 +41,8 @@ void Player::init() {
   m_states = States::addStates(this);
 
   // 设置玩家的死亡特效
-  m_effect = Effect::addEffect(nullptr, "assets/effect/1764.png", glm::vec2(0.0f), 2.0f);
+  m_effect = Effect::addEffect(Game::getInstance().getCurrentScene(), "assets/effect/1764.png", glm::vec2(0.0f), 2.0f);
+  m_effect->setActive(false);
 
   // 创建武器
   m_weapon_thunder = WeaponThunder::addWeaponThunder(this, 2.0f, 40.0f);
@@ -154,8 +155,8 @@ void Player::checkDeath() {
   // 例如：检查生命值、碰撞检测等
   if (!m_states->getIsAlive()) {
     // 玩家死亡，可以添加死亡动画或游戏结束逻辑
+    m_effect->setActive(true);
     m_effect->setPosition(m_position);
-    Game::getInstance().getCurrentScene()->safeAddChild(m_effect);
     setActive(false);
     Game::getInstance().playSound("assets/sound/female-scream-02-89290.mp3");
   }
