@@ -1,17 +1,17 @@
 # for each "example/x.cpp", generate target "x"
 file(GLOB_RECURSE ALL_SRCS *.cpp)
-foreach(v ${ALL_SRCS})
-  message("Processing: ${v}")
-  get_filename_component(TARGET ${v} NAME_WE) # 生成目标名（去掉路径和扩展名）
+foreach (v ${ALL_SRCS})
+    message("Processing: ${v}")
+    get_filename_component(TARGET ${v} NAME_WE) # 生成目标名（去掉路径和扩展名）
 
-  add_executable(${TARGET} ${v})
+    add_executable(${TARGET} ${v})
 
-  target_link_libraries(${TARGET}
-    PRIVATE
-      ${SDL3_LIBRARIES}
-      SDL3_image::SDL3_image
-      SDL3_mixer::SDL3_mixer
-      SDL3_ttf::SDL3_ttf
-      glm::glm
-  )
-endforeach()
+    target_link_libraries(${TARGET} PRIVATE
+            SDL3::Headers
+            SDL3::SDL3-shared
+            SDL3_image::SDL3_image
+            SDL3_mixer::SDL3_mixer
+            SDL3_ttf::SDL3_ttf
+            glm::glm
+    )
+endforeach ()

@@ -1,108 +1,150 @@
-# src/CMakeLists.txt
+# src/CMakeLists.txt —— 游戏本体（GhostEscape）
+#
+# 模块划分与依赖层次（自底向上，单向依赖，禁止反向引用）：
+#
+#   utility     通用工具：日志（logger）、单例（singleton）
+#      ↑
+#   engine      引擎核心：对象体系（Object/ObjectScreen/ObjectWorld/ObjectAffiliate）、
+#               场景（Scene/Entity）、主循环（Game）、资源管理（AssetStore）
+#      ↑
+#   components  挂件组件：精灵（Sprite/SpriteAnim）、碰撞体（Collider）、
+#               血量条（AffiliateBar）、文本标签（TextLable）
+#      ↑
+#   world       世界空间对象：法术（Spell）、特效（Effect）
+#      ↑
+#   mechanics   游戏机制：状态（States）、武器（Weapon）、计时器（Timer）、背景星空（BackgroundStar）
+#      ↑
+#   hud         屏幕空间 UI：HUD 面板（HUDStates/HUDSkill/HUDText/HUDButton）、鼠标指针（UIMouse）
+#      ↑
+#   game        游戏玩法逻辑：玩家（Player）、敌人（Enemy）、刷怪器（Spawner）、
+#               雷击武器（WeaponThunder）、游戏场景（SceneMain/SceneTitle）
+#
+# 头文件引用统一使用 "#include "<module>/<File>.h"" 形式（include 根目录为 src/）。
 
 set(TARGET ${PROJECT_NAME}-${CMAKE_SYSTEM_NAME})
 
 # ==========================================
-# utils 模块：通用工具组件
-# 必须先于 core 定义，因为 core 依赖 utils
+# utility 模块：通用工具（日志/单例），不依赖任何游戏模块
 # ==========================================
-add_library(utils STATIC
-  # affiliate（视觉/碰撞组件）
-  utils/impl/affiliate/Collider.cpp
-  utils/impl/affiliate/Sprite.cpp
-  utils/impl/affiliate/SpriteAnim.cpp
-  utils/impl/affiliate/AffiliateBar.cpp
-  utils/impl/affiliate/TextLable.cpp
-  # raw（游戏机制：状态/武器）
-  utils/impl/raw/States.cpp
-  utils/impl/raw/Weapon.cpp
-  utils/impl/raw/Timer.cpp
-  utils/impl/raw/BackGroundStar.cpp
-  # screen（屏幕空间 UI）
-  utils/impl/screen/UIMouse.cpp
-  utils/impl/screen/HUDStates.cpp
-  utils/impl/screen/HUDSkill.cpp
-  utils/impl/screen/HUDText.cpp
-  utils/impl/screen/HUDButton.cpp
-  # world（世界空间对象：法术/特效）
-  utils/impl/world/Effect.cpp
-  utils/impl/world/Spell.cpp
-)
+add_subdirectory(utility)
 
-# utils 包含目录
-target_include_directories(utils
-  PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/utils/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/core/include
-  PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/utils/impl
+# ==========================================
+# engine 模块：引擎核心
+# ==========================================
+add_library(engine STATIC
+        engine/AssetStore.cpp
+        engine/Entity.cpp
+        engine/Game.cpp
+        engine/Object.cpp
+        engine/ObjectAffiliate.cpp
+        engine/ObjectScreen.cpp
+        engine/ObjectWorld.cpp
+        engine/Scene.cpp
 )
-
-# utils 链接库（SDL、GLM 作为 utils 的公共依赖）
-target_link_libraries(utils
-  PUBLIC
-    ${SDL3_LIBRARIES}
-    SDL3_image::SDL3_image
-    SDL3_mixer::SDL3_mixer
-    SDL3_ttf::SDL3_ttf
-    glm::glm
+target_include_directories(engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(engine
+        PUBLIC    # SDL、GLM 为引擎的公共依赖
+        ${SDL3_LIBRARIES}
+        SDL3_image::SDL3_image
+        SDL3_mixer::SDL3_mixer
+        SDL3_ttf::SDL3_ttf
+        glm::glm
+        PRIVATE   # 仅 Game.cpp 内部使用日志工具
+        utility
 )
 
 # ==========================================
-# core 模块：引擎核心 + 游戏逻辑
+# components 模块：挂件组件
 # ==========================================
-add_library(core STATIC
-  # 引擎核心实现
-  core/impl/AssetStore.cpp
-  core/impl/Entity.cpp
-  core/impl/Game.cpp
-  core/impl/Object.cpp
-  core/impl/ObjectAffiliate.cpp
-  core/impl/ObjectScreen.cpp
-  core/impl/ObjectWorld.cpp
-  core/impl/Scene.cpp
-  # 游戏逻辑实现
-  core/impl/game/Enemy.cpp
-  core/impl/game/Player.cpp
-  core/impl/game/SceneMain.cpp
-  core/impl/game/SceneTitle.cpp
-  core/impl/game/Spawner.cpp
-  core/impl/game/WeaponThunder.cpp
+add_library(components STATIC
+        components/AffiliateBar.cpp
+        components/Collider.cpp
+        components/Sprite.cpp
+        components/SpriteAnim.cpp
+        components/TextLable.cpp
+)
+target_include_directories(components PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(components
+        PUBLIC engine
 )
 
-# core 包含目录
-target_include_directories(core
-  PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/core/include
-  PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/core/impl
-    # utils 的公开头文件对 core 的游戏逻辑可见
-    ${CMAKE_CURRENT_SOURCE_DIR}/utils/include
+# ==========================================
+# world 模块：世界空间对象（法术/特效）
+# ==========================================
+add_library(world STATIC
+        world/Effect.cpp
+        world/Spell.cpp
+)
+target_include_directories(world PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(world
+        PUBLIC
+        engine
+        components
 )
 
-# core 链接库
-target_link_libraries(core
-  PUBLIC
-    # 引擎核心依赖 SDL、GLM
-    ${SDL3_LIBRARIES}
-    SDL3_image::SDL3_image
-    SDL3_mixer::SDL3_mixer
-    SDL3_ttf::SDL3_ttf
-    glm::glm
-  PRIVATE
-    # core 的游戏逻辑依赖 utils
-    utils
+# ==========================================
+# mechanics 模块：游戏机制（状态/武器/计时器/背景星空）
+# ==========================================
+add_library(mechanics STATIC
+        mechanics/BackGroundStar.cpp
+        mechanics/States.cpp
+        mechanics/Timer.cpp
+        mechanics/Weapon.cpp
+)
+target_include_directories(mechanics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(mechanics
+        PUBLIC
+        engine
+        components
+        world
+)
+
+# ==========================================
+# hud 模块：屏幕空间 UI
+# ==========================================
+add_library(hud STATIC
+        hud/HUDButton.cpp
+        hud/HUDSkill.cpp
+        hud/HUDStates.cpp
+        hud/HUDText.cpp
+        hud/UIMouse.cpp
+)
+target_include_directories(hud PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(hud
+        PUBLIC
+        engine
+        components
+        mechanics
+)
+
+# ==========================================
+# game 模块：游戏玩法逻辑（依赖以上全部模块）
+# ==========================================
+add_library(game STATIC
+        game/Enemy.cpp
+        game/Player.cpp
+        game/SceneMain.cpp
+        game/SceneTitle.cpp
+        game/Spawner.cpp
+        game/WeaponThunder.cpp
+)
+target_include_directories(game PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(game
+        PUBLIC
+        engine
+        components
+        world
+        mechanics
+        hud
 )
 
 # ==========================================
 # 主可执行文件
 # ==========================================
 add_executable(${TARGET} main.cpp)
+target_link_libraries(${TARGET} PRIVATE game)
 
-# 主程序链接 core 和 utils
-target_link_libraries(${TARGET} PRIVATE core utils)
-
-# 运行时工作目录（可选：便于调试）
+# Debug 配置下启用调试宏
 target_compile_definitions(${TARGET} PRIVATE
-  $<$<CONFIG:Debug>:_DEBUG>
+        $<$<CONFIG:Debug>:_DEBUG>
 )

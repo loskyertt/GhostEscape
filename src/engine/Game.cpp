@@ -1,0 +1,517 @@
+/*
+ * @File    :   src\core\impl\Game.cpp
+ * @Time    :   2026/03/15 16:31:31
+ * @Author  :   loskyertt
+ * @Github  :   https://github.com/loskyertt
+ * @Desc    :   .....
+ */
+
+#include "engine/Game.h"
+#include "engine/AssetStore.h"
+#include "game/SceneTitle.h"
+
+#include "engine/Texture.h"
+
+#include "utility/logger/logger.h"
+
+#include <glm/fwd.hpp>
+
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_events.h>
+#include <SDL3/SDL_init.h>
+#include <SDL3/SDL_oldnames.h>
+#include <SDL3/SDL_rect.h>
+#include <SDL3/SDL_render.h>
+#include <SDL3/SDL_stdinc.h>
+#include <SDL3/SDL_surface.h>
+#include <SDL3/SDL_timer.h>
+#include <SDL3/SDL_video.h>
+#include <SDL3_mixer/SDL_mixer.h>
+#include <SDL3_ttf/SDL_ttf.h>
+
+#include <fstream>
+#include <cstddef>
+#include <string>
+
+Game& Game::getInstance()
+{
+    static Game instance;
+    return instance;
+}
+
+Game::~Game()
+{
+    Log_info("调用 ~Game()：程序退出");
+}
+
+void Game::init(const std::string& title, int width, int height)
+{
+    // === 初始化日志 ===
+    auto& logger = sky::utility::Singleton<sky::utility::Logger>::instance();
+    logger.open("ghostescape.log");
+
+    m_screen_size = glm::vec2(width, height);
+
+    // === SDL 初始化 ===
+    if (!SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO))
+    {
+        Log_error("SDL_Init Error: %s", SDL_GetError());
+        return;
+    }
+
+    // === SDL_mixer 初始化 ===
+    if (!MIX_Init())
+    {
+        Log_error("MIX_Init Error: %s", SDL_GetError());
+        return;
+    }
+    // 创建 Mixer，绑定到默认音频输出设备
+    m_mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
+    if (!m_mixer)
+    {
+        Log_error("MIX_CreateMixerDevice Error: %s", SDL_GetError());
+        MIX_Quit();
+        return;
+    }
+
+    // === SDL_ttf 初始化 ===
+    if (!TTF_Init())
+    {
+        Log_error("TTF_Init Error: %s", SDL_GetError());
+        SDL_Quit();
+        return;
+    }
+
+    // === 创建窗口与渲染器 ===
+    SDL_CreateWindowAndRenderer(title.c_str(), width, height, SDL_WINDOW_RESIZABLE, &m_window, &m_renderer);
+    if (!m_window || !m_renderer)
+    {
+        Log_error("SDL_CreateWindowAndRenderer Error: %s", SDL_GetError());
+        SDL_Quit();
+        return;
+    }
+
+    // === 设置窗口逻辑分辨率 ===
+    SDL_SetRenderLogicalPresentation(m_renderer, width, height, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+
+    // === 设置字体 ===
+    m_ttf_engine = TTF_CreateRendererTextEngine(m_renderer);
+    if (!m_ttf_engine)
+    {
+        Log_error("TTF_CreateRendererTextEngine Error: %s", SDL_GetError());
+        SDL_Quit();
+        return;
+    }
+
+    // === 计算帧延迟 ===
+    m_frame_delay = 1000000000 / m_FPS;
+
+    // === 创建资源管理器 ===
+    m_asset_store = new AssetStore(m_renderer, m_mixer);
+
+    // === 创建音频轨道 ===
+    m_music_track = MIX_CreateTrack(m_mixer);
+    if (!m_music_track)
+    {
+        Log_error("MIX_CreateTrack (music) Error: %s", SDL_GetError());
+    }
+    m_sfx_track = MIX_CreateTrack(m_mixer);
+    if (!m_sfx_track)
+    {
+        Log_error("MIX_CreateTrack (sfx) Error: %s", SDL_GetError());
+    }
+
+    // === 创建场景 ===
+    m_current_scene = new SceneTitle();
+    m_current_scene->init();
+}
+
+void Game::run()
+{
+    while (m_is_running)
+    {
+        auto start = SDL_GetTicksNS();
+        if (m_next_scene)
+        {
+            changeScene(m_next_scene);
+            m_next_scene = nullptr;
+        }
+
+        handleEvents();
+        update(m_delta_time);
+        render();
+
+        auto end     = SDL_GetTicksNS();
+        auto elapsed = end - start;  // 实际工作时间
+
+        if (elapsed < m_frame_delay)
+        {
+            // SDL_DelayNS 补齐到 16ms，delta_time 始终是稳定的 1/60 秒
+            SDL_DelayNS(m_frame_delay - elapsed);
+            // 正常帧：delta_time 用目标帧时长（稳定）
+            m_delta_time = static_cast<float>(static_cast<double>(m_frame_delay) / 1.0e9);
+        }
+        else
+        {
+            // 超时帧：delta_time 用实际耗时（游戏逻辑不会慢动作）
+            m_delta_time = static_cast<float>(static_cast<double>(elapsed) / 1.0e9);
+        }
+        // SDL_Log("FPS: %f", 1.0 / static_cast<double>(m_delta_time));
+    }
+}
+
+void Game::changeScene(Scene* scene)
+{
+    if (m_current_scene)
+    {
+        m_current_scene->clean();
+        delete m_current_scene;
+    }
+    m_current_scene = scene;
+    m_current_scene->init();
+}
+
+void Game::handleEvents()
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        if (event.type == SDL_EVENT_QUIT)
+        {
+            m_is_running = false;
+            break;
+        }
+
+        m_current_scene->handleEvents(event);
+    }
+}
+
+void Game::update(const float& delta_time)
+{
+    m_mouse_buttons = SDL_GetMouseState(&m_mouse_pos.x, &m_mouse_pos.y);
+    m_current_scene->update(delta_time);
+}
+
+void Game::render()
+{
+    SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);  // 先设清屏色
+    SDL_RenderClear(m_renderer);                       // 再清屏
+    m_current_scene->render();                         // 渲染当前场景
+    SDL_RenderPresent(m_renderer);
+}
+
+void Game::clean()
+{
+    // 清理场景
+    if (m_current_scene)
+    {
+        m_current_scene->clean();
+        delete m_current_scene;
+    }
+
+    // 先停止所有轨道
+    if (m_mixer)
+    {
+        MIX_StopAllTracks(m_mixer, 500);
+    }
+
+    // 销毁轨道
+    if (m_music_track)
+    {
+        MIX_DestroyTrack(m_music_track);
+        m_music_track = nullptr;
+    }
+    if (m_sfx_track)
+    {
+        MIX_DestroyTrack(m_sfx_track);
+        m_sfx_track = nullptr;
+    }
+
+    // 清理资源
+    if (m_asset_store)
+    {
+        m_asset_store->clean();
+        delete m_asset_store;
+    }
+
+    if (m_ttf_engine)
+    {
+        TTF_DestroyRendererTextEngine(m_ttf_engine);
+    }
+
+    // 销毁渲染器和窗口
+    if (m_renderer)
+    {
+        SDL_DestroyRenderer(m_renderer);
+    }
+    if (m_window)
+    {
+        SDL_DestroyWindow(m_window);
+    }
+
+    // 关闭设备（销毁 Mixer）
+    if (m_mixer)
+    {
+        MIX_DestroyMixer(m_mixer);
+    }
+
+    MIX_Quit();  // 退出 MIX
+    TTF_Quit();  // 退出 TTF
+    SDL_Quit();  // 退出 SDL
+}
+
+void Game::drawGrid(const glm::vec2& top_left, const glm::vec2& bottom_right, float grid_width, const SDL_FColor& color)
+{
+    SDL_SetRenderDrawColorFloat(m_renderer, color.r, color.g, color.b, color.a);
+
+    for (float x = top_left.x; x <= bottom_right.x; x += grid_width)
+    {
+        /*
+         * 起点坐标 -> 终点坐标
+         * (x, top_left.y) -> (x, bottom_right.y) 构成一条竖线
+         */
+        SDL_RenderLine(m_renderer, x, top_left.y, x, bottom_right.y);
+    }
+    for (float y = top_left.y; y <= bottom_right.y; y += grid_width)
+    {
+        SDL_RenderLine(m_renderer, top_left.x, y, bottom_right.x, y);
+    }
+
+    // 还原颜色
+    SDL_SetRenderDrawColorFloat(m_renderer, 0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+void Game::drawBoundary(const glm::vec2& top_left,
+                        const glm::vec2& bottom_right,
+                        float boundary_width,
+                        const SDL_FColor& color)
+{
+    SDL_SetRenderDrawColorFloat(m_renderer, color.r, color.g, color.b, color.a);
+
+    for (float i = 0; i < boundary_width; i++)
+    {
+        SDL_FRect rect = {
+            top_left.x - i,
+            top_left.y - i,
+            bottom_right.x - top_left.x + i * 2,
+            bottom_right.y - top_left.y + i * 2,
+        };
+        SDL_RenderRect(m_renderer, &rect);
+    }
+
+    // 还原颜色
+    SDL_SetRenderDrawColorFloat(m_renderer, 0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+void Game::drawPoints(const std::vector<glm::vec2>& points, const glm::vec2& render_position, const SDL_FColor& color)
+{
+    SDL_SetRenderDrawColorFloat(m_renderer, color.r, color.g, color.b, color.a);
+
+    for (const auto& point : points)
+    {
+        auto x = point.x + render_position.x;
+        auto y = point.y + render_position.y;
+        SDL_RenderPoint(m_renderer, x, y);
+    }
+
+    // 还原颜色
+    SDL_SetRenderDrawColorFloat(m_renderer, 0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+void Game::renderTexture(const Texture& texture,
+                         const glm::vec2& position,
+                         const glm::vec2& size,
+                         const glm::vec2& mask)
+{
+    SDL_FRect src_rect = {
+        texture.src_rect.x,
+        texture.src_rect.y + texture.src_rect.h * (1.0f - mask.y),
+        texture.src_rect.w * mask.x,
+        texture.src_rect.h * mask.y,
+    };
+
+    SDL_FRect dst_rect = {
+        position.x,
+        position.y + size.y * (1.0f - mask.y),
+        size.x * mask.x,
+        size.y * mask.y,
+    };
+
+    SDL_RenderTextureRotated(m_renderer,
+                             texture.texture,
+                             &src_rect,
+                             &dst_rect,
+                             static_cast<double>(texture.angle),
+                             nullptr,
+                             texture.is_flip ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
+}
+
+void Game::renderColliders(const glm::vec2& position, const glm::vec2& size, float alpha)
+{
+    auto texture   = m_asset_store->getImage("assets/UI/circle.png");
+    SDL_FRect rect = {
+        position.x,
+        position.y,
+        size.x,
+        size.y,
+    };
+    SDL_SetTextureAlphaModFloat(texture, alpha);
+    SDL_RenderTexture(m_renderer, texture, NULL, &rect);
+}
+
+void Game::renderHorizontalBar(const glm::vec2& position, const glm::vec2& size, float percentage, SDL_FColor color)
+{
+    SDL_SetRenderDrawColorFloat(m_renderer, color.r, color.g, color.b, color.a);
+
+    SDL_FRect boundary_rect = {
+        position.x,
+        position.y,
+        size.x,
+        size.y,
+    };
+    SDL_FRect fill_rect = {
+        position.x,
+        position.y,
+        size.x * percentage,
+        size.y,
+    };
+    SDL_RenderRect(m_renderer, &boundary_rect);
+    SDL_RenderFillRect(m_renderer, &fill_rect);
+    SDL_SetRenderDrawColorFloat(m_renderer, 0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+TTF_Text* Game::createText(const std::string& text, const std::string& font_path, float font_size)
+{
+    return TTF_CreateText(m_ttf_engine, m_asset_store->getFont(font_path, font_size), text.c_str(), 0);
+}
+
+float Game::randomFloat(float min, float max)
+{
+    std::uniform_real_distribution<float> distribution(min, max);
+    return distribution(gen);
+}
+
+int Game::randomInt(int min, int max)
+{
+    std::uniform_int_distribution<int> distribution(min, max);
+    return distribution(gen);
+}
+
+glm::vec2 Game::randomVec2(glm::vec2 min, glm::vec2 max)
+{
+    return glm::vec2(randomFloat(min.x, max.x), randomFloat(min.y, max.y));
+}
+
+glm::ivec2 Game::randomIvec2(glm::ivec2 min, glm::ivec2 max)
+{
+    return glm::ivec2(randomInt(min.x, max.x), randomInt(min.y, max.y));
+}
+
+void Game::playMusic(const std::string& music_path, bool loop)
+{
+    // 背景音乐固定流式加载（predecode = false）
+    if (!m_asset_store->hasSound(music_path))
+    {
+        m_asset_store->loadSound(music_path, false);
+    }
+
+    MIX_Audio* audio = m_asset_store->getSound(music_path);
+    if (!audio) return;
+    MIX_SetTrackAudio(m_music_track, audio);
+    SDL_PropertiesID props = SDL_CreateProperties();
+    SDL_SetNumberProperty(props, MIX_PROP_PLAY_LOOPS_NUMBER, loop ? -1 : 0);
+    MIX_PlayTrack(m_music_track, props);
+    SDL_DestroyProperties(props);
+}
+
+void Game::stopMusic()
+{
+    MIX_StopTrack(m_music_track, 500);
+}
+
+void Game::pauseMusic()
+{
+    MIX_PauseTrack(m_music_track);
+}
+
+void Game::resumeMusic()
+{
+    MIX_ResumeTrack(m_music_track);
+}
+
+void Game::playSound(const std::string& sound_path)
+{
+    // 音效固定预解码加载（predecode = true）
+    if (!m_asset_store->hasSound(sound_path))
+    {
+        m_asset_store->loadSound(sound_path, true);
+    }
+
+    MIX_Audio* audio = m_asset_store->getSound(sound_path);
+    if (!audio) return;
+    MIX_SetTrackAudio(m_sfx_track, audio);
+    MIX_PlayTrack(m_sfx_track, 0);
+}
+
+void Game::stopSound()
+{
+    MIX_StopTrack(m_sfx_track, 500);
+}
+
+void Game::pauseSound()
+{
+    MIX_PauseTrack(m_sfx_track);
+}
+
+void Game::resumeSound()
+{
+    MIX_ResumeTrack(m_sfx_track);
+}
+
+void Game::addScore(int score)
+{
+    setScore(m_score += score);
+}
+
+bool Game::isMouseInRect(const glm::vec2& top_left, const glm::vec2& bottom_right)
+{
+    return m_mouse_pos.x >= top_left.x && m_mouse_pos.x <= bottom_right.x && m_mouse_pos.y >= top_left.y &&
+           m_mouse_pos.y <= bottom_right.y;
+}
+
+std::string Game::loadText(const std::string& file_path)
+{
+    std::ifstream file(file_path);
+    std::string line;
+    std::string text = "";
+    while (std::getline(file, line))
+    {
+        text += line + "\n";
+    }
+    return text;
+}
+
+void Game::updateMouse()
+{
+    m_mouse_buttons = SDL_GetMouseState(&m_mouse_pos.x, &m_mouse_pos.y);
+
+    // 限制比例
+    int w, h;
+    SDL_GetWindowSize(m_window, &w, &h);
+    SDL_SetWindowAspectRatio(m_window, m_screen_size.x / m_screen_size.y, m_screen_size.x / m_screen_size.y);
+    m_mouse_pos *= m_screen_size / glm::vec2(w, h);
+
+    // 不限制比例
+    // SDL_FRect rect;
+    // SDL_GetRenderLogicalPresentationRect(m_renderer, &rect);
+    // m_mouse_pos = (m_mouse_pos - glm::vec2{rect.x, rect.y}) * m_screen_size / glm::vec2{rect.w, rect.h};
+}
+
+void Game::setScore(int score)
+{
+    m_score = score;
+    if (score > m_high_score)
+    {
+        m_high_score = score;
+    }
+}

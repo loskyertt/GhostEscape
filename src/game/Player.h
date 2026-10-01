@@ -1,0 +1,64 @@
+/*
+ * @File    :   include\Player.h
+ * @Time    :   2026/03/15 23:44:48
+ * @Author  :   loskyertt
+ * @Github  :   https://github.com/loskyertt
+ * @Desc    :   .....
+ */
+
+#pragma once
+
+#include "components/SpriteAnim.h"
+#include "engine/Entity.h"
+#include "game/WeaponThunder.h"
+
+class States;
+class Effect;
+class Timer;
+
+class Player : public Entity
+{
+private:
+    SpriteAnim* sprite_idle         = nullptr;
+    SpriteAnim* sprite_move         = nullptr;
+    Effect* m_effect                = nullptr;
+    WeaponThunder* m_weapon_thunder = nullptr;
+    Timer* m_timer_flash            = nullptr;  // 实现玩家受伤闪烁效果的计时器
+
+    bool m_is_moving = false;
+
+public:
+    /* 初始化 */
+    void init() override;
+
+    /* 事件处理 */
+    bool handleEvents(SDL_Event& event) override;
+
+    /* 更新 */
+    void update(const float& delta_time) override;
+
+    /* 渲染 */
+    void render() override;
+
+    /* 清理 */
+    void clean() override;
+
+    /* 受到伤害 */
+    void takeDamage(float damage) override;
+
+public:
+    /* 键盘控制逻辑 */
+    void keyboardControl();
+
+    /* 相机跟随玩家 */
+    void syncCamera();
+
+    /* 判断当前物体状态 */
+    void checkState();
+
+    /* 改变物体运动状态，让运动状态切换更丝滑 */
+    void changeState(bool is_moving);
+
+    /* 检查玩家是否死亡 */
+    void checkDeath();
+};

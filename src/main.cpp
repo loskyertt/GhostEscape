@@ -6,10 +6,11 @@
  * @Desc    :   .....
  */
 
-#include "core/Game.h"
+#include "engine/Game.h"
 
-int main() {
-  Game &game = Game::getInstance();
-  game.init("GhostEscape", 1280, 720);
-  game.run();
+int main()
+{
+    Game& game = Game::getInstance();
+    game.init("GhostEscape", 1280, 720);
+    game.run();
 }

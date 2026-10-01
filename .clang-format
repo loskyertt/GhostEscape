@@ -1,27 +1,38 @@
+# =============================================================================
 # Google C/C++ Code Style settings
 # https://clang.llvm.org/docs/ClangFormatStyleOptions.html
-# Author: Kehan Xue, kehan.xue (at) gmail.com
+# Author: loskyertt, loskyertt0403@gmail.com
+# =============================================================================
 
 Language: Cpp
 BasedOnStyle: Google
-AccessModifierOffset: -1
-AlignAfterOpenBracket: DontAlign  # 换行时将严格使用 ContinuationIndentWidth 进行缩进
-AlignConsecutiveAssignments: None
-AlignOperands: DontAlign  # 不对齐操作数
-AllowAllArgumentsOnNextLine: false # default: true
-AllowAllConstructorInitializersOnNextLine: false # default: true
+AccessModifierOffset: -4
+AlignAfterOpenBracket: true
+AlignArrayOfStructures: Left
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: false
+  AlignCompound: true
+AlignConsecutiveMacros:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: false
+AlignOperands: Align
+AllowAllArgumentsOnNextLine: false
+PackConstructorInitializers: CurrentLine
 AllowAllParametersOfDeclarationOnNextLine: false
-AllowShortBlocksOnASingleLine: Empty
+AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: Inline
-AllowShortIfStatementsOnASingleLine: Never  # To avoid conflict, set this "Never" and each "if statement" should include brace when coding
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: WithoutElse
 AllowShortLambdasOnASingleLine: Inline
 AllowShortLoopsOnASingleLine: false
-AlwaysBreakAfterReturnType: None
-AlwaysBreakTemplateDeclarations: Yes
-BinPackArguments: false    # 不将参数打包到一行
-BinPackParameters: false    # 函数定义的参数列表同样处理
-BreakBeforeBraces: Custom
+BreakAfterReturnType: None
+BreakTemplateDeclarations: Yes
+BinPackArguments: false
+BinPackParameters: OnePerLine
+BreakBeforeBraces: Allman
 BraceWrapping:
   AfterCaseLabel: false
   AfterClass: false
@@ -43,9 +54,9 @@ BreakBeforeBinaryOperators: None
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeColon
 BreakInheritanceList: BeforeColon
-ColumnLimit: 120  # 超过此宽度才触发换行
+ColumnLimit: 120  # default: 80
 CompactNamespaces: false
-ContinuationIndentWidth: 4  # 续行缩进宽度（控制参数缩进量）
+ContinuationIndentWidth: 4
 Cpp11BracedListStyle: true
 DerivePointerAlignment: false  # Make sure the * or & align on the left
 EmptyLineBeforeAccessModifier: LogicalBlock
@@ -53,16 +64,17 @@ FixNamespaceComments: true
 IncludeBlocks: Preserve
 IndentCaseLabels: true
 IndentPPDirectives: None
-IndentWidth: 2
+IndentWidth: 4
 KeepEmptyLinesAtTheStartOfBlocks: true
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: None
 ObjCSpaceAfterProperty: false
 ObjCSpaceBeforeProtocolList: true
-PointerAlignment: Right
-PenaltyReturnTypeOnItsOwnLine: 1000  # 增加返回值独占一行的惩罚值
-ReflowComments: false
-SeparateDefinitionBlocks: Always   # Only support since clang-format 14
+PointerAlignment: Left
+PenaltyBreakAssignment: 1000000
+ReferenceAlignment: Left
+ReflowComments: IndentOnly
+SeparateDefinitionBlocks: Leave   # Only support since clang-format 14
 SortIncludes: Never # 禁用 include 头文件格式化时自动排序
 SpaceAfterCStyleCast: false
 SpaceAfterLogicalNot: false
@@ -75,7 +87,7 @@ SpaceBeforeParens: ControlStatements
 SpaceBeforeRangeBasedForLoopColon: true
 SpaceBeforeSquareBrackets: false
 SpaceInEmptyParentheses: false
-SpacesBeforeTrailingComments: 2  # 行尾注释前的空格数
+SpacesBeforeTrailingComments: 2
 SpacesInAngles: false
 SpacesInCStyleCastParentheses: false
 SpacesInContainerLiterals: false
